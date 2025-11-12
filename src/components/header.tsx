@@ -1,0 +1,160 @@
+"use client"
+
+import { useState } from "react"
+import Link from "next/link"
+import { Menu, X, ChevronDown } from "lucide-react"
+
+export default function Header() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+
+  const menuItems = [
+    {
+      label: "교회소개",
+      href: "#intro",
+      submenu: [
+        { label: "환영인사", href: "/intro/welcome" },
+        { label: "교회비전", href: "/intro/vision" },
+        { label: "교회소식", href: "/intro/news" },
+        { label: "성도", href: "/intro/members" },
+        { label: "예배시간", href: "/intro/schedule" },
+        { label: "헌금안내", href: "/intro/donation" },
+        { label: "오시는길", href: "/intro/location" },
+      ],
+    },
+    {
+      label: "말씀과 찬양",
+      href: "#sermon",
+      submenu: [
+        { label: "주일예배", href: "/sermon/sunday" },
+        { label: "수요예배", href: "/sermon/wednesday" },
+        { label: "금요기도회", href: "/sermon/friday" },
+        { label: "새벽기도회", href: "/sermon/dawn" },
+        { label: "특별예배", href: "/sermon/special" },
+      ],
+    },
+    {
+      label: "커뮤니티",
+      href: "#community",
+      submenu: [
+        { label: "게시판", href: "/community/board" },
+        { label: "앨범", href: "/community/album" },
+        { label: "자료실", href: "/community/resources" },
+      ],
+    },
+  ]
+
+  return (
+    <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <Link href="/" className="text-2xl font-bold text-blue-900">
+              교회명
+            </Link>
+          </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-8">
+            {menuItems.map((item) => (
+              <div
+                key={item.label}
+                className="relative group"
+                onMouseEnter={() => setOpenDropdown(item.label)}
+                onMouseLeave={() => setOpenDropdown(null)}
+              >
+                <button className="flex items-center gap-1 text-gray-700 hover:text-blue-900 transition text-sm font-medium">
+                  {item.label}
+                  {item.submenu && <ChevronDown size={16} />}
+                </button>
+
+                {/* Dropdown Menu */}
+                {item.submenu && (
+                  <div className="absolute left-0 mt-0 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    {item.submenu.map((subitem) => (
+                      <Link
+                        key={subitem.label}
+                        href={subitem.href}
+                        className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-900 text-sm border-b border-gray-100 last:border-b-0 first:rounded-t-lg last:rounded-b-lg transition"
+                      >
+                        {subitem.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </nav>
+
+          {/* Auth Links */}
+          <div className="hidden md:flex items-center gap-4 ml-auto">
+            <Link href="/login" className="text-gray-700 hover:text-blue-900 text-sm font-medium">
+              로그인
+            </Link>
+            <Link
+              href="/signup"
+              className="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition text-sm font-medium"
+            >
+              회원가입
+            </Link>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <nav className="md:hidden pb-4 space-y-2">
+            {menuItems.map((item) => (
+              <div key={item.label}>
+                <button
+                  onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
+                  className="w-full flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-gray-100 rounded transition"
+                >
+                  {item.label}
+                  {item.submenu && (
+                    <ChevronDown
+                      size={16}
+                      className={`transform transition-transform ${openDropdown === item.label ? "rotate-180" : ""}`}
+                    />
+                  )}
+                </button>
+
+                {/* Mobile Submenu */}
+                {openDropdown === item.label && item.submenu && (
+                  <div className="pl-4 space-y-1">
+                    {item.submenu.map((subitem) => (
+                      <Link
+                        key={subitem.label}
+                        href={subitem.href}
+                        className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded text-sm transition"
+                      >
+                        {subitem.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+            {/* Mobile Auth Links */}
+            <div className="px-4 py-2 space-y-2 border-t border-gray-200 mt-4 pt-4">
+              <Link href="/login" className="block text-gray-700 hover:text-blue-900 text-sm font-medium">
+                로그인
+              </Link>
+              <Link
+                href="/signup"
+                className="block bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition text-sm font-medium text-center"
+              >
+                회원가입
+              </Link>
+            </div>
+          </nav>
+        )}
+      </div>
+    </header>
+  )
+}
