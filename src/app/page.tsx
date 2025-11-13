@@ -12,11 +12,9 @@ export default function Home() {
     <div className="w-full">
       <Header />
       <Hero />
-      <About />
+      <Events />
       <Categories />
       <Gallery />
-      <Events />
-      <Ministry />
       <Footer />
     </div>
   )

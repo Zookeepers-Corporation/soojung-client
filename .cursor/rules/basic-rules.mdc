@@ -32,7 +32,7 @@ alwaysApply: true
 - **불필요한 리렌더링** 방지 (memo, useMemo, useCallback)
 
 ## Tailwind CSS 규칙
-- **반응형 디자인** 우선 (`sm:`, `md:`, `lg:`, `xl:`)
+- 항상 **반응형 디자인**을 고려 (`sm:`, `md:`, `lg:`, `xl:`)
 - **다크 모드** 지원 고려 (`dark:`)
 - **커스텀 클래스** 최소화, Tailwind 유틸리티 우선 사용
 - **일관된 spacing** 사용 (`space-y-*`, `gap-*`)
@@ -57,6 +57,11 @@ alwaysApply: true
 ## 커밋 메시지
 - **영어로 작성**: `feat: add user authentication`
 - **형식**: `type: description` (feat, fix, docs, style, refactor, test, chore)
+
+### 폰트 사용
+- 기본 폰트: **KimJeongCheolGothic** (자동 적용)
+- 모든 텍스트는 자동으로 KimJeongCheolGothic 폰트 사용
+- 폰트 weight: 300 (light), 400 (normal), 700 (bold)
 
 ## ESLint 규칙 준수
 - **모든 ESLint 경고/에러** 수정 후 커밋
