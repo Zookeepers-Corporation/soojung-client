@@ -26,16 +26,6 @@ export default function PastorsSection() {
   return (
     <section className="py-12 md:py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            교역자
-          </h2>
-          <p className="text-gray-600 text-lg">
-            하나님의 말씀으로 교회를 섬기는 교역자들을 소개합니다.
-          </p>
-        </div>
-
         {/* Pastors Grid */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {pastors.map((pastor, index) => (

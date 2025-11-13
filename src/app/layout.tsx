@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "우리 교회 - 하나님의 사랑을 나누는 공동체",
+  title: "포항수정교회",
   description: "진정한 신앙 공동체, 하나님의 말씀으로 함께 성장합니다.",
   generator: "v0.app",
   icons: {

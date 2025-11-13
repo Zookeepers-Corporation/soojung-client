@@ -63,7 +63,7 @@ export default function Carousel({
       {/* Carousel Container */}
       <div className="relative h-full">
         <div
-          className="flex transition-transform duration-500 ease-in-out"
+          className="flex h-full transition-transform duration-500 ease-in-out"
           style={{
             transform: `translateX(-${currentIndex * 100}%)`,
           }}
@@ -71,7 +71,7 @@ export default function Carousel({
           {items.map((item, index) => (
             <div
               key={index}
-              className="min-w-full flex-shrink-0"
+              className="min-w-full flex-shrink-0 h-full"
             >
               {item}
             </div>

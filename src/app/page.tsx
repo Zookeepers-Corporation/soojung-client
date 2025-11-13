@@ -13,7 +13,7 @@ export default function Home() {
       <Header />
       <Hero />
       <Events />
-      {/* <Categories /> */}
+      <Categories />
       <Gallery />
       <Footer />
     </div>

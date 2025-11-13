@@ -4,13 +4,13 @@ export default function WelcomeHero() {
         <div
           className="absolute inset-0 bg-cover bg-center opacity-10"
           style={{
-            backgroundImage: "url('/grand-church-interior.png')",
+            backgroundImage: "url('/main.png')",
           }}
         />
   
         <div className="relative z-10 text-center">
-          <p className="text-gray-600 text-lg mb-2">강남교회 담임목사</p>
-          <h1 className="text-5xl font-bold text-gray-800">고문산</h1>
+          <p className="text-gray-600 text-lg mb-2">포항수정교회 담임목사</p>
+          <h1 className="text-5xl font-bold text-gray-800">김재곤</h1>
           <div className="w-32 h-1 bg-yellow-600 mx-auto mt-4" />
         </div>
       </section>

@@ -27,7 +27,7 @@ export default function Gallery() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">교회 소식</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">교회 갤러리를 보여줄 섹션</h2>
             <p className="text-gray-600">우리 교회의 다양한 활동들을 소개합니다.</p>
           </div>
   

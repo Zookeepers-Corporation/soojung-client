@@ -44,7 +44,7 @@ export default function Categories() {
         {/* Section Title */}
         <div className="text-center mb-16">
           <Heading variant="title4" className="mb-4">
-            주요 카테고리
+            공지사항, 교회소식, 성도소식을 미리보기로 보여줌
           </Heading>
           <Text variant="regular" color="secondary">
             교회 정보와 다양한 커뮤니티에 쉽게 접근하세요.

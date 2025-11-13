@@ -7,7 +7,7 @@ export default function PastorIntroduction() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="flex justify-center">
             <div className="relative w-full max-w-md aspect-square rounded-lg overflow-hidden shadow-lg">
-              <Image src="/pastor-in-library-portrait.jpg" alt="담임목사 고문산" fill className="object-cover" />
+              <Image src="" alt="담임목사 김재곤" fill className="object-cover" />
             </div>
           </div>
 

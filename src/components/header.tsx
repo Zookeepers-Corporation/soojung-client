@@ -23,6 +23,10 @@ export default function Header() {
       ],
     },
     {
+      label: "새가족안내",
+      href: "/intro/new-family",
+    },
+    {
       label: "말씀과 찬양",
       href: "#sermon",
       submenu: [
@@ -77,10 +81,18 @@ export default function Header() {
                 onMouseEnter={() => setOpenDropdown(item.label)}
                 onMouseLeave={() => setOpenDropdown(null)}
               >
-                <button className="flex items-center gap-1 text-gray-700 hover:text-blue-900 transition text-base font-bold">
-                  {item.label}
-                  {item.submenu && <ChevronDown size={16} />}
-                </button>
+                {item.submenu ? (
+                  <button className="text-gray-700 hover:text-blue-900 transition text-base font-bold">
+                    {item.label}
+                  </button>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="text-gray-700 hover:text-blue-900 transition text-base font-bold"
+                  >
+                    {item.label}
+                  </Link>
+                )}
 
                 {/* Dropdown Menu */}
                 {item.submenu && (
@@ -111,18 +123,25 @@ export default function Header() {
           <nav className="md:hidden pb-4 space-y-2">
             {menuItems.map((item) => (
               <div key={item.label}>
-                <button
-                  onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
-                  className="w-full flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-gray-100 rounded transition font-bold"
-                >
-                  {item.label}
-                  {item.submenu && (
+                {item.submenu ? (
+                  <button
+                    onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
+                    className="w-full flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-gray-100 rounded transition font-bold"
+                  >
+                    {item.label}
                     <ChevronDown
                       size={16}
                       className={`transform transition-transform ${openDropdown === item.label ? "rotate-180" : ""}`}
                     />
-                  )}
-                </button>
+                  </button>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="w-full flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded transition font-bold"
+                  >
+                    {item.label}
+                  </Link>
+                )}
 
                 {/* Mobile Submenu */}
                 {openDropdown === item.label && item.submenu && (

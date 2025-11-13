@@ -20,6 +20,7 @@ interface SermonListProps {
   posts: SermonPost[]
   itemsPerPage?: number
   showCategoryTabs?: boolean
+  customTabs?: React.ReactNode
 }
 
 export default function SermonList({
@@ -27,6 +28,7 @@ export default function SermonList({
   posts,
   itemsPerPage = 9,
   showCategoryTabs = true,
+  customTabs,
 }: SermonListProps) {
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -40,9 +42,10 @@ export default function SermonList({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Title */}
         <div className="mb-8 text-center">
-          <Heading variant="title4" className={showCategoryTabs ? "mb-6" : ""}>
+          <Heading variant="title4" className={showCategoryTabs || customTabs ? "mb-6" : ""}>
             {title}
           </Heading>
+          {customTabs && <div className="mb-6">{customTabs}</div>}
           {showCategoryTabs && <SermonCategoryTabs />}
         </div>
 

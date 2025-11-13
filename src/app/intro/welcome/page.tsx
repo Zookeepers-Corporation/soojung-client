@@ -11,7 +11,6 @@ export default function WelcomePage() {
       <main className="flex-grow">
         <WelcomeHero />
         <PastorIntroduction />
-        <ChurchValues />
       </main>
       <Footer />
     </div>
