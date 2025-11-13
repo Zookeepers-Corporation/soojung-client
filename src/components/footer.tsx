@@ -1,3 +1,5 @@
+import FooterMap from "./footer-map"
+
 export default function Footer() {
     return (
       <footer className="bg-gray-900 text-white py-16">
@@ -43,9 +45,9 @@ export default function Footer() {
             {/* Location */}
             <div>
               <h4 className="text-lg font-bold mb-4">찾아오는 길</h4>
-              <p className="text-gray-400 mb-4">서울시 강남구 테헤란로 123</p>
-              <div className="bg-gray-800 rounded-lg h-40 flex items-center justify-center">
-                <p className="text-gray-500">지도 영역</p>
+              <p className="text-gray-400 mb-4">경상북도 포항시 남구 대잠동</p>
+              <div className="bg-gray-800 rounded-lg h-40 overflow-hidden">
+                <FooterMap />
               </div>
             </div>
           </div>

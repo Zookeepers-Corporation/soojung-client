@@ -14,10 +14,10 @@ export default function Header() {
       href: "#intro",
       submenu: [
         { label: "환영인사", href: "/intro/welcome" },
-        { label: "교회비전", href: "/intro/vision" },
         { label: "교회소식", href: "/intro/news" },
-        { label: "성도", href: "/intro/members" },
-        { label: "예배시간", href: "/intro/schedule" },
+        { label: "성도소식", href: "/intro/members" },
+        { label: "섬기는 사람들", href: "/intro/staff" },
+        { label: "예배시간", href: "/intro/worship" },
         { label: "헌금안내", href: "/intro/donation" },
         { label: "오시는길", href: "/intro/location" },
       ],
