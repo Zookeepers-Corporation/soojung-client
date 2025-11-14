@@ -249,16 +249,16 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
 
     setIsUpdating(true)
     try {
-      // editImages 배열의 순서를 유지하면서 기존 이미지와 새 이미지를 분리
+      // editImages 배열의 순서대로 keepImageIdentifiers, keepImageOrders, newImages, newImageOrders 설정
       const keepImageIdentifiers: string[] = []
       const keepImageOrders: number[] = []
-      const newImageFiles: File[] = []
+      const newImages: File[] = []
       const newImageOrders: number[] = []
 
       editImages.forEach((img, index) => {
         if (img.isNew && img.file) {
           // 새 이미지인 경우
-          newImageFiles.push(img.file)
+          newImages.push(img.file)
           newImageOrders.push(index)
         } else if (img.identifier) {
           // 기존 이미지인 경우
@@ -272,7 +272,7 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
         content: editFormData.content.trim(),
         keepImageIdentifiers: keepImageIdentifiers.length > 0 ? keepImageIdentifiers : undefined,
         keepImageOrders: keepImageOrders.length > 0 ? keepImageOrders : undefined,
-        newImages: newImageFiles.length > 0 ? newImageFiles : undefined,
+        newImages: newImages.length > 0 ? newImages : undefined,
         newImageOrders: newImageOrders.length > 0 ? newImageOrders : undefined,
         deleteFileIdentifiers: deleteFileIdentifiers.length > 0 ? deleteFileIdentifiers : undefined,
         newFiles: newFiles.length > 0 ? newFiles : undefined,
@@ -627,7 +627,17 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
               onDelete={handleDelete}
             />
             <div className="pb-12">
-              <CommentSection comments={board.comments} commentCount={board.commentCount} />
+              <CommentSection
+                boardIdentifier={id}
+                comments={board.comments}
+                commentCount={board.commentCount}
+                onCommentUpdate={async () => {
+                  const refreshResponse = await getBoardDetail(id)
+                  if (refreshResponse.data) {
+                    setBoard(refreshResponse.data)
+                  }
+                }}
+              />
             </div>
           </>
         )}

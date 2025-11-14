@@ -11,6 +11,11 @@ import {
   BoardDetailApiResponse,
   BoardUpdateRequest,
   BoardUpdateApiResponse,
+  CommentCreateRequest,
+  CommentCreateApiResponse,
+  CommentUpdateRequest,
+  CommentUpdateApiResponse,
+  CommentDeleteApiResponse,
   API_ERROR_CODES,
   ApiResponseData,
 } from "@/types/api"
@@ -74,6 +79,9 @@ async function fetchApi<T>(
       responseData.code === API_ERROR_CODES.USER_NOT_APPROVED ||
       responseData.code === API_ERROR_CODES.USER_ALREADY_EXIST ||
       responseData.code === API_ERROR_CODES.SESSION_EXPIRED ||
+      responseData.code === API_ERROR_CODES.BOARD_NOT_FOUND ||
+      responseData.code === API_ERROR_CODES.COMMENT_UPDATE_FORBIDDEN ||
+      responseData.code === API_ERROR_CODES.COMMENT_DELETE_FORBIDDEN ||
       (responseData.code !== undefined && responseData.code >= 400)
 
     if (isError) {
@@ -120,6 +128,14 @@ async function fetchApi<T>(
       // 게시글을 찾을 수 없는 경우 (code가 40001인 경우)
       else if (responseData.code === API_ERROR_CODES.BOARD_NOT_FOUND) {
         errorMessage = responseData.message || "게시글을 찾을 수 없습니다."
+      }
+      // 댓글 수정 권한 없음 에러인 경우 (code가 40304인 경우)
+      else if (responseData.code === API_ERROR_CODES.COMMENT_UPDATE_FORBIDDEN) {
+        errorMessage = responseData.message || "댓글 수정 권한이 없습니다."
+      }
+      // 댓글 삭제 권한 없음 에러인 경우 (code가 40305인 경우)
+      else if (responseData.code === API_ERROR_CODES.COMMENT_DELETE_FORBIDDEN) {
+        errorMessage = responseData.message || "댓글 삭제 권한이 없습니다."
       }
 
       throw new ApiError(errorMessage, response.status, errorCode, validationErrors)
@@ -429,4 +445,49 @@ export async function createBoard(request: BoardCreateRequest): Promise<BoardCre
     }
     throw new Error("네트워크 오류가 발생했습니다.")
   }
+}
+
+/**
+ * 댓글 작성 API 호출
+ */
+export async function createComment(
+  boardIdentifier: string,
+  request: CommentCreateRequest
+): Promise<CommentCreateApiResponse> {
+  return fetchApi<CommentCreateApiResponse>(`/v1/boards/${boardIdentifier}/comments`, {
+    method: "POST",
+    body: JSON.stringify(request),
+  })
+}
+
+/**
+ * 댓글 수정 API 호출
+ */
+export async function updateComment(
+  boardIdentifier: string,
+  commentIdentifier: string,
+  request: CommentUpdateRequest
+): Promise<CommentUpdateApiResponse> {
+  return fetchApi<CommentUpdateApiResponse>(
+    `/v1/boards/${boardIdentifier}/comments/${commentIdentifier}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(request),
+    }
+  )
+}
+
+/**
+ * 댓글 삭제 API 호출
+ */
+export async function deleteComment(
+  boardIdentifier: string,
+  commentIdentifier: string
+): Promise<CommentDeleteApiResponse> {
+  return fetchApi<CommentDeleteApiResponse>(
+    `/v1/boards/${boardIdentifier}/comments/${commentIdentifier}`,
+    {
+      method: "DELETE",
+    }
+  )
 }

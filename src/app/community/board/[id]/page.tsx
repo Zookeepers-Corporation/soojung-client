@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, use } from "react"
 import { useRouter } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
@@ -11,13 +11,14 @@ import { BoardDetailResponse, API_ERROR_CODES } from "@/types/api"
 import Dialog from "@/components/ui/dialog"
 
 interface BoardDetailPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default function BoardDetailPage({ params }: BoardDetailPageProps) {
   const router = useRouter()
+  const { id } = use(params)
   const [board, setBoard] = useState<BoardDetailResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -26,7 +27,7 @@ export default function BoardDetailPage({ params }: BoardDetailPageProps) {
     const fetchData = async () => {
       setIsLoading(true)
       try {
-        const response = await getBoardDetail(params.id)
+        const response = await getBoardDetail(id)
         if (response.data) {
           setBoard(response.data)
         }
@@ -43,7 +44,7 @@ export default function BoardDetailPage({ params }: BoardDetailPageProps) {
     }
 
     fetchData()
-  }, [params.id, router])
+  }, [id, router])
 
   const formatDate = (dateString: string) => {
     try {
@@ -59,7 +60,7 @@ export default function BoardDetailPage({ params }: BoardDetailPageProps) {
   }
 
   const handleEdit = () => {
-    router.push(`/boards/edit/${params.id}`)
+    router.push(`/boards/edit/${id}`)
   }
 
   const handleDelete = () => {
@@ -108,7 +109,17 @@ export default function BoardDetailPage({ params }: BoardDetailPageProps) {
           onDelete={handleDelete}
         />
         <div className="pb-12">
-          <CommentSection comments={board.comments} commentCount={board.commentCount} />
+          <CommentSection
+            boardIdentifier={id}
+            comments={board.comments}
+            commentCount={board.commentCount}
+            onCommentUpdate={async () => {
+              const refreshResponse = await getBoardDetail(id)
+              if (refreshResponse.data) {
+                setBoard(refreshResponse.data)
+              }
+            }}
+          />
         </div>
       </main>
       <Footer />

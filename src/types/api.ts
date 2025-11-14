@@ -145,6 +145,22 @@ export interface BoardFileInfo {
   fileSize: number
 }
 
+// 댓글 작성 요청 타입
+export interface CommentCreateRequest {
+  content: string
+  parentCommentIdentifier?: string
+}
+
+// 댓글 작성 응답 타입
+export interface CommentCreateResponse {
+  commentIdentifier: string
+}
+
+// 댓글 수정 요청 타입
+export interface CommentUpdateRequest {
+  content: string
+}
+
 // 댓글 응답 타입
 export interface CommentResponse {
   identifier: string
@@ -157,6 +173,15 @@ export interface CommentResponse {
   replies: CommentResponse[]
   reply: boolean
 }
+
+// 댓글 작성 API 응답 타입
+export type CommentCreateApiResponse = ApiResponseData<CommentCreateResponse>
+
+// 댓글 수정 API 응답 타입
+export type CommentUpdateApiResponse = ApiResponseData<null>
+
+// 댓글 삭제 API 응답 타입
+export type CommentDeleteApiResponse = ApiResponseData<null>
 
 // 게시글 상세 응답 타입
 export interface BoardDetailResponse {
@@ -210,5 +235,7 @@ export const API_ERROR_CODES = {
   INVALID_FILE: 40204,
   INVALID_FILE_EXTENSION: 40205,
   BOARD_NOT_FOUND: 40001,
+  COMMENT_UPDATE_FORBIDDEN: 40304,
+  COMMENT_DELETE_FORBIDDEN: 40305,
 } as const
 
