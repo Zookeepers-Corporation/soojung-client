@@ -1,6 +1,8 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
+import { AuthProvider } from "@/contexts/auth-context"
+import SessionExpiredDialog from "@/components/session-expired-dialog"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -34,7 +36,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`font-sans antialiased`}>
-        {children}
+        <AuthProvider>
+          {children}
+          <SessionExpiredDialog />
+        </AuthProvider>
         <Analytics />
       </body>
     </html>
