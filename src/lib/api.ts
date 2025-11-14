@@ -6,6 +6,8 @@ import {
   HomeApiResponse,
   BoardCategory,
   BoardListApiResponse,
+  BoardCreateRequest,
+  BoardCreateApiResponse,
   API_ERROR_CODES,
   ApiResponseData,
 } from "@/types/api"
@@ -175,4 +177,82 @@ export async function getBoardList(
   return fetchApi<BoardListApiResponse>(`/v1/boards?${params.toString()}`, {
     method: "GET",
   })
+}
+
+/**
+ * 게시글 작성 API 호출 (multipart/form-data)
+ */
+export async function createBoard(request: BoardCreateRequest): Promise<BoardCreateApiResponse> {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
+  const url = `${API_URL}/v1/boards`
+
+  const formData = new FormData()
+  formData.append("title", request.title)
+  if (request.content) {
+    formData.append("content", request.content)
+  }
+  formData.append("category", request.category)
+
+  // 이미지 파일 추가
+  if (request.images && request.images.length > 0) {
+    request.images.forEach((image) => {
+      formData.append("images", image)
+    })
+  }
+
+  // 이미지 순서 추가
+  if (request.imageOrders && request.imageOrders.length > 0) {
+    request.imageOrders.forEach((order) => {
+      formData.append("imageOrders", order.toString())
+    })
+  }
+
+  // 첨부 파일 추가
+  if (request.files && request.files.length > 0) {
+    request.files.forEach((file) => {
+      formData.append("files", file)
+    })
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    })
+
+    const responseData: ApiResponseData<unknown> = await response.json()
+
+    if (!response.ok || (responseData.code !== undefined && responseData.code >= 400)) {
+      let errorMessage = responseData.message || "요청 처리 중 오류가 발생했습니다."
+      const errorCode: number | undefined = responseData.code
+
+      // 관리자 전용 카테고리 에러
+      if (responseData.code === API_ERROR_CODES.ADMIN_ONLY) {
+        errorMessage = responseData.message || "관리자만 접근할 수 있습니다."
+      }
+      // 파일 업로드 관련 에러
+      else if (
+        responseData.code === API_ERROR_CODES.FILE_UPLOAD_FAILED ||
+        responseData.code === API_ERROR_CODES.FILE_SIZE_EXCEEDED ||
+        responseData.code === API_ERROR_CODES.INVALID_IMAGE_FILE ||
+        responseData.code === API_ERROR_CODES.INVALID_FILE ||
+        responseData.code === API_ERROR_CODES.INVALID_FILE_EXTENSION
+      ) {
+        errorMessage = responseData.message || "파일 업로드 중 오류가 발생했습니다."
+      }
+
+      throw new ApiError(errorMessage, response.status, errorCode)
+    }
+
+    return responseData as BoardCreateApiResponse
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error
+    }
+    if (error instanceof Error) {
+      throw error
+    }
+    throw new Error("네트워크 오류가 발생했습니다.")
+  }
 }

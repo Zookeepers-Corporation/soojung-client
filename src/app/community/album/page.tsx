@@ -61,6 +61,7 @@ export default function AlbumPage() {
             currentPage={currentPage}
             onPageChange={handlePageChange}
             basePath="/community/album"
+            category={BoardCategory.ALBUM}
             showCategoryTabs={false}
           />
         )}

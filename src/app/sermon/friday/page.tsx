@@ -61,6 +61,7 @@ export default function FridaySermonPage() {
             currentPage={currentPage}
             onPageChange={handlePageChange}
             basePath="/sermon/friday"
+            category={BoardCategory.FRIDAY_PRAYER}
           />
         )}
       </main>

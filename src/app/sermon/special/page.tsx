@@ -61,6 +61,7 @@ export default function SpecialSermonPage() {
             currentPage={currentPage}
             onPageChange={handlePageChange}
             basePath="/sermon/special"
+            category={BoardCategory.SPECIAL_WORSHIP}
           />
         )}
       </main>

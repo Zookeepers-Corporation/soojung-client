@@ -61,6 +61,7 @@ export default function BoardPage() {
             currentPage={currentPage}
             onPageChange={handlePageChange}
             basePath="/community/board"
+            category={BoardCategory.BOARD}
             showCategoryTabs={false}
           />
         )}

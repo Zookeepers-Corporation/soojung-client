@@ -1,10 +1,12 @@
 "use client"
 
+import Link from "next/link"
 import SermonPostCard from "./sermon-post-card"
 import SermonCategoryTabs from "./sermon-category-tabs"
 import Pagination from "@/components/ui/pagination"
 import { Heading, Text } from "@/components/ui/typography"
-import { BoardListResponse, PageInfo } from "@/types/api"
+import { BoardListResponse, PageInfo, BoardCategory, UserRole } from "@/types/api"
+import { useAuth } from "@/contexts/auth-context"
 
 interface SermonListProps {
   title: string
@@ -15,6 +17,7 @@ interface SermonListProps {
   showCategoryTabs?: boolean
   customTabs?: React.ReactNode
   basePath: string // 예: "/sermon/sunday"
+  category: BoardCategory
 }
 
 export default function SermonList({
@@ -26,7 +29,24 @@ export default function SermonList({
   showCategoryTabs = true,
   customTabs,
   basePath,
+  category,
 }: SermonListProps) {
+  const { isLoggedIn, user } = useAuth()
+
+  // 관리자 전용 카테고리인지 확인
+  const isAdminOnlyCategory =
+    category === BoardCategory.SUNDAY_WORSHIP ||
+    category === BoardCategory.WEDNESDAY_WORSHIP ||
+    category === BoardCategory.FRIDAY_PRAYER ||
+    category === BoardCategory.DAWN_PRAYER ||
+    category === BoardCategory.SPECIAL_WORSHIP
+
+  // 작성 버튼 표시 여부
+  const canWrite =
+    isAdminOnlyCategory
+      ? isLoggedIn && user?.role === UserRole.ADMIN
+      : isLoggedIn
+
   // 날짜 포맷팅 (ISO 8601 -> YYYY-MM-DD)
   const formatDate = (dateString: string) => {
     try {
@@ -46,9 +66,17 @@ export default function SermonList({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Title */}
         <div className="mb-8 text-center">
-          <Heading variant="title4" className={showCategoryTabs || customTabs ? "mb-6" : ""}>
-            {title}
-          </Heading>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <Heading variant="title4">{title}</Heading>
+            {canWrite && (
+              <Link
+                href={`/boards/write?category=${category}`}
+                className="text-[#5E6AD2] hover:text-[#4E5BBD] font-medium text-sm transition-colors"
+              >
+                게시글 작성
+              </Link>
+            )}
+          </div>
           {customTabs && <div className="mb-6">{customTabs}</div>}
           {showCategoryTabs && <SermonCategoryTabs />}
         </div>

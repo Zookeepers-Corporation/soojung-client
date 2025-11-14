@@ -61,6 +61,7 @@ export default function DawnSermonPage() {
             currentPage={currentPage}
             onPageChange={handlePageChange}
             basePath="/sermon/dawn"
+            category={BoardCategory.DAWN_PRAYER}
           />
         )}
       </main>

@@ -26,6 +26,12 @@ export interface UserLoginRequest {
   password: string
 }
 
+// 사용자 역할 enum
+export enum UserRole {
+  ADMIN = "ADMIN",
+  USER = "USER",
+}
+
 // 로그인 응답 데이터 타입
 export interface UserLoginResponse {
   identifier: string
@@ -33,6 +39,7 @@ export interface UserLoginResponse {
   name: string
   email?: string
   phoneNumber?: string
+  role?: UserRole
 }
 
 // 로그인 응답 타입
@@ -105,6 +112,24 @@ export type BoardListPageResponse = PageResponse<BoardListResponse>
 // 게시글 리스트 API 응답 타입
 export type BoardListApiResponse = ApiResponseData<BoardListPageResponse>
 
+// 게시글 작성 요청 타입
+export interface BoardCreateRequest {
+  title: string
+  content?: string
+  category: BoardCategory
+  images?: File[]
+  imageOrders?: number[]
+  files?: File[]
+}
+
+// 게시글 작성 응답 타입
+export interface BoardCreateResponse {
+  identifier: string
+}
+
+// 게시글 작성 API 응답 타입
+export type BoardCreateApiResponse = ApiResponseData<BoardCreateResponse>
+
 // API 에러 코드 상수
 export const API_ERROR_CODES = {
   VALIDATION_ERROR: 100,
@@ -113,5 +138,11 @@ export const API_ERROR_CODES = {
   USER_NOT_APPROVED: 40102,
   USER_ALREADY_EXIST: 40104,
   SESSION_EXPIRED: 40105,
+  ADMIN_ONLY: 40301,
+  FILE_UPLOAD_FAILED: 40200,
+  FILE_SIZE_EXCEEDED: 40202,
+  INVALID_IMAGE_FILE: 40203,
+  INVALID_FILE: 40204,
+  INVALID_FILE_EXTENSION: 40205,
 } as const
 

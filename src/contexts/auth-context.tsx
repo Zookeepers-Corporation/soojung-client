@@ -14,14 +14,26 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+const USER_STORAGE_KEY = "user"
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState<UserLoginResponse | null>(null)
   const router = useRouter()
 
-  // 초기 로드 시 세션 확인
+  // 초기 로드 시 세션 스토리지에서 사용자 정보 복원
   useEffect(() => {
-    checkSession()
+    const storedUser = sessionStorage.getItem(USER_STORAGE_KEY)
+    if (storedUser) {
+      try {
+        const userData = JSON.parse(storedUser) as UserLoginResponse
+        setIsLoggedIn(true)
+        setUser(userData)
+      } catch (error) {
+        // 저장된 데이터가 유효하지 않으면 삭제
+        sessionStorage.removeItem(USER_STORAGE_KEY)
+      }
+    }
   }, [])
 
   // 세션 만료 이벤트 리스너
@@ -29,6 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const handleSessionExpired = (event: CustomEvent) => {
       setIsLoggedIn(false)
       setUser(null)
+      sessionStorage.removeItem(USER_STORAGE_KEY)
       // 세션 만료 Dialog는 전역에서 처리
     }
 
@@ -41,11 +54,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = (userData: UserLoginResponse) => {
     setIsLoggedIn(true)
     setUser(userData)
+    // 세션 스토리지에 저장
+    sessionStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData))
   }
 
   const logout = async () => {
     setIsLoggedIn(false)
     setUser(null)
+    // 세션 스토리지에서 삭제
+    sessionStorage.removeItem(USER_STORAGE_KEY)
     
     // 로그아웃 API 호출 (세션 삭제)
     try {
@@ -63,28 +80,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const checkSession = async () => {
-    try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
-      const response = await fetch(`${API_URL}/v1/users/me`, {
-        method: "GET",
-        credentials: "include",
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        if (data.code === 200 && data.data) {
-          setIsLoggedIn(true)
-          setUser(data.data)
-        } else {
-          setIsLoggedIn(false)
-          setUser(null)
-        }
-      } else {
+    // 세션 스토리지에서 확인
+    const storedUser = sessionStorage.getItem(USER_STORAGE_KEY)
+    if (storedUser) {
+      try {
+        const userData = JSON.parse(storedUser) as UserLoginResponse
+        setIsLoggedIn(true)
+        setUser(userData)
+      } catch (error) {
+        sessionStorage.removeItem(USER_STORAGE_KEY)
         setIsLoggedIn(false)
         setUser(null)
       }
-    } catch (error) {
-      // 세션 확인 실패 시 로그인하지 않은 것으로 처리
+    } else {
       setIsLoggedIn(false)
       setUser(null)
     }
