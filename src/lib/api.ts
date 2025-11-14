@@ -8,6 +8,9 @@ import {
   BoardListApiResponse,
   BoardCreateRequest,
   BoardCreateApiResponse,
+  BoardDetailApiResponse,
+  BoardUpdateRequest,
+  BoardUpdateApiResponse,
   API_ERROR_CODES,
   ApiResponseData,
 } from "@/types/api"
@@ -114,6 +117,10 @@ async function fetchApi<T>(
       else if (responseData.code === API_ERROR_CODES.USER_NOT_APPROVED) {
         errorMessage = responseData.message || "관리자 승인이 필요합니다. 승인 후 로그인해주세요."
       }
+      // 게시글을 찾을 수 없는 경우 (code가 40001인 경우)
+      else if (responseData.code === API_ERROR_CODES.BOARD_NOT_FOUND) {
+        errorMessage = responseData.message || "게시글을 찾을 수 없습니다."
+      }
 
       throw new ApiError(errorMessage, response.status, errorCode, validationErrors)
     }
@@ -180,6 +187,144 @@ export async function getBoardList(
 }
 
 /**
+ * 게시글 상세 조회 API 호출
+ */
+export async function getBoardDetail(identifier: string): Promise<BoardDetailApiResponse> {
+  return fetchApi<BoardDetailApiResponse>(`/v1/boards/${identifier}`, {
+    method: "GET",
+  })
+}
+
+/**
+ * 게시글 수정 API 호출 (multipart/form-data)
+ */
+export async function updateBoard(
+  identifier: string,
+  request: BoardUpdateRequest
+): Promise<BoardUpdateApiResponse> {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
+  const url = `${API_URL}/v1/boards/${identifier}`
+
+  const formData = new FormData()
+  formData.append("title", request.title)
+  if (request.content) {
+    formData.append("content", request.content)
+  }
+
+  // 유지할 이미지 identifier 추가
+  if (request.keepImageIdentifiers && request.keepImageIdentifiers.length > 0) {
+    request.keepImageIdentifiers.forEach((identifier) => {
+      formData.append("keepImageIdentifiers", identifier)
+    })
+  }
+
+  // 유지할 이미지 순서 추가
+  if (request.keepImageOrders && request.keepImageOrders.length > 0) {
+    request.keepImageOrders.forEach((order) => {
+      formData.append("keepImageOrders", order.toString())
+    })
+  }
+
+  // 새 이미지 파일 추가
+  if (request.newImages && request.newImages.length > 0) {
+    request.newImages.forEach((image) => {
+      formData.append("newImages", image)
+    })
+  }
+
+  // 새 이미지 순서 추가
+  if (request.newImageOrders && request.newImageOrders.length > 0) {
+    request.newImageOrders.forEach((order) => {
+      formData.append("newImageOrders", order.toString())
+    })
+  }
+
+  // 삭제할 파일 identifier 추가
+  if (request.deleteFileIdentifiers && request.deleteFileIdentifiers.length > 0) {
+    request.deleteFileIdentifiers.forEach((identifier) => {
+      formData.append("deleteFileIdentifiers", identifier)
+    })
+  }
+
+  // 새 파일 추가
+  if (request.newFiles && request.newFiles.length > 0) {
+    request.newFiles.forEach((file) => {
+      formData.append("newFiles", file)
+    })
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      credentials: "include",
+      body: formData,
+    })
+
+    const responseData: ApiResponseData<unknown> = await response.json()
+
+    if (!response.ok || (responseData.code !== undefined && responseData.code >= 400)) {
+      let errorMessage = responseData.message || "요청 처리 중 오류가 발생했습니다."
+      const errorCode: number | undefined = responseData.code
+      let validationErrors: string[] | undefined
+
+      // Validation 에러인 경우
+      if (
+        responseData.code === API_ERROR_CODES.VALIDATION_ERROR &&
+        Array.isArray(responseData.data)
+      ) {
+        validationErrors = responseData.data as string[]
+        errorMessage = responseData.message || "유효성 검사 오류"
+      }
+      // 세션 만료 에러인 경우
+      else if (responseData.code === API_ERROR_CODES.SESSION_EXPIRED) {
+        errorMessage = responseData.message || "세션이 만료되었습니다. 다시 로그인해주세요."
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("session-expired", {
+              detail: { message: errorMessage },
+            })
+          )
+        }
+      }
+      // 인증 필요 에러인 경우
+      else if (responseData.code === API_ERROR_CODES.UNAUTHORIZED) {
+        errorMessage = responseData.message || "인증이 필요합니다."
+        if (typeof window !== "undefined") {
+          window.location.href = "/login"
+        }
+      }
+      // 수정 권한 없음 에러
+      else if (responseData.code === API_ERROR_CODES.BOARD_UPDATE_FORBIDDEN) {
+        errorMessage = responseData.message || "게시글 수정 권한이 없습니다."
+      }
+      // 파일 업로드/삭제 관련 에러
+      else if (
+        responseData.code === API_ERROR_CODES.FILE_UPLOAD_FAILED ||
+        responseData.code === API_ERROR_CODES.FILE_DELETE_FAILED ||
+        responseData.code === API_ERROR_CODES.FILE_SIZE_EXCEEDED ||
+        responseData.code === API_ERROR_CODES.INVALID_IMAGE_FILE ||
+        responseData.code === API_ERROR_CODES.INVALID_FILE ||
+        responseData.code === API_ERROR_CODES.INVALID_FILE_EXTENSION
+      ) {
+        errorMessage = responseData.message || "파일 처리 중 오류가 발생했습니다."
+      }
+
+      throw new ApiError(errorMessage, response.status, errorCode, validationErrors)
+    }
+
+    return responseData as BoardUpdateApiResponse
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error
+    }
+    if (error instanceof Error) {
+      throw error
+    }
+    throw new Error("네트워크 오류가 발생했습니다.")
+  }
+}
+
+/**
  * 게시글 작성 API 호출 (multipart/form-data)
  */
 export async function createBoard(request: BoardCreateRequest): Promise<BoardCreateApiResponse> {
@@ -226,9 +371,38 @@ export async function createBoard(request: BoardCreateRequest): Promise<BoardCre
     if (!response.ok || (responseData.code !== undefined && responseData.code >= 400)) {
       let errorMessage = responseData.message || "요청 처리 중 오류가 발생했습니다."
       const errorCode: number | undefined = responseData.code
+      let validationErrors: string[] | undefined
 
+      // Validation 에러인 경우
+      if (
+        responseData.code === API_ERROR_CODES.VALIDATION_ERROR &&
+        Array.isArray(responseData.data)
+      ) {
+        validationErrors = responseData.data as string[]
+        errorMessage = responseData.message || "유효성 검사 오류"
+      }
+      // 세션 만료 에러인 경우 (code가 40105인 경우)
+      else if (responseData.code === API_ERROR_CODES.SESSION_EXPIRED) {
+        errorMessage = responseData.message || "세션이 만료되었습니다. 다시 로그인해주세요."
+        // 세션 만료는 특별 처리 (전역 Dialog 표시)
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("session-expired", {
+              detail: { message: errorMessage },
+            })
+          )
+        }
+      }
+      // 인증 필요 에러인 경우 (code가 40100인 경우)
+      else if (responseData.code === API_ERROR_CODES.UNAUTHORIZED) {
+        errorMessage = responseData.message || "인증이 필요합니다."
+        // 로그인 페이지로 리다이렉트
+        if (typeof window !== "undefined") {
+          window.location.href = "/login"
+        }
+      }
       // 관리자 전용 카테고리 에러
-      if (responseData.code === API_ERROR_CODES.ADMIN_ONLY) {
+      else if (responseData.code === API_ERROR_CODES.ADMIN_ONLY) {
         errorMessage = responseData.message || "관리자만 접근할 수 있습니다."
       }
       // 파일 업로드 관련 에러
@@ -242,7 +416,7 @@ export async function createBoard(request: BoardCreateRequest): Promise<BoardCre
         errorMessage = responseData.message || "파일 업로드 중 오류가 발생했습니다."
       }
 
-      throw new ApiError(errorMessage, response.status, errorCode)
+      throw new ApiError(errorMessage, response.status, errorCode, validationErrors)
     }
 
     return responseData as BoardCreateApiResponse

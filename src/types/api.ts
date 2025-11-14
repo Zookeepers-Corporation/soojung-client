@@ -130,6 +130,68 @@ export interface BoardCreateResponse {
 // 게시글 작성 API 응답 타입
 export type BoardCreateApiResponse = ApiResponseData<BoardCreateResponse>
 
+// 게시글 이미지 정보 타입
+export interface BoardImageInfo {
+  identifier: string
+  imageUrl: string
+  displayOrder: number
+}
+
+// 게시글 파일 정보 타입
+export interface BoardFileInfo {
+  identifier: string
+  fileUrl: string
+  originalFileName: string
+  fileSize: number
+}
+
+// 댓글 응답 타입
+export interface CommentResponse {
+  identifier: string
+  content: string
+  authorName: string
+  authorIdentifier: string
+  createdAt: string
+  canEdit: boolean
+  canDelete: boolean
+  replies: CommentResponse[]
+  reply: boolean
+}
+
+// 게시글 상세 응답 타입
+export interface BoardDetailResponse {
+  identifier: string
+  title: string
+  content: string
+  authorName: string
+  authorIdentifier: string
+  createdAt: string
+  images: BoardImageInfo[]
+  files: BoardFileInfo[]
+  comments: CommentResponse[]
+  commentCount: number
+  canEdit: boolean
+  canDelete: boolean
+}
+
+// 게시글 상세 API 응답 타입
+export type BoardDetailApiResponse = ApiResponseData<BoardDetailResponse>
+
+// 게시글 수정 요청 타입
+export interface BoardUpdateRequest {
+  title: string
+  content?: string
+  keepImageIdentifiers?: string[]
+  keepImageOrders?: number[]
+  newImages?: File[]
+  newImageOrders?: number[]
+  deleteFileIdentifiers?: string[]
+  newFiles?: File[]
+}
+
+// 게시글 수정 API 응답 타입
+export type BoardUpdateApiResponse = ApiResponseData<null>
+
 // API 에러 코드 상수
 export const API_ERROR_CODES = {
   VALIDATION_ERROR: 100,
@@ -139,10 +201,14 @@ export const API_ERROR_CODES = {
   USER_ALREADY_EXIST: 40104,
   SESSION_EXPIRED: 40105,
   ADMIN_ONLY: 40301,
+  BOARD_DELETE_FORBIDDEN: 40302,
+  BOARD_UPDATE_FORBIDDEN: 40303,
   FILE_UPLOAD_FAILED: 40200,
+  FILE_DELETE_FAILED: 40201,
   FILE_SIZE_EXCEEDED: 40202,
   INVALID_IMAGE_FILE: 40203,
   INVALID_FILE: 40204,
   INVALID_FILE_EXTENSION: 40205,
+  BOARD_NOT_FOUND: 40001,
 } as const
 
