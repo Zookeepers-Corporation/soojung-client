@@ -4,6 +4,8 @@ import {
   UserLoginRequest,
   UserLoginApiResponse,
   HomeApiResponse,
+  BoardCategory,
+  BoardListApiResponse,
   API_ERROR_CODES,
   ApiResponseData,
 } from "@/types/api"
@@ -152,6 +154,25 @@ export async function login(request: UserLoginRequest): Promise<UserLoginApiResp
  */
 export async function getHomeInfo(): Promise<HomeApiResponse> {
   return fetchApi<HomeApiResponse>("/v1/home", {
+    method: "GET",
+  })
+}
+
+/**
+ * 게시글 리스트 조회 API 호출
+ */
+export async function getBoardList(
+  category: BoardCategory,
+  page: number = 0,
+  size: number = 20
+): Promise<BoardListApiResponse> {
+  const params = new URLSearchParams({
+    category,
+    page: page.toString(),
+    size: size.toString(),
+  })
+
+  return fetchApi<BoardListApiResponse>(`/v1/boards?${params.toString()}`, {
     method: "GET",
   })
 }

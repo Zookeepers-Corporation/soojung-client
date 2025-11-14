@@ -1,41 +1,45 @@
 "use client"
 
-import { useState } from "react"
 import SermonPostCard from "./sermon-post-card"
 import SermonCategoryTabs from "./sermon-category-tabs"
 import Pagination from "@/components/ui/pagination"
 import { Heading, Text } from "@/components/ui/typography"
-
-interface SermonPost {
-  id: string | number
-  title: string
-  date: string
-  image?: string
-  excerpt?: string
-  href: string
-}
+import { BoardListResponse, PageInfo } from "@/types/api"
 
 interface SermonListProps {
   title: string
-  posts: SermonPost[]
-  itemsPerPage?: number
+  posts: BoardListResponse[]
+  pageInfo: PageInfo
+  currentPage: number
+  onPageChange: (page: number) => void
   showCategoryTabs?: boolean
   customTabs?: React.ReactNode
+  basePath: string // 예: "/sermon/sunday"
 }
 
 export default function SermonList({
   title,
   posts,
-  itemsPerPage = 9,
+  pageInfo,
+  currentPage,
+  onPageChange,
   showCategoryTabs = true,
   customTabs,
+  basePath,
 }: SermonListProps) {
-  const [currentPage, setCurrentPage] = useState(1)
-
-  const totalPages = Math.ceil(posts.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentPosts = posts.slice(startIndex, endIndex)
+  // 날짜 포맷팅 (ISO 8601 -> YYYY-MM-DD)
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString)
+      return date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+    } catch {
+      return dateString
+    }
+  }
 
   return (
     <div className="py-12 md:py-16">
@@ -50,28 +54,27 @@ export default function SermonList({
         </div>
 
         {/* Posts Grid */}
-        {currentPosts.length > 0 ? (
+        {posts.length > 0 ? (
           <>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {currentPosts.map((post) => (
+              {posts.map((post) => (
                 <SermonPostCard
-                  key={post.id}
-                  id={post.id}
+                  key={post.identifier}
+                  id={post.identifier}
                   title={post.title}
-                  date={post.date}
-                  image={post.image}
-                  excerpt={post.excerpt}
-                  href={post.href}
+                  date={formatDate(post.createdAt)}
+                  image={post.thumbnailUrl}
+                  href={`${basePath}/${post.identifier}`}
                 />
               ))}
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
+            {pageInfo.totalPages > 1 && (
               <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
+                currentPage={currentPage + 1} // API는 0부터 시작, UI는 1부터 시작
+                totalPages={pageInfo.totalPages}
+                onPageChange={(page) => onPageChange(page - 1)} // UI는 1부터 시작, API는 0부터 시작
               />
             )}
           </>

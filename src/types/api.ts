@@ -64,6 +64,47 @@ export interface HomeResponse {
 // 홈 API 응답 타입
 export type HomeApiResponse = ApiResponseData<HomeResponse>
 
+// 게시판 카테고리 enum
+export enum BoardCategory {
+  SUNDAY_WORSHIP = "SUNDAY_WORSHIP",
+  WEDNESDAY_WORSHIP = "WEDNESDAY_WORSHIP",
+  FRIDAY_PRAYER = "FRIDAY_PRAYER",
+  DAWN_PRAYER = "DAWN_PRAYER",
+  SPECIAL_WORSHIP = "SPECIAL_WORSHIP",
+  BOARD = "BOARD",
+  ALBUM = "ALBUM",
+  ARCHIVE = "ARCHIVE",
+}
+
+// 게시글 리스트 응답 아이템 타입
+export interface BoardListResponse {
+  identifier: string
+  title: string
+  authorName: string
+  thumbnailUrl?: string
+  createdAt: string
+}
+
+// 페이지 정보 타입
+export interface PageInfo {
+  size: number
+  number: number
+  totalElements: number
+  totalPages: number
+}
+
+// 페이지네이션 응답 타입
+export interface PageResponse<T> {
+  content: T[]
+  page: PageInfo
+}
+
+// 게시글 리스트 페이지 응답 타입
+export type BoardListPageResponse = PageResponse<BoardListResponse>
+
+// 게시글 리스트 API 응답 타입
+export type BoardListApiResponse = ApiResponseData<BoardListPageResponse>
+
 // API 에러 코드 상수
 export const API_ERROR_CODES = {
   VALIDATION_ERROR: 100,

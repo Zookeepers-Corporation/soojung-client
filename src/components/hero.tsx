@@ -9,10 +9,10 @@ interface HeroProps {
 }
 
 export default function Hero({ banners }: HeroProps) {
-  // 배너가 없을 경우 기본 이미지 사용
-  const displayBanners = banners.length > 0 
-    ? banners 
-    : [{ identifier: "default", imageUrl: "/main.jpg", displayOrder: 0 }]
+  // 배너가 없으면 렌더링하지 않음
+  if (banners.length === 0) {
+    return null
+  }
 
   return (
     <section className="relative w-full h-96 md:h-screen overflow-hidden">
@@ -20,11 +20,11 @@ export default function Hero({ banners }: HeroProps) {
         <Carousel
           autoPlay={true}
           autoPlayInterval={5000}
-          showIndicators={displayBanners.length > 1}
-          showArrows={displayBanners.length > 1}
+          showIndicators={banners.length > 1}
+          showArrows={banners.length > 1}
           className="h-full"
         >
-          {displayBanners.map((banner, index) => (
+          {banners.map((banner, index) => (
             <div key={banner.identifier} className="relative w-full h-96 md:h-screen">
               <Image
                 src={banner.imageUrl}

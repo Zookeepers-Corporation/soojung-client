@@ -15,6 +15,7 @@ import { BannerItem, NextWeekEventConfig } from "@/types/api"
 export default function Home() {
   const [banners, setBanners] = useState<BannerItem[]>([])
   const [nextWeekEvent, setNextWeekEvent] = useState<NextWeekEventConfig | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchHomeData = async () => {
@@ -31,6 +32,8 @@ export default function Home() {
       } catch (error) {
         console.error("홈 정보 조회 실패:", error)
         // 에러 발생 시 기본값 유지
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -40,7 +43,7 @@ export default function Home() {
   return (
     <div className="w-full">
       <Header />
-      <Hero banners={banners} />
+      {!isLoading && banners.length > 0 && <Hero banners={banners} />}
       <Events nextWeekEvent={nextWeekEvent} />
       <Categories />
       <Gallery />
