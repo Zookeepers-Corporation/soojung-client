@@ -76,6 +76,17 @@ export interface NextWeekEventConfig {
   content: string
 }
 
+// 다음주 행사 설정 수정 요청 타입
+export interface UpdateNextWeekEventRequest {
+  content: string
+}
+
+// 다음주 행사 설정 조회 API 응답 타입
+export type NextWeekEventConfigApiResponse = ApiResponseData<NextWeekEventConfig>
+
+// 다음주 행사 설정 수정 API 응답 타입
+export type UpdateNextWeekEventApiResponse = ApiResponseData<null>
+
 // 홈 응답 타입
 export interface HomeResponse {
   banners: HomeBannerResponse

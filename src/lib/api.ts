@@ -20,6 +20,9 @@ import {
   HomeBannerApiResponse,
   UpdateHomeBannerRequest,
   UpdateHomeBannerApiResponse,
+  NextWeekEventConfigApiResponse,
+  UpdateNextWeekEventRequest,
+  UpdateNextWeekEventApiResponse,
   API_ERROR_CODES,
   ApiResponseData,
 } from "@/types/api"
@@ -597,5 +600,26 @@ export async function updateHomeBannerConfig(
   return fetchApi<UpdateHomeBannerApiResponse>("/v1/admin/configs/home-banner", {
     method: "PUT",
     body: formData,
+  })
+}
+
+/**
+ * 관리자 다음주 이벤트 설정 조회 API 호출
+ */
+export async function getNextWeekEventConfig(): Promise<NextWeekEventConfigApiResponse> {
+  return fetchApi<NextWeekEventConfigApiResponse>("/v1/admin/configs/next-week-event", {
+    method: "GET",
+  })
+}
+
+/**
+ * 관리자 다음주 이벤트 설정 수정 API 호출
+ */
+export async function updateNextWeekEventConfig(
+  request: UpdateNextWeekEventRequest
+): Promise<UpdateNextWeekEventApiResponse> {
+  return fetchApi<UpdateNextWeekEventApiResponse>("/v1/admin/configs/next-week-event", {
+    method: "PUT",
+    body: JSON.stringify(request),
   })
 }
