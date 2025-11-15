@@ -2,40 +2,33 @@
 
 import Image from "next/image"
 import Carousel from "@/components/ui/carousel"
+import { BannerItem } from "@/types/api"
 
-// Hero 이미지 목록 (추가 이미지는 여기에 추가하세요)
-const heroImages = [
-  {
-    src: "/main.jpg",
-    alt: "교회 예배",
-  },
-  // 추가 이미지를 원하시면 아래에 추가하세요
-  {
-    src: "/main.jpg",
-    alt: "교회 행사",
-  },
-  // {
-  //   src: "/hero-image-3.jpg",
-  //   alt: "교회 모임",
-  // },
-]
+interface HeroProps {
+  banners: BannerItem[]
+}
 
-export default function Hero() {
+export default function Hero({ banners }: HeroProps) {
+  // 배너가 없으면 렌더링하지 않음
+  if (banners.length === 0) {
+    return null
+  }
+
   return (
     <section className="relative w-full h-96 md:h-screen overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
         <Carousel
           autoPlay={true}
           autoPlayInterval={5000}
-          showIndicators={true}
-          showArrows={true}
+          showIndicators={banners.length > 1}
+          showArrows={banners.length > 1}
           className="h-full"
         >
-          {heroImages.map((image, index) => (
-            <div key={index} className="relative w-full h-96 md:h-screen">
+          {banners.map((banner, index) => (
+            <div key={banner.identifier} className="relative w-full h-96 md:h-screen">
               <Image
-                src={image.src}
-                alt={image.alt}
+                src={banner.imageUrl}
+                alt={`배너 이미지 ${index + 1}`}
                 fill
                 priority={index === 0}
                 quality={85}

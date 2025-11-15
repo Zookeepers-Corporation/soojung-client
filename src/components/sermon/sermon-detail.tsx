@@ -2,6 +2,7 @@
 
 import Carousel from "@/components/ui/carousel"
 import Card from "@/components/ui/card"
+import Button from "@/components/ui/button"
 import { Heading, Text } from "@/components/ui/typography"
 import Image from "next/image"
 
@@ -11,6 +12,10 @@ interface SermonDetailProps {
   date: string
   images?: string[]
   content: string
+  canEdit?: boolean
+  canDelete?: boolean
+  onEdit?: () => void
+  onDelete?: () => void
 }
 
 export default function SermonDetail({
@@ -19,15 +24,35 @@ export default function SermonDetail({
   date,
   images = [],
   content,
+  canEdit = false,
+  canDelete = false,
+  onEdit,
+  onDelete,
 }: SermonDetailProps) {
   return (
     <div className="py-12 md:py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <Heading variant="title3" className="mb-4">
-            {title}
-          </Heading>
+          <div className="flex items-start justify-between mb-4">
+            <Heading variant="title3" className="flex-1">
+              {title}
+            </Heading>
+            {(canEdit || canDelete) && (
+              <div className="flex gap-2 ml-4">
+                {canEdit && (
+                  <Button variant="secondary" onClick={onEdit}>
+                    수정
+                  </Button>
+                )}
+                {canDelete && (
+                  <Button variant="secondary" onClick={onDelete}>
+                    삭제
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
           <div className="flex flex-wrap items-center gap-4 text-[#6B7075]">
             <Text variant="small" color="tertiary">
               작성자: {author}

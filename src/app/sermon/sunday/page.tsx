@@ -1,39 +1,69 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import SermonList from "@/components/sermon/sermon-list"
-
-// TODO: API 연결 후 실제 데이터로 교체
-const mockPosts = [
-  {
-    id: 1,
-    title: "2025년 1월 첫째 주 설교",
-    date: "2025-01-05",
-    excerpt: "하나님의 말씀으로 시작하는 새해입니다.",
-    href: "/sermon/sunday/1",
-  },
-  {
-    id: 2,
-    title: "2025년 1월 둘째 주 설교",
-    date: "2025-01-12",
-    excerpt: "믿음으로 나아가는 한 주가 되기를 바랍니다.",
-    href: "/sermon/sunday/2",
-  },
-  // 더미 데이터 추가 (나중에 API로 교체)
-  ...Array.from({ length: 7 }, (_, i) => ({
-    id: i + 3,
-    title: `2025년 설교 ${i + 3}`,
-    date: `2025-01-${String(i + 19).padStart(2, "0")}`,
-    excerpt: "하나님의 말씀을 전합니다.",
-    href: `/sermon/sunday/${i + 3}`,
-  })),
-]
+import { getBoardList } from "@/lib/api"
+import { BoardCategory, BoardListResponse, PageInfo } from "@/types/api"
 
 export default function SundaySermonPage() {
+  const searchParams = useSearchParams()
+  const [posts, setPosts] = useState<BoardListResponse[]>([])
+  const [pageInfo, setPageInfo] = useState<PageInfo>({
+    size: 20,
+    number: 0,
+    totalElements: 0,
+    totalPages: 0,
+  })
+  const [currentPage, setCurrentPage] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const page = parseInt(searchParams.get("page") || "0", 10)
+    setCurrentPage(page)
+  }, [searchParams])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const response = await getBoardList(BoardCategory.SUNDAY_WORSHIP, currentPage, 9)
+        if (response.data) {
+          setPosts(response.data.content)
+          setPageInfo(response.data.page)
+        }
+      } catch (error) {
+        console.error("게시글 리스트 조회 실패:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [currentPage])
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <SermonList title="주일예배" posts={mockPosts} />
+        {!isLoading && (
+          <SermonList
+            title="주일예배"
+            posts={posts}
+            pageInfo={pageInfo}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            basePath="/sermon/sunday"
+            category={BoardCategory.SUNDAY_WORSHIP}
+          />
+        )}
       </main>
       <Footer />
     </div>

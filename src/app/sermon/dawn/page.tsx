@@ -1,22 +1,69 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import SermonList from "@/components/sermon/sermon-list"
-
-// TODO: API 연결 후 실제 데이터로 교체
-const mockPosts = Array.from({ length: 9 }, (_, i) => ({
-  id: i + 1,
-  title: `2025년 새벽기도회 ${i + 1}`,
-  date: `2025-01-${String(i + 1).padStart(2, "0")}`,
-  excerpt: "새벽기도회 말씀입니다.",
-  href: `/sermon/dawn/${i + 1}`,
-}))
+import { getBoardList } from "@/lib/api"
+import { BoardCategory, BoardListResponse, PageInfo } from "@/types/api"
 
 export default function DawnSermonPage() {
+  const searchParams = useSearchParams()
+  const [posts, setPosts] = useState<BoardListResponse[]>([])
+  const [pageInfo, setPageInfo] = useState<PageInfo>({
+    size: 20,
+    number: 0,
+    totalElements: 0,
+    totalPages: 0,
+  })
+  const [currentPage, setCurrentPage] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const page = parseInt(searchParams.get("page") || "0", 10)
+    setCurrentPage(page)
+  }, [searchParams])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const response = await getBoardList(BoardCategory.DAWN_PRAYER, currentPage, 9)
+        if (response.data) {
+          setPosts(response.data.content)
+          setPageInfo(response.data.page)
+        }
+      } catch (error) {
+        console.error("게시글 리스트 조회 실패:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [currentPage])
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <SermonList title="새벽기도회" posts={mockPosts} />
+        {!isLoading && (
+          <SermonList
+            title="새벽기도회"
+            posts={posts}
+            pageInfo={pageInfo}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            basePath="/sermon/dawn"
+            category={BoardCategory.DAWN_PRAYER}
+          />
+        )}
       </main>
       <Footer />
     </div>
