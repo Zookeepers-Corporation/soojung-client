@@ -4,11 +4,13 @@ import { useState } from "react"
 import Link from "next/link"
 import { Menu, X, ChevronDown } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import { UserRole } from "@/types/api"
 
 export default function Header() {
   const { isLoggedIn, user, logout } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const isAdmin = isLoggedIn && user?.role === UserRole.ADMIN
 
   const menuItems = [
     {
@@ -58,6 +60,11 @@ export default function Header() {
           <div className="flex items-center gap-4">
             {isLoggedIn ? (
               <>
+                {isAdmin && (
+                  <Link href="/admin" className="text-gray-600 hover:text-blue-900 text-xs font-medium transition">
+                    관리자 페이지
+                  </Link>
+                )}
                 <span className="text-gray-600 text-xs font-medium">{user?.name}님</span>
                 <button
                   onClick={logout}
@@ -179,6 +186,11 @@ export default function Header() {
             <div className="px-4 py-2 space-y-2 border-t border-gray-200 mt-4 pt-4">
               {isLoggedIn ? (
                 <>
+                  {isAdmin && (
+                    <Link href="/admin" className="block text-gray-700 hover:text-blue-900 text-sm font-medium">
+                      관리자 페이지
+                    </Link>
+                  )}
                   <div className="text-gray-700 text-sm font-medium py-2">{user?.name}님</div>
                   <button
                     onClick={logout}

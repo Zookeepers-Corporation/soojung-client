@@ -217,6 +217,37 @@ export interface BoardUpdateRequest {
 // 게시글 수정 API 응답 타입
 export type BoardUpdateApiResponse = ApiResponseData<null>
 
+// 관리자 유저 리스트 응답 타입
+export interface AdminUserListResponse {
+  identifier: string
+  name: string
+  birth?: string // LocalDate를 문자열로 (YYYY-MM-DD 형식)
+  email?: string
+  approved: boolean // API 응답은 approved로 옴
+  signupSource?: string
+  role: UserRole
+  createdAt: string // LocalDateTime을 문자열로
+}
+
+// Spring Page 타입 (백엔드 Page<T> 응답)
+export interface SpringPage<T> {
+  content: T[]
+  totalElements: number
+  totalPages: number
+  number: number // 현재 페이지 (0부터 시작)
+  size: number
+  first: boolean
+  last: boolean
+  numberOfElements: number
+  empty: boolean
+}
+
+// 관리자 유저 리스트 페이지 응답 타입
+export type AdminUserListPageResponse = SpringPage<AdminUserListResponse>
+
+// 관리자 유저 리스트 API 응답 타입
+export type AdminUserListApiResponse = ApiResponseData<AdminUserListPageResponse>
+
 // API 에러 코드 상수
 export const API_ERROR_CODES = {
   VALIDATION_ERROR: 100,

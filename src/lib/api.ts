@@ -16,6 +16,7 @@ import {
   CommentUpdateRequest,
   CommentUpdateApiResponse,
   CommentDeleteApiResponse,
+  AdminUserListApiResponse,
   API_ERROR_CODES,
   ApiResponseData,
 } from "@/types/api"
@@ -490,4 +491,40 @@ export async function deleteComment(
       method: "DELETE",
     }
   )
+}
+
+/**
+ * 관리자 유저 리스트 조회 API 호출
+ */
+export async function getAdminUserList(params: {
+  isApproved?: boolean
+  searchKeyword?: string
+  page?: number
+  size?: number
+  sort?: string
+}): Promise<AdminUserListApiResponse> {
+  const queryParams = new URLSearchParams()
+  
+  if (params.isApproved !== undefined) {
+    queryParams.append("isApproved", params.isApproved.toString())
+  }
+  if (params.searchKeyword) {
+    queryParams.append("searchKeyword", params.searchKeyword)
+  }
+  if (params.page !== undefined) {
+    queryParams.append("page", params.page.toString())
+  }
+  if (params.size !== undefined) {
+    queryParams.append("size", params.size.toString())
+  }
+  if (params.sort) {
+    queryParams.append("sort", params.sort)
+  }
+
+  const queryString = queryParams.toString()
+  const endpoint = `/v1/admin/users${queryString ? `?${queryString}` : ""}`
+
+  return fetchApi<AdminUserListApiResponse>(endpoint, {
+    method: "GET",
+  })
 }
