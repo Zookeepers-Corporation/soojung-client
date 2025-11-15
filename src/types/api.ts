@@ -57,6 +57,20 @@ export interface HomeBannerResponse {
   banners: BannerItem[]
 }
 
+// 홈 배너 수정 요청 타입
+export interface UpdateHomeBannerRequest {
+  keepBannerIdentifiers?: string[]
+  keepBannerOrders?: number[]
+  newImages?: File[]
+  newImageOrders?: number[]
+}
+
+// 홈 배너 조회 API 응답 타입
+export type HomeBannerApiResponse = ApiResponseData<HomeBannerResponse>
+
+// 홈 배너 수정 API 응답 타입
+export type UpdateHomeBannerApiResponse = ApiResponseData<null>
+
 // 다음주 행사 설정 타입
 export interface NextWeekEventConfig {
   content: string

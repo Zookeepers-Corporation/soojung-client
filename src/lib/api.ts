@@ -17,6 +17,9 @@ import {
   CommentUpdateApiResponse,
   CommentDeleteApiResponse,
   AdminUserListApiResponse,
+  HomeBannerApiResponse,
+  UpdateHomeBannerRequest,
+  UpdateHomeBannerApiResponse,
   API_ERROR_CODES,
   ApiResponseData,
 } from "@/types/api"
@@ -47,11 +50,14 @@ async function fetchApi<T>(
 ): Promise<T> {
   const url = `${API_URL}${endpoint}`
   
+  // FormData인 경우 Content-Type을 설정하지 않음 (브라우저가 자동으로 boundary 포함 설정)
+  const isFormData = options.body instanceof FormData
+  
   const config: RequestInit = {
     ...options,
     credentials: "include", // 세션 쿠키 전송
     headers: {
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...options.headers,
     },
   }
@@ -544,5 +550,52 @@ export async function approveUser(identifier: string): Promise<ApiResponseData<n
 export async function rejectUser(identifier: string): Promise<ApiResponseData<null>> {
   return fetchApi<ApiResponseData<null>>(`/v1/admin/users/${identifier}/reject`, {
     method: "DELETE",
+  })
+}
+
+/**
+ * 관리자 홈 배너 조회 API 호출
+ */
+export async function getHomeBannerConfig(): Promise<HomeBannerApiResponse> {
+  return fetchApi<HomeBannerApiResponse>("/v1/admin/configs/home-banner", {
+    method: "GET",
+  })
+}
+
+/**
+ * 관리자 홈 배너 수정 API 호출
+ */
+export async function updateHomeBannerConfig(
+  request: UpdateHomeBannerRequest
+): Promise<UpdateHomeBannerApiResponse> {
+  const formData = new FormData()
+
+  if (request.keepBannerIdentifiers && request.keepBannerIdentifiers.length > 0) {
+    request.keepBannerIdentifiers.forEach((identifier) => {
+      formData.append("keepBannerIdentifiers", identifier)
+    })
+  }
+
+  if (request.keepBannerOrders && request.keepBannerOrders.length > 0) {
+    request.keepBannerOrders.forEach((order) => {
+      formData.append("keepBannerOrders", order.toString())
+    })
+  }
+
+  if (request.newImages && request.newImages.length > 0) {
+    request.newImages.forEach((file) => {
+      formData.append("newImages", file)
+    })
+  }
+
+  if (request.newImageOrders && request.newImageOrders.length > 0) {
+    request.newImageOrders.forEach((order) => {
+      formData.append("newImageOrders", order.toString())
+    })
+  }
+
+  return fetchApi<UpdateHomeBannerApiResponse>("/v1/admin/configs/home-banner", {
+    method: "PUT",
+    body: formData,
   })
 }
