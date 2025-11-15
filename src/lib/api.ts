@@ -528,3 +528,21 @@ export async function getAdminUserList(params: {
     method: "GET",
   })
 }
+
+/**
+ * 관리자 유저 승인 API 호출
+ */
+export async function approveUser(identifier: string): Promise<ApiResponseData<null>> {
+  return fetchApi<ApiResponseData<null>>(`/v1/admin/users/${identifier}/approve`, {
+    method: "POST",
+  })
+}
+
+/**
+ * 관리자 유저 거절 API 호출
+ */
+export async function rejectUser(identifier: string): Promise<ApiResponseData<null>> {
+  return fetchApi<ApiResponseData<null>>(`/v1/admin/users/${identifier}/reject`, {
+    method: "DELETE",
+  })
+}
