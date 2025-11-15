@@ -11,13 +11,13 @@ import { useAuth } from "@/contexts/auth-context"
 interface SermonListProps {
   title: string
   posts: BoardListResponse[]
-  pageInfo: PageInfo
-  currentPage: number
-  onPageChange: (page: number) => void
+  pageInfo?: PageInfo
+  currentPage?: number
+  onPageChange?: (page: number) => void
   showCategoryTabs?: boolean
   customTabs?: React.ReactNode
-  basePath: string // 예: "/sermon/sunday"
-  category: BoardCategory
+  basePath?: string // 예: "/sermon/sunday"
+  category?: BoardCategory
 }
 
 export default function SermonList({
@@ -43,9 +43,11 @@ export default function SermonList({
 
   // 작성 버튼 표시 여부
   const canWrite =
-    isAdminOnlyCategory
-      ? isLoggedIn && user?.role === UserRole.ADMIN
-      : isLoggedIn
+    category
+      ? isAdminOnlyCategory
+        ? isLoggedIn && user?.role === UserRole.ADMIN
+        : isLoggedIn
+      : false
 
   // 날짜 포맷팅 (ISO 8601 -> YYYY-MM-DD)
   const formatDate = (dateString: string) => {
@@ -68,7 +70,7 @@ export default function SermonList({
         <div className="mb-8 text-center">
           <div className="flex items-center justify-center gap-4 mb-6">
             <Heading variant="title4">{title}</Heading>
-            {canWrite && (
+            {canWrite && category && (
               <Link
                 href={`/boards/write?category=${category}`}
                 className="text-[#5E6AD2] hover:text-[#4E5BBD] font-medium text-sm transition-colors"
@@ -85,20 +87,27 @@ export default function SermonList({
         {posts.length > 0 ? (
           <>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {posts.map((post) => (
-                <SermonPostCard
-                  key={post.identifier}
-                  id={post.identifier}
-                  title={post.title}
-                  date={formatDate(post.createdAt)}
-                  image={post.thumbnailUrl}
-                  href={`${basePath}/${post.identifier}`}
-                />
-              ))}
+              {posts.map((post) => {
+                // basePath가 있으면 동적 경로 사용, 없으면 href 직접 사용
+                const href = basePath
+                  ? `${basePath}/${post.identifier}`
+                  : (post as any).href || `#`
+                
+                return (
+                  <SermonPostCard
+                    key={post.identifier || (post as any).id}
+                    id={post.identifier || (post as any).id}
+                    title={post.title}
+                    date={formatDate(post.createdAt || (post as any).date)}
+                    image={post.thumbnailUrl}
+                    href={href}
+                  />
+                )
+              })}
             </div>
 
             {/* Pagination */}
-            {pageInfo.totalPages > 1 && (
+            {pageInfo && pageInfo.totalPages > 1 && currentPage !== undefined && onPageChange && (
               <Pagination
                 currentPage={currentPage + 1} // API는 0부터 시작, UI는 1부터 시작
                 totalPages={pageInfo.totalPages}

@@ -6,20 +6,20 @@ interface WorshipItem {
   export default function RegularWorshipSection() {
     const worshipSchedule: WorshipItem[] = [
       {
-        category: "주일예배",
-        times: ["오전 10시 30분", "오후 3시 30분"],
+        category: "주일 예배",
+        times: ["오전 11시 00분", "오후 1시 30분"],
       },
       {
-        category: "수요예배",
-        times: ["저녁 7시 30분", "밤 10시 30분"],
+        category: "수요 기도회",
+        times: ["저녁 7시 30분"],
       },
       {
         category: "금요기도회",
-        times: ["오전 6시 30분"],
+        times: ["개인 기도"],
       },
       {
         category: "새벽기도",
-        times: ["매일 오전 5시 30분"],
+        times: ["오전 5시 00분"],
       },
     ]
   
@@ -30,12 +30,12 @@ interface WorshipItem {
             {/* 좌측: 이미지 */}
             <div className="flex gap-4 justify-center">
               <img
-                src="/church-worship-service-1.jpg"
+                src="/sub1.jpg"
                 alt="예배 모습 1"
                 className="w-48 h-80 object-cover rounded-lg shadow-lg"
               />
               <img
-                src="/church-worship-service-2.jpg"
+                src="/sub2.jpg"
                 alt="예배 모습 2"
                 className="w-48 h-80 object-cover rounded-lg shadow-lg mt-8"
               />

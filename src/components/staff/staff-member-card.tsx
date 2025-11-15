@@ -16,28 +16,28 @@ export default function StaffMemberCard({
   description,
 }: StaffMemberCardProps) {
   return (
-    <Card className="overflow-hidden group hover:shadow-[0px_4px_24px_rgba(0,0,0,0.06)] transition-shadow duration-300 p-0">
+    <Card className="overflow-hidden p-0 border-none shadow-none">
       {/* Image Container */}
       <div className="relative w-full aspect-square overflow-hidden bg-[#F0F2F5]">
         <Image
           src={image}
           alt={name}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          className="object-cover"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
 
       {/* Content */}
-      <div className="p-6 text-center">
-        <Heading variant="title2" className="mb-2">
+      <div className="p-4 text-center">
+        <Heading variant="title3" className="mb-1">
           {name}
         </Heading>
-        <Text variant="regular" className="text-[#5E6AD2] font-semibold mb-3 block">
+        <Text variant="small" className="text-[#5E6AD2] font-semibold mb-2 block">
           {role}
         </Text>
         {description && (
-          <Text variant="small" color="secondary" className="leading-relaxed">
+          <Text variant="tiny" color="secondary" className="leading-relaxed">
             {description}
           </Text>
         )}

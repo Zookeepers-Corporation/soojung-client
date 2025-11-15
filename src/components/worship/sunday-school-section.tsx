@@ -5,14 +5,8 @@ interface SundaySchoolClass {
   
   export default function SundaySchoolSection() {
     const classes: SundaySchoolClass[] = [
-      { name: "유아부(0~4)", schedule: "주일 오전 10시 30분" },
-      { name: "유치부(4~6)", schedule: "주일 오전 9시~10시교" },
-      { name: "유초부(7~8)", schedule: "주일 오전 9시~10시" },
-      { name: "저학년(8~11)", schedule: "주일 오전 / 2~3시교" },
-      { name: "고학년(3~6)", schedule: "주일 오전 / 2~3시교" },
-      { name: "초등(5~6학년)", schedule: "주일 오전 / 3~4시" },
-      { name: "중등부", schedule: "주일 오전 / 3~4시교" },
-      { name: "청년부", schedule: "주일 오전 / 1~3시교" },
+      { name: "초등부", schedule: "주일 오전 / 10시" },
+      { name: "중고등부", schedule: "주일 오전 / 10시" },
     ]
   
     return (
@@ -27,8 +21,8 @@ interface SundaySchoolClass {
             {/* 좌측: 교회학교 이미지 */}
             <div className="flex justify-center">
               <img
-                src="/sunday-school-children-worship-gathering.jpg"
-                alt="교회학교 예배"
+                src="/students.png"
+                alt="중고등부 예배"
                 className="w-full max-w-sm h-64 object-cover rounded-lg shadow-lg"
               />
             </div>

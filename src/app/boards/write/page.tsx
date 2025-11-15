@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
@@ -13,7 +13,7 @@ import { createBoard, ApiError } from "@/lib/api"
 import { BoardCategory, BoardCreateRequest, API_ERROR_CODES } from "@/types/api"
 import { useAuth } from "@/contexts/auth-context"
 
-export default function WriteBoardPage() {
+function WriteBoardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { isLoggedIn } = useAuth()
@@ -469,6 +469,14 @@ export default function WriteBoardPage() {
         }}
       />
     </div>
+  )
+}
+
+export default function WriteBoardPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <WriteBoardContent />
+    </Suspense>
   )
 }
 

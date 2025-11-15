@@ -47,10 +47,10 @@ export default function Hero({ banners }: HeroProps) {
       {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4 z-20 pointer-events-none">
         <h1 className="text-4xl md:text-6xl font-bold text-center text-balance">
-          하나님의 사랑을 나누는 교회
+          성령의 능력으로 부흥하는 교회
         </h1>
         <p className="text-lg md:text-2xl mt-4 text-center">
-          함께 믿음으로 성장하는 공동체
+          성령충만한 이들이 용사로 세워지는 포항수정교회
         </p>
       </div>
     </section>
