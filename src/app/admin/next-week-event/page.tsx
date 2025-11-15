@@ -30,7 +30,7 @@ export default function AdminNextWeekEventPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [errors, setErrors] = useState<{ content?: string; general?: string }>({})
 
-  const { showToast } = useToast()
+  const { showToast, ToastComponent } = useToast()
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -66,6 +66,7 @@ export default function AdminNextWeekEventPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     setErrors({})
 
     const newErrors: { content?: string } = {}
@@ -81,8 +82,15 @@ export default function AdminNextWeekEventPage() {
 
     setIsSaving(true)
     try {
-      await updateNextWeekEventConfig({ content: content.trim() })
-      showToast("다음주 특별행사 설정이 성공적으로 수정되었습니다.", "success")
+      const response = await updateNextWeekEventConfig({ content: content.trim() })
+      if (response.code === 200) {
+        // 약간의 지연을 주어 Toast가 표시되도록 함
+        setTimeout(() => {
+          showToast("다음주 특별행사 설정이 성공적으로 수정되었습니다.", "success")
+        }, 100)
+      } else {
+        showToast(response.message || "설정 저장 중 오류가 발생했습니다.", "error")
+      }
     } catch (error) {
       if (error instanceof ApiError) {
         if (error.code === API_ERROR_CODES.VALIDATION_ERROR && error.validationErrors) {
@@ -90,10 +98,11 @@ export default function AdminNextWeekEventPage() {
         } else {
           setErrors({ general: error.message || "설정 저장 중 오류가 발생했습니다." })
         }
+        showToast(error.message || "설정 저장 중 오류가 발생했습니다.", "error")
       } else {
         setErrors({ general: "설정 저장 중 오류가 발생했습니다." })
+        showToast("설정 저장 중 오류가 발생했습니다.", "error")
       }
-      showToast("설정 저장 중 오류가 발생했습니다.", "error")
     } finally {
       setIsSaving(false)
     }
@@ -184,6 +193,7 @@ export default function AdminNextWeekEventPage() {
         </div>
       </main>
       <Footer />
+      {ToastComponent}
     </div>
   )
 }

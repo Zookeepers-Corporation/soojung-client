@@ -183,8 +183,8 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setNewFiles([...newFiles, ...Array.from(e.target.files)])
-    }
   }
+}
 
   const removeImage = (index: number) => {
     setEditImages(editImages.filter((_, i) => i !== index))
@@ -601,7 +601,7 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
           </div>
         ) : (
           <>
-            <SermonDetail
+        <SermonDetail
               title={board.title}
               author={board.authorName}
               date={formatDate(board.createdAt)}
@@ -611,8 +611,8 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
               canDelete={board.canDelete}
               onEdit={handleEdit}
               onDelete={handleDelete}
-            />
-            <div className="pb-12">
+        />
+        <div className="pb-12">
               <CommentSection
                 boardIdentifier={id}
                 comments={board.comments}
@@ -624,7 +624,7 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
                   }
                 }}
               />
-            </div>
+        </div>
           </>
         )}
       </main>

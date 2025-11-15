@@ -123,7 +123,7 @@ export default function ResourcesDetailPage({
         />
         {/* 파일 다운로드 섹션 */}
         {board.files && board.files.length > 0 && (
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
             <Card>
               <Heading variant="title4" className="mb-4">
                 첨부 파일
@@ -149,9 +149,9 @@ export default function ResourcesDetailPage({
                     </Button>
                   </a>
                 ))}
-              </div>
-            </Card>
           </div>
+            </Card>
+        </div>
         )}
         <div className="pb-12">
           <CommentSection
