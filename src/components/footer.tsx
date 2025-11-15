@@ -8,10 +8,10 @@ export default function Footer() {
             {/* Church Info */}
             <div>
               <h3 className="text-2xl font-bold mb-4">포항수정교회</h3>
-              <p className="text-gray-400 mb-6">하나님의 사랑과 진리로 세워가는 공동체입니다.</p>
+              <p className="text-gray-400 mb-6">성령충만한 이들이 용사로 세워지는 교회입니다.</p>
               <div className="space-y-2 text-sm text-gray-400">
                 <p>📞 전화: 054-248-7831</p>
-                <p>📧 이메일: info@church.com</p>
+                <p>📧 이메일: pohangsoojungofficial@gmail.com</p>
               </div>
             </div>
   

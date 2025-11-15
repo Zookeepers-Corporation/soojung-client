@@ -10,16 +10,16 @@ interface Pastor {
 export default function PastorsSection() {
   const pastors: Pastor[] = [
     {
-      name: "홍길동",
+      name: "김재곤",
       role: "담임목사",
       image: "/pastor-main.jpg",
       description: "하나님의 말씀으로 교회를 섬기고 있습니다.",
     },
     {
-      name: "김철수",
-      role: "부목사",
+      name: "박미정",
+      role: "교육목사",
       image: "/pastor-assistant.jpg",
-      description: "청년 사역과 전도 사역을 담당하고 있습니다.",
+      description: "하나님의 말씀으로 교회를 섬기고 있습니다.",
     },
   ]
 

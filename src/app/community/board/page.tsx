@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
@@ -8,7 +8,7 @@ import SermonList from "@/components/sermon/sermon-list"
 import { getBoardList } from "@/lib/api"
 import { BoardCategory, BoardListResponse, PageInfo } from "@/types/api"
 
-export default function BoardPage() {
+function BoardPageContent() {
   const searchParams = useSearchParams()
   const [posts, setPosts] = useState<BoardListResponse[]>([])
   const [pageInfo, setPageInfo] = useState<PageInfo>({
@@ -68,5 +68,13 @@ export default function BoardPage() {
       </main>
       <Footer />
     </div>
+  )
+}
+
+export default function BoardPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BoardPageContent />
+    </Suspense>
   )
 }

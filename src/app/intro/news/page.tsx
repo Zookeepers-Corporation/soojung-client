@@ -1,36 +1,56 @@
+"use client"
+
+import { useEffect, useState, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import SermonList from "@/components/sermon/sermon-list"
 import Button from "@/components/ui/button"
 import Link from "next/link"
+import { getBoardList } from "@/lib/api"
+import { BoardCategory, BoardListResponse, PageInfo } from "@/types/api"
 
-// TODO: API 연결 후 실제 데이터로 교체
-const mockPosts = [
-  {
-    id: 1,
-    title: "2025년 1월 교회소식",
-    date: "2025-01-05",
-    excerpt: "새해를 맞이하여 교회의 다양한 소식을 전달드립니다.",
-    href: "/intro/news/1",
-  },
-  {
-    id: 2,
-    title: "2025년 교회 행사 안내",
-    date: "2025-01-03",
-    excerpt: "이번 달 진행되는 교회 행사 일정을 안내드립니다.",
-    href: "/intro/news/2",
-  },
-  // 더미 데이터 추가 (나중에 API로 교체)
-  ...Array.from({ length: 7 }, (_, i) => ({
-    id: i + 3,
-    title: `교회소식 ${i + 3}`,
-    date: `2025-01-${String(i + 5).padStart(2, "0")}`,
-    excerpt: "교회소식 내용입니다.",
-    href: `/intro/news/${i + 3}`,
-  })),
-]
+function NewsPageContent() {
+  const searchParams = useSearchParams()
+  const [posts, setPosts] = useState<BoardListResponse[]>([])
+  const [pageInfo, setPageInfo] = useState<PageInfo>({
+    size: 20,
+    number: 0,
+    totalElements: 0,
+    totalPages: 0,
+  })
+  const [currentPage, setCurrentPage] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
 
-export default function NewsPage() {
+  useEffect(() => {
+    const page = parseInt(searchParams.get("page") || "0", 10)
+    setCurrentPage(page)
+  }, [searchParams])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const response = await getBoardList(BoardCategory.CHURCH_NEWS, currentPage, 9)
+        if (response.data) {
+          setPosts(response.data.content)
+          setPageInfo(response.data.page)
+        }
+      } catch (error) {
+        console.error("게시글 리스트 조회 실패:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [currentPage])
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
   const customTabs = (
     <div className="flex justify-center gap-4">
       <Link href="/intro/news">
@@ -46,14 +66,29 @@ export default function NewsPage() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <SermonList
-          title="교회소식"
-          posts={mockPosts}
-          showCategoryTabs={false}
-          customTabs={customTabs}
-        />
+        {!isLoading && (
+          <SermonList
+            title="교회소식"
+            posts={posts}
+            pageInfo={pageInfo}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            basePath="/intro/news"
+            category={BoardCategory.CHURCH_NEWS}
+            showCategoryTabs={false}
+            customTabs={customTabs}
+          />
+        )}
       </main>
       <Footer />
     </div>
+  )
+}
+
+export default function NewsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <NewsPageContent />
+    </Suspense>
   )
 }

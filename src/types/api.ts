@@ -106,6 +106,8 @@ export enum BoardCategory {
   BOARD = "BOARD",
   ALBUM = "ALBUM",
   ARCHIVE = "ARCHIVE",
+  CHURCH_NEWS = "CHURCH_NEWS",
+  CHURCH_PEOPLE_NEWS = "CHURCH_PEOPLE_NEWS",
 }
 
 // 게시글 리스트 응답 아이템 타입

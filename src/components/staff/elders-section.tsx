@@ -10,34 +10,34 @@ interface Elder {
 export default function EldersSection() {
   const elders: Elder[] = [
     {
-      name: "이영희",
+      name: "박재원",
       role: "장로",
       image: "/elder-1.jpg",
     },
     {
-      name: "박민수",
+      name: "송갑천",
       role: "장로",
       image: "/elder-2.jpg",
     },
     {
-      name: "정수진",
+      name: "김승환",
       role: "장로",
       image: "/elder-3.jpg",
     },
     {
-      name: "최동욱",
+      name: "방청록",
       role: "장로",
       image: "/elder-4.jpg",
     },
     {
-      name: "강지훈",
+      name: "황영택",
       role: "장로",
       image: "/elder-5.jpg",
     },
   ]
 
   return (
-    <section className="py-12 md:py-16 bg-gray-50">
+    <section className="py-12 md:py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Elders Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">

@@ -28,17 +28,18 @@ export default function Events({ nextWeekEvent }: EventsProps) {
         {/* Events Grid */}
         <div className="grid md:grid-cols-2 gap-8">
           <div className="bg-gray-50 p-8 rounded-lg">
-            <h4 className="text-xl font-bold text-gray-900 mb-4">정기 모임</h4>
+            <h4 className="text-xl font-bold text-gray-900 mb-4">정기 예배</h4>
             <ul className="space-y-3 text-gray-600">
-              <li>✓ 주일 예배: 11:00 AM</li>
-              <li>✓ 수요 중보기도: 7:30 PM</li>
-              <li>✓ 금요 찬양예배: 7:30 PM</li>
-              <li>✓ 새벽기도: 6:00 AM</li>
+              <li>✓ 주일 낮 예배: 11:00 AM</li>
+              <li>✓ 주일 오후 예배: 1:30 PM</li>
+              <li>✓ 수요 기도회: 7:30 PM</li>
+              <li>✓ 금요 기도회: 개인기도</li>
+              <li>✓ 새벽 기도회: 5:00 AM</li>
             </ul>
           </div>
 
           <div className="bg-yellow-50 p-8 rounded-lg border-l-4 border-yellow-600">
-            <h4 className="text-xl font-bold text-gray-900 mb-4">다음주 특별 행사</h4>
+            <h4 className="text-xl font-bold text-gray-900 mb-4">교회 행사</h4>
             {nextWeekEvent?.content ? (
               <div
                 className="text-gray-600 prose prose-sm max-w-none"
