@@ -99,6 +99,7 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
         if (error instanceof ApiError) {
           if (error.code === API_ERROR_CODES.BOARD_NOT_FOUND) {
             router.push("/sermon/sunday")
+            return
           }
         }
         console.error("게시글 상세 조회 실패:", error)
@@ -108,7 +109,7 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
     }
 
     fetchData()
-  }, [id, router])
+  }, [id])
 
   const formatDate = (dateString: string) => {
     try {

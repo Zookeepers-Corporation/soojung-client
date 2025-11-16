@@ -10,7 +10,9 @@ export default function WelcomePage() {
       <Header />
       <main className="flex-grow">
         <WelcomeHero />
-        <PastorIntroduction />
+        <div className="py-12 md:py-16">
+          <PastorIntroduction />
+        </div>
       </main>
       <Footer />
     </div>

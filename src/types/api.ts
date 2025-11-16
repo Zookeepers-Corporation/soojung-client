@@ -119,6 +119,34 @@ export interface BoardListResponse {
   createdAt: string
 }
 
+// 최신 게시글 응답 아이템 타입 (API에서 category와 categoryTitle 포함)
+export interface LatestBoardResponse {
+  category: BoardCategory
+  categoryTitle: string
+  identifier: string
+  title: string
+  authorName: string
+  createdAt: string
+}
+
+// 최신 게시글 API 응답 데이터 타입
+export interface LatestBoardsResponse {
+  sundayWorship: LatestBoardResponse[]
+  churchNews: LatestBoardResponse[]
+  churchPeopleNews: LatestBoardResponse[]
+  board: LatestBoardResponse[]
+  album?: LatestBoardResponse[]
+}
+
+// 최신 앨범 응답 아이템 타입
+export interface LatestAlbumResponse {
+  identifier: string
+  title: string
+  authorName: string
+  thumbnailUrl: string
+  createdAt: string
+}
+
 // 페이지 정보 타입
 export interface PageInfo {
   size: number

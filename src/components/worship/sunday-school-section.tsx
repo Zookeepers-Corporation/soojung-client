@@ -31,8 +31,8 @@ interface SundaySchoolClass {
             <div className="space-y-4">
               {classes.map((classItem, index) => (
                 <div key={index} className="pb-4 border-b border-gray-300 last:border-b-0">
-                  <h4 className="font-semibold text-gray-900 mb-1">{classItem.name}</h4>
-                  <p className="text-gray-600 text-sm">{classItem.schedule}</p>
+                  <h4 className="text-xl font-semibold text-gray-900 mb-1">{classItem.name}</h4>
+                  <p className="text-gray-600">{classItem.schedule}</p>
                 </div>
               ))}
             </div>

@@ -22,7 +22,6 @@ export default function Header() {
         { label: "성도소식", href: "/intro/members" },
         { label: "섬기는 사람들", href: "/intro/staff" },
         { label: "예배시간", href: "/intro/worship" },
-        { label: "헌금안내", href: "/intro/donation" },
         { label: "오시는길", href: "/intro/location" },
       ],
     },
@@ -38,7 +37,6 @@ export default function Header() {
         { label: "수요예배", href: "/sermon/wednesday" },
         { label: "금요기도회", href: "/sermon/friday" },
         { label: "새벽기도회", href: "/sermon/dawn" },
-        { label: "특별예배", href: "/sermon/special" },
       ],
     },
     {

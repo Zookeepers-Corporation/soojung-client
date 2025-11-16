@@ -1,5 +1,6 @@
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import NewFamilyPageHeader from "@/components/intro/new-family-page-header"
 import Card from "@/components/ui/card"
 import { Heading, Text } from "@/components/ui/typography"
 
@@ -7,17 +8,9 @@ export default function NewFamilyPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow py-12 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Page Header */}
-          <div className="text-center mb-12">
-            <Heading variant="title4" className="mb-4">
-              새가족 안내
-            </Heading>
-            <Text variant="regular" color="secondary">
-              포항수정교회에 오신 것을 환영합니다
-            </Text>
-          </div>
+      <main className="flex-grow">
+        <NewFamilyPageHeader />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
 
           {/* Welcome Section */}
           <Card className="mb-8">

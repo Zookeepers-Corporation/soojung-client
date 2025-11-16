@@ -37,7 +37,7 @@ export default function EldersSection() {
   ]
 
   return (
-    <section className="py-12 md:py-16 bg-white">
+    <section className="pb-4 md:pb-8 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Elders Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">

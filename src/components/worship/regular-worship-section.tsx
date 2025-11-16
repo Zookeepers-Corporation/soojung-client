@@ -24,7 +24,11 @@ interface WorshipItem {
     ]
   
     return (
-      <section className="py-16 bg-white">
+      <section className="pt-6 py-16 bg-white">
+        <div className="text-center mb-12">
+          <p className="text-sm text-gray-600 mb-2">Worship</p>
+          <h2 className="text-4xl font-bold text-gray-900">장년 예배안내</h2>
+        </div>
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
             {/* 좌측: 이미지 */}

@@ -1,15 +1,19 @@
 import Image from "next/image"
 
+const PASTOR_IMAGE = "/pastor-main.jpg"
+
 export default function PastorIntroduction() {
   return (
     <section className="py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="flex justify-center">
-            <div className="relative w-full max-w-md aspect-square rounded-lg overflow-hidden shadow-lg">
-              <Image src="" alt="담임목사 김재곤" fill className="object-cover" />
+          {PASTOR_IMAGE && (
+            <div className="flex justify-center">
+              <div className="relative w-full max-w-md aspect-square rounded-lg overflow-hidden shadow-lg">
+                <Image src={PASTOR_IMAGE} alt="담임목사 김재곤" fill className="object-cover" />
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="space-y-8">
             <div>

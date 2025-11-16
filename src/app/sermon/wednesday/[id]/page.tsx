@@ -105,7 +105,7 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
     }
 
     fetchData()
-  }, [id, router])
+  }, [id])
 
   const formatDate = (dateString: string) => {
     try {

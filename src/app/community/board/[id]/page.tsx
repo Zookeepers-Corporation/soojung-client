@@ -35,6 +35,7 @@ export default function BoardDetailPage({ params }: BoardDetailPageProps) {
         if (error instanceof ApiError) {
           if (error.code === API_ERROR_CODES.BOARD_NOT_FOUND) {
             router.push("/community/board")
+            return
           }
         }
         console.error("게시글 상세 조회 실패:", error)
@@ -44,7 +45,7 @@ export default function BoardDetailPage({ params }: BoardDetailPageProps) {
     }
 
     fetchData()
-  }, [id, router])
+  }, [id])
 
   const formatDate = (dateString: string) => {
     try {

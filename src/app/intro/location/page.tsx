@@ -1,5 +1,6 @@
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import LocationPageHeader from "@/components/intro/location-page-header"
 import LocationMap from "@/components/location-map"
 
 export default function LocationPage() {
@@ -7,12 +8,8 @@ export default function LocationPage() {
     <div className="w-full min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Page Title */}
-          <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">오시는 길</h1>
-            <p className="text-gray-600">교회로 오시는 길을 안내해드립니다.</p>
-          </div>
+        <LocationPageHeader />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
 
           {/* Map and Info Section */}
           <div className="flex flex-col lg:flex-row items-center justify-center gap-8">

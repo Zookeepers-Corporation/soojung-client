@@ -1,6 +1,6 @@
 export default function WelcomeHero() {
     return (
-      <section className="relative h-96 flex items-center justify-center overflow-hidden">
+      <section className="relative h-80 flex items-center justify-center overflow-hidden">
         {/* 배경 이미지 - 불투명도 조금만 */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"

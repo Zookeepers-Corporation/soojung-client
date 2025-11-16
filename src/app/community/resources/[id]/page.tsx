@@ -49,7 +49,7 @@ export default function ResourcesDetailPage({
     }
 
     fetchData()
-  }, [id, router])
+  }, [id])
 
   const formatDate = (dateString: string) => {
     try {
