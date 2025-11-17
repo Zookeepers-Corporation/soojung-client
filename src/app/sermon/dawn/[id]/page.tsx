@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, use, useRef } from "react"
+import { useEffect, useState, use, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
@@ -105,7 +105,7 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
     }
 
     fetchData()
-  }, [id, router])
+  }, [id])
 
   const formatDate = (dateString: string) => {
     try {
@@ -309,6 +309,13 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
     setIsDeleteDialogOpen(false)
     console.log("삭제 기능은 추후 구현 예정")
   }
+
+  const handleCommentUpdate = useCallback(async () => {
+    const refreshResponse = await getBoardDetail(id)
+    if (refreshResponse.data) {
+      setBoard(refreshResponse.data)
+    }
+  }, [id])
 
   if (isLoading) {
     return (
@@ -617,12 +624,7 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
                 boardIdentifier={id}
                 comments={board.comments}
                 commentCount={board.commentCount}
-                onCommentUpdate={async () => {
-                  const refreshResponse = await getBoardDetail(id)
-                  if (refreshResponse.data) {
-                    setBoard(refreshResponse.data)
-                  }
-                }}
+                onCommentUpdate={handleCommentUpdate}
               />
         </div>
           </>

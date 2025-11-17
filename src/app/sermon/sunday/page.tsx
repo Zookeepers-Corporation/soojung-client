@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import SermonPageHeader from "@/components/sermon/sermon-page-header"
 import SermonList from "@/components/sermon/sermon-list"
 import { getBoardList } from "@/lib/api"
 import { BoardCategory, BoardListResponse, PageInfo } from "@/types/api"
@@ -53,17 +54,20 @@ function SundaySermonPageContent() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        {!isLoading && (
-          <SermonList
-            title="주일예배"
-            posts={posts}
-            pageInfo={pageInfo}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-            basePath="/sermon/sunday"
-            category={BoardCategory.SUNDAY_WORSHIP}
-          />
-        )}
+        <SermonPageHeader title="주일예배" subtitle="Sunday Worship" />
+        <div className="py-12 md:py-16">
+          {!isLoading && (
+            <SermonList
+              title=""
+              posts={posts}
+              pageInfo={pageInfo}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              basePath="/sermon/sunday"
+              category={BoardCategory.SUNDAY_WORSHIP}
+            />
+          )}
+        </div>
       </main>
       <Footer />
     </div>

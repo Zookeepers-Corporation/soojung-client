@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Card from "@/components/ui/card"
 import Button from "@/components/ui/button"
@@ -37,9 +37,15 @@ export default function CommentSection({
   const [replyContent, setReplyContent] = useState("")
   const [isDeletingCommentId, setIsDeletingCommentId] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const prevCommentsRef = useRef<string>("")
 
   useEffect(() => {
-    setCommentList(comments)
+    // comments 배열을 JSON으로 변환하여 비교 (깊은 비교)
+    const commentsString = JSON.stringify(comments)
+    if (prevCommentsRef.current !== commentsString) {
+      prevCommentsRef.current = commentsString
+      setCommentList(comments)
+    }
   }, [comments])
 
   const formatDate = (dateString: string) => {

@@ -1,5 +1,6 @@
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import NewFamilyPageHeader from "@/components/intro/new-family-page-header"
 import Card from "@/components/ui/card"
 import { Heading, Text } from "@/components/ui/typography"
 
@@ -7,17 +8,9 @@ export default function NewFamilyPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow py-12 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Page Header */}
-          <div className="text-center mb-12">
-            <Heading variant="title4" className="mb-4">
-              새가족 안내
-            </Heading>
-            <Text variant="regular" color="secondary">
-              포항수정교회에 오신 것을 환영합니다
-            </Text>
-          </div>
+      <main className="flex-grow">
+        <NewFamilyPageHeader />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
 
           {/* Welcome Section */}
           <Card className="mb-8">
@@ -40,10 +33,18 @@ export default function NewFamilyPage() {
             <div className="space-y-4">
               <div>
                 <Text variant="regular" className="font-semibold mb-2">
-                  주일예배
+                  주일 낮 예배
                 </Text>
                 <Text variant="regular" color="secondary">
-                  매주 일요일 오전 11시
+                  일요일 오전 11시
+                </Text>
+              </div>
+              <div>
+                <Text variant="regular" className="font-semibold mb-2">
+                  주일 오후 예배
+                </Text>
+                <Text variant="regular" color="secondary">
+                  일요일 오후 1시 30분
                 </Text>
               </div>
               <div>
@@ -51,7 +52,7 @@ export default function NewFamilyPage() {
                   수요예배
                 </Text>
                 <Text variant="regular" color="secondary">
-                  매주 수요일 오후 7시 30분
+                  수요일 오후 7시 30분
                 </Text>
               </div>
               <div>
@@ -59,7 +60,7 @@ export default function NewFamilyPage() {
                   금요기도회
                 </Text>
                 <Text variant="regular" color="secondary">
-                  매주 금요일 오후 8시
+                  개인기도
                 </Text>
               </div>
               <div>
@@ -67,7 +68,7 @@ export default function NewFamilyPage() {
                   새벽기도회
                 </Text>
                 <Text variant="regular" color="secondary">
-                  매일 새벽 5시 30분
+                  새벽 5시 00분
                 </Text>
               </div>
             </div>
@@ -85,6 +86,14 @@ export default function NewFamilyPage() {
                 </Text>
                 <Text variant="regular" color="secondary">
                   054-248-7831
+                </Text>
+              </div>
+              <div>
+                <Text variant="regular" className="font-semibold mb-2">
+                  이메일
+                </Text>
+                <Text variant="regular" color="secondary">
+                  pohangsoojungofficial@gmail.com
                 </Text>
               </div>
               <div>
@@ -117,7 +126,7 @@ export default function NewFamilyPage() {
                   주차 안내
                 </Text>
                 <Text variant="regular" color="secondary">
-                  교회 내 주차장을 이용하실 수 있습니다. 주차 공간이 부족할 경우 주변 공영주차장을 이용해 주세요.
+                  교회 왼쪽 편의 주차장을 이용하실 수 있습니다. 주차 공간이 부족할 경우 주변 길가에 주차해 주세요.
                 </Text>
               </div>
               <div>
@@ -125,7 +134,7 @@ export default function NewFamilyPage() {
                   새가족 등록
                 </Text>
                 <Text variant="regular" color="secondary">
-                  교회에 정기적으로 참석하시려면 새가족 등록을 해주시기 바랍니다. 등록 후 교회 소식과 행사 안내를 받으실 수 있습니다.
+                  교회에 정기적으로 참석하시려면 새가족 등록을 도와드립니다.
                 </Text>
               </div>
               <div>

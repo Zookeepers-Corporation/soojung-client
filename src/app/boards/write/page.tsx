@@ -10,13 +10,13 @@ import Button from "@/components/ui/button"
 import { Heading, Text } from "@/components/ui/typography"
 import Dialog from "@/components/ui/dialog"
 import { createBoard, ApiError } from "@/lib/api"
-import { BoardCategory, BoardCreateRequest, API_ERROR_CODES } from "@/types/api"
+import { BoardCategory, BoardCreateRequest, API_ERROR_CODES, UserRole } from "@/types/api"
 import { useAuth } from "@/contexts/auth-context"
 
 function WriteBoardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, user } = useAuth()
   const categoryParam = searchParams.get("category") as BoardCategory | null
 
   const [formData, setFormData] = useState({
@@ -24,6 +24,13 @@ function WriteBoardContent() {
     content: "",
     category: categoryParam || BoardCategory.BOARD,
   })
+
+  // categoryParam이 변경되면 formData.category도 업데이트
+  useEffect(() => {
+    if (categoryParam) {
+      setFormData((prev) => ({ ...prev, category: categoryParam }))
+    }
+  }, [categoryParam])
   const [images, setImages] = useState<File[]>([])
   const [imageOrders, setImageOrders] = useState<number[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
@@ -39,14 +46,36 @@ function WriteBoardContent() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false)
 
+  // 관리자 전용 카테고리인지 확인
+  const isAdminOnlyCategory =
+    formData.category === BoardCategory.SUNDAY_WORSHIP ||
+    formData.category === BoardCategory.WEDNESDAY_WORSHIP ||
+    formData.category === BoardCategory.FRIDAY_PRAYER ||
+    formData.category === BoardCategory.DAWN_PRAYER ||
+    formData.category === BoardCategory.SPECIAL_WORSHIP ||
+    formData.category === BoardCategory.CHURCH_NEWS ||
+    formData.category === BoardCategory.CHURCH_PEOPLE_NEWS
+
+  const isAdmin = isLoggedIn && user?.role === UserRole.ADMIN
+
   // 로그인하지 않은 경우 리다이렉트
   useEffect(() => {
     if (!isLoggedIn) {
       router.push("/login")
+      return
     }
-  }, [isLoggedIn, router])
+    // 관리자 전용 카테고리인데 관리자가 아닌 경우 리다이렉트
+    if (isAdminOnlyCategory && !isAdmin) {
+      router.push("/")
+    }
+  }, [isLoggedIn, isAdminOnlyCategory, isAdmin, router])
 
   if (!isLoggedIn) {
+    return null
+  }
+
+  // 관리자 전용 카테고리인데 관리자가 아닌 경우
+  if (isAdminOnlyCategory && !isAdmin) {
     return null
   }
 
@@ -194,6 +223,8 @@ function WriteBoardContent() {
       [BoardCategory.BOARD]: "게시판",
       [BoardCategory.ALBUM]: "앨범",
       [BoardCategory.ARCHIVE]: "자료실",
+      [BoardCategory.CHURCH_NEWS]: "교회소식",
+      [BoardCategory.CHURCH_PEOPLE_NEWS]: "성도소식",
     }
     return categoryMap[category] || category
   }
@@ -208,6 +239,8 @@ function WriteBoardContent() {
       [BoardCategory.BOARD]: "/community/board",
       [BoardCategory.ALBUM]: "/community/album",
       [BoardCategory.ARCHIVE]: "/community/resources",
+      [BoardCategory.CHURCH_NEWS]: "/intro/news",
+      [BoardCategory.CHURCH_PEOPLE_NEWS]: "/intro/members",
     }
     return pathMap[category] || "/"
   }

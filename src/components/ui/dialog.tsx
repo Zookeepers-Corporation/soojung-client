@@ -14,6 +14,7 @@ interface DialogProps {
   showCancel?: boolean
   cancelText?: string
   onCancel?: () => void
+  disabled?: boolean
 }
 
 export default function Dialog({
@@ -26,6 +27,7 @@ export default function Dialog({
   showCancel = false,
   cancelText = "취소",
   onCancel,
+  disabled = false,
 }: DialogProps) {
   // ESC 키로 닫기
   useEffect(() => {
@@ -43,6 +45,7 @@ export default function Dialog({
 
   // 배경 클릭으로 닫기 방지 (Dialog 내부 클릭만 허용)
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (disabled) return
     if (e.target === e.currentTarget) {
       onClose()
     }
@@ -51,6 +54,7 @@ export default function Dialog({
   if (!isOpen) return null
 
   const handleConfirm = () => {
+    if (disabled) return
     if (onConfirm) {
       onConfirm()
     } else {
@@ -59,6 +63,7 @@ export default function Dialog({
   }
 
   const handleCancel = () => {
+    if (disabled) return
     if (onCancel) {
       onCancel()
     } else {
@@ -92,11 +97,11 @@ export default function Dialog({
 
         <div className="flex gap-3 justify-end">
           {showCancel && (
-            <Button variant="secondary" onClick={handleCancel}>
+            <Button variant="secondary" onClick={handleCancel} disabled={disabled}>
               {cancelText}
             </Button>
           )}
-          <Button variant="primary" onClick={handleConfirm}>
+          <Button variant="primary" onClick={handleConfirm} disabled={disabled}>
             {confirmText}
           </Button>
         </div>

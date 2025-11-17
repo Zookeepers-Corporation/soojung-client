@@ -8,7 +8,6 @@ const categories = [
   { label: "수요예배", href: "/sermon/wednesday" },
   { label: "금요기도회", href: "/sermon/friday" },
   { label: "새벽기도회", href: "/sermon/dawn" },
-  { label: "특별예배", href: "/sermon/special" },
 ]
 
 export default function SermonCategoryTabs() {

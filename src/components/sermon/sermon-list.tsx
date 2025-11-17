@@ -39,7 +39,9 @@ export default function SermonList({
     category === BoardCategory.WEDNESDAY_WORSHIP ||
     category === BoardCategory.FRIDAY_PRAYER ||
     category === BoardCategory.DAWN_PRAYER ||
-    category === BoardCategory.SPECIAL_WORSHIP
+    category === BoardCategory.SPECIAL_WORSHIP ||
+    category === BoardCategory.CHURCH_NEWS ||
+    category === BoardCategory.CHURCH_PEOPLE_NEWS
 
   // 작성 버튼 표시 여부
   const canWrite =
@@ -64,7 +66,7 @@ export default function SermonList({
   }
 
   return (
-    <div className="py-12 md:py-16">
+    <div className="pt-8 pb-4 md:pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Title */}
         <div className="mb-8 text-center">

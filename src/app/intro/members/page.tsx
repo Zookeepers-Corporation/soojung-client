@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import MembersPageHeader from "@/components/intro/members-page-header"
 import SermonList from "@/components/sermon/sermon-list"
 import Button from "@/components/ui/button"
 import Link from "next/link"
@@ -66,9 +67,11 @@ function MembersPageContent() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        {!isLoading && (
-          <SermonList
-            title="성도소식"
+        <MembersPageHeader />
+        <div className="pb-4 md:pb-8">
+          {!isLoading && (
+            <SermonList
+            title=""
             posts={posts}
             pageInfo={pageInfo}
             currentPage={currentPage}
@@ -78,7 +81,8 @@ function MembersPageContent() {
             showCategoryTabs={false}
             customTabs={customTabs}
           />
-        )}
+          )}
+        </div>
       </main>
       <Footer />
     </div>

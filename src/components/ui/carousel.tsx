@@ -10,6 +10,7 @@ interface CarouselProps {
   showIndicators?: boolean
   showArrows?: boolean
   className?: string
+  arrowStyle?: "default" | "minimal" // 화살표 스타일 옵션
 }
 
 export default function Carousel({
@@ -19,6 +20,7 @@ export default function Carousel({
   showIndicators = true,
   showArrows = true,
   className = "",
+  arrowStyle = "default",
 }: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
@@ -84,27 +86,37 @@ export default function Carousel({
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10
-                     bg-white/90 hover:bg-white border border-[#E5E7EB] 
-                     rounded-full p-2 shadow-[0px_2px_4px_rgba(0,0,0,0.04)]
-                     transition-all duration-200
-                     hover:shadow-[0px_4px_24px_rgba(0,0,0,0.06)]
-                     focus:outline-none focus:ring-2 focus:ring-[#5E6AD2] focus:ring-offset-2"
+            className={
+              arrowStyle === "minimal"
+                ? "absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-transparent hover:bg-transparent border-none rounded-none p-2 shadow-none transition-all duration-200 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent"
+                : "absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white border border-[#E5E7EB] rounded-full p-2 shadow-[0px_2px_4px_rgba(0,0,0,0.04)] transition-all duration-200 hover:shadow-[0px_4px_24px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-[#5E6AD2] focus:ring-offset-2"
+            }
             aria-label="Previous slide"
           >
-            <ChevronLeft className="w-5 h-5 text-[#0F1011]" />
+            <ChevronLeft
+              className={
+                arrowStyle === "minimal"
+                  ? "w-8 h-8 text-white drop-shadow-lg"
+                  : "w-5 h-5 text-[#0F1011]"
+              }
+            />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10
-                     bg-white/90 hover:bg-white border border-[#E5E7EB] 
-                     rounded-full p-2 shadow-[0px_2px_4px_rgba(0,0,0,0.04)]
-                     transition-all duration-200
-                     hover:shadow-[0px_4px_24px_rgba(0,0,0,0.06)]
-                     focus:outline-none focus:ring-2 focus:ring-[#5E6AD2] focus:ring-offset-2"
+            className={
+              arrowStyle === "minimal"
+                ? "absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-transparent hover:bg-transparent border-none rounded-none p-2 shadow-none transition-all duration-200 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent"
+                : "absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white border border-[#E5E7EB] rounded-full p-2 shadow-[0px_2px_4px_rgba(0,0,0,0.04)] transition-all duration-200 hover:shadow-[0px_4px_24px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-[#5E6AD2] focus:ring-offset-2"
+            }
             aria-label="Next slide"
           >
-            <ChevronRight className="w-5 h-5 text-[#0F1011]" />
+            <ChevronRight
+              className={
+                arrowStyle === "minimal"
+                  ? "w-8 h-8 text-white drop-shadow-lg"
+                  : "w-5 h-5 text-[#0F1011]"
+              }
+            />
           </button>
         </>
       )}

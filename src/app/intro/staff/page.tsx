@@ -18,7 +18,7 @@ export default function StaffPage() {
         <StaffPageHeader />
         
         {/* Tab Buttons */}
-        <div className="py-8 bg-white">
+        <div className="pt-12 py-8 bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center gap-4">
               <Button

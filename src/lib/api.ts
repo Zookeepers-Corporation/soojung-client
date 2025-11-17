@@ -6,11 +6,15 @@ import {
   HomeApiResponse,
   BoardCategory,
   BoardListApiResponse,
+  BoardListResponse,
+  LatestBoardsResponse,
+  LatestAlbumResponse,
   BoardCreateRequest,
   BoardCreateApiResponse,
   BoardDetailApiResponse,
   BoardUpdateRequest,
   BoardUpdateApiResponse,
+  BoardDeleteApiResponse,
   CommentCreateRequest,
   CommentCreateApiResponse,
   CommentUpdateRequest,
@@ -213,6 +217,24 @@ export async function getBoardList(
 }
 
 /**
+ * 최신 게시글 조회 API 호출 (각 카테고리별 최대 4개)
+ */
+export async function getLatestBoards(): Promise<ApiResponseData<LatestBoardsResponse>> {
+  return fetchApi<ApiResponseData<LatestBoardsResponse>>("/v1/boards/latest", {
+    method: "GET",
+  })
+}
+
+/**
+ * 최신 앨범 조회 API 호출 (최대 4개)
+ */
+export async function getLatestAlbums(): Promise<ApiResponseData<LatestAlbumResponse[]>> {
+  return fetchApi<ApiResponseData<LatestAlbumResponse[]>>("/v1/boards/albums/latest", {
+    method: "GET",
+  })
+}
+
+/**
  * 게시글 상세 조회 API 호출
  */
 export async function getBoardDetail(identifier: string): Promise<BoardDetailApiResponse> {
@@ -348,6 +370,15 @@ export async function updateBoard(
     }
     throw new Error("네트워크 오류가 발생했습니다.")
   }
+}
+
+/**
+ * 게시글 삭제 API 호출
+ */
+export async function deleteBoard(identifier: string): Promise<BoardDeleteApiResponse> {
+  return fetchApi<BoardDeleteApiResponse>(`/v1/boards/${identifier}`, {
+    method: "DELETE",
+  })
 }
 
 /**

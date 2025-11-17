@@ -12,19 +12,17 @@ export default function PastorsSection() {
     {
       name: "김재곤",
       role: "담임목사",
-      image: "/pastor-main.jpg",
-      description: "하나님의 말씀으로 교회를 섬기고 있습니다.",
+      image: "/sub1.jpg",
     },
     {
       name: "박미정",
       role: "교육목사",
-      image: "/pastor-assistant.jpg",
-      description: "하나님의 말씀으로 교회를 섬기고 있습니다.",
+      image: "/edu_pastor.jpeg",
     },
   ]
 
   return (
-    <section className="py-12 md:py-16">
+    <section className="pb-4 md:pb-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Pastors Grid */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">

@@ -10,8 +10,10 @@ export default function WorshipPage() {
       <Header />
       <main className="flex-grow">
         <WorshipPageHeader />
-        <RegularWorshipSection />
-        <SundaySchoolSection />
+        <div className="py-12 md:py-16 pb-0 md:pb-0">
+          <RegularWorshipSection />
+          <SundaySchoolSection />
+        </div>
       </main>
       <Footer />
     </div>

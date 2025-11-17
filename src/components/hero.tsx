@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import Carousel from "@/components/ui/carousel"
 import { BannerItem } from "@/types/api"
@@ -9,13 +10,58 @@ interface HeroProps {
 }
 
 export default function Hero({ banners }: HeroProps) {
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+  const lastScrollY = useRef<number>(typeof window !== "undefined" ? window.scrollY : 0)
+  const wasIntersecting = useRef<boolean>(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const currentScrollY = window.scrollY
+        const isScrollingDown = currentScrollY >= lastScrollY.current
+
+        if (entry.isIntersecting) {
+          // 아래로 스크롤할 때만 애니메이션 트리거
+          // 또는 처음 뷰포트에 들어올 때
+          if (isScrollingDown || !wasIntersecting.current) {
+            setIsVisible(true)
+          }
+          wasIntersecting.current = true
+        } else {
+          setIsVisible(false)
+          wasIntersecting.current = false
+        }
+        lastScrollY.current = currentScrollY
+      },
+      { threshold: 0.1 }
+    )
+
+    const handleScroll = () => {
+      lastScrollY.current = window.scrollY
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current)
+      }
+    }
+  }, [])
+
   // 배너가 없으면 렌더링하지 않음
   if (banners.length === 0) {
     return null
   }
 
   return (
-    <section className="relative w-full h-96 md:h-screen overflow-hidden">
+    <section ref={sectionRef} className="relative w-full h-96 md:h-[100dvh] overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
         <Carousel
           autoPlay={true}
@@ -23,9 +69,10 @@ export default function Hero({ banners }: HeroProps) {
           showIndicators={banners.length > 1}
           showArrows={banners.length > 1}
           className="h-full"
+          arrowStyle="minimal"
         >
           {banners.map((banner, index) => (
-            <div key={banner.identifier} className="relative w-full h-96 md:h-screen">
+            <div key={banner.identifier} className="relative w-full h-96 md:h-[100dvh]">
               <Image
                 src={banner.imageUrl}
                 alt={`배너 이미지 ${index + 1}`}
@@ -46,11 +93,23 @@ export default function Hero({ banners }: HeroProps) {
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4 z-20 pointer-events-none">
-        <h1 className="text-4xl md:text-6xl font-bold text-center text-balance">
-          성령의 능력으로 부흥하는 교회
+        <h1
+          className={`text-4xl md:text-6xl font-bold text-center text-balance transition-all duration-1000 ease-out ${
+            isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-8"
+          }`}
+        >
+          포항수정교회
         </h1>
-        <p className="text-lg md:text-2xl mt-4 text-center">
-          성령충만한 이들이 용사로 세워지는 포항수정교회
+        <p
+          className={`text-lg md:text-2xl mt-4 text-center transition-all duration-1000 ease-out delay-300 ${
+            isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-8"
+          }`}
+        >
+          성령충만한 이들이 용사로 세워지는 교회
         </p>
       </div>
     </section>

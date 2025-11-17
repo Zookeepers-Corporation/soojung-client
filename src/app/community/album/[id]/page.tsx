@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState, use } from "react"
+import { useEffect, useState, use, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import SermonDetail from "@/components/sermon/sermon-detail"
 import CommentSection from "@/components/sermon/comment-section"
-import { getBoardDetail, ApiError } from "@/lib/api"
+import { getBoardDetail, deleteBoard, ApiError } from "@/lib/api"
 import { BoardDetailResponse, API_ERROR_CODES } from "@/types/api"
 import Dialog from "@/components/ui/dialog"
 
@@ -22,6 +22,7 @@ export default function AlbumDetailPage({ params }: AlbumDetailPageProps) {
   const [board, setBoard] = useState<BoardDetailResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +36,7 @@ export default function AlbumDetailPage({ params }: AlbumDetailPageProps) {
         if (error instanceof ApiError) {
           if (error.code === API_ERROR_CODES.BOARD_NOT_FOUND) {
             router.push("/community/album")
+            return
           }
         }
         console.error("게시글 상세 조회 실패:", error)
@@ -44,7 +46,7 @@ export default function AlbumDetailPage({ params }: AlbumDetailPageProps) {
     }
 
     fetchData()
-  }, [id, router])
+  }, [id])
 
   const formatDate = (dateString: string) => {
     try {
@@ -60,7 +62,7 @@ export default function AlbumDetailPage({ params }: AlbumDetailPageProps) {
   }
 
   const handleEdit = () => {
-    router.push(`/boards/edit/${id}`)
+    router.push(`/boards/edit/${id}?category=ALBUM`)
   }
 
   const handleDelete = () => {
@@ -68,10 +70,33 @@ export default function AlbumDetailPage({ params }: AlbumDetailPageProps) {
   }
 
   const handleDeleteConfirm = async () => {
-    // TODO: 삭제 API 호출
-    setIsDeleteDialogOpen(false)
-    console.log("삭제 기능은 추후 구현 예정")
+    setIsDeleting(true)
+    try {
+      const response = await deleteBoard(id)
+      if (response.data === null) {
+        // 삭제 성공 시 앨범 목록 페이지로 리다이렉트
+        router.push("/community/album")
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        console.error("게시글 삭제 실패:", error.message)
+        alert(`게시글 삭제에 실패했습니다: ${error.message}`)
+      } else {
+        console.error("게시글 삭제 실패:", error)
+        alert("게시글 삭제 중 오류가 발생했습니다.")
+      }
+      setIsDeleteDialogOpen(false)
+    } finally {
+      setIsDeleting(false)
+    }
   }
+
+  const handleCommentUpdate = useCallback(async () => {
+    const refreshResponse = await getBoardDetail(id)
+    if (refreshResponse.data) {
+      setBoard(refreshResponse.data)
+    }
+  }, [id])
 
   if (isLoading) {
     return (
@@ -113,12 +138,7 @@ export default function AlbumDetailPage({ params }: AlbumDetailPageProps) {
             boardIdentifier={id}
             comments={board.comments}
             commentCount={board.commentCount}
-            onCommentUpdate={async () => {
-              const refreshResponse = await getBoardDetail(id)
-              if (refreshResponse.data) {
-                setBoard(refreshResponse.data)
-              }
-            }}
+            onCommentUpdate={handleCommentUpdate}
           />
         </div>
       </main>
@@ -127,13 +147,14 @@ export default function AlbumDetailPage({ params }: AlbumDetailPageProps) {
       {/* 삭제 확인 Dialog */}
       <Dialog
         isOpen={isDeleteDialogOpen}
-        onClose={() => setIsDeleteDialogOpen(false)}
+        onClose={() => !isDeleting && setIsDeleteDialogOpen(false)}
         message="정말 이 게시글을 삭제하시겠습니까?"
-        confirmText="삭제"
+        confirmText={isDeleting ? "삭제 중..." : "삭제"}
         cancelText="취소"
         showCancel={true}
         onConfirm={handleDeleteConfirm}
-        onCancel={() => setIsDeleteDialogOpen(false)}
+        onCancel={() => !isDeleting && setIsDeleteDialogOpen(false)}
+        disabled={isDeleting}
       />
     </div>
   )
