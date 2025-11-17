@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import Card from "@/components/ui/card"
 import { Heading, Text } from "@/components/ui/typography"
@@ -130,6 +130,50 @@ interface CategoryPosts {
 export default function Categories() {
   const [categoryPosts, setCategoryPosts] = useState<CategoryPosts[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+  const lastScrollY = useRef<number>(typeof window !== "undefined" ? window.scrollY : 0)
+  const wasIntersecting = useRef<boolean>(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const currentScrollY = window.scrollY
+        const isScrollingDown = currentScrollY >= lastScrollY.current
+
+        if (entry.isIntersecting) {
+          // 아래로 스크롤할 때만 애니메이션 트리거
+          // 또는 처음 뷰포트에 들어올 때
+          if (isScrollingDown || !wasIntersecting.current) {
+            setIsVisible(true)
+          }
+          wasIntersecting.current = true
+        } else {
+          setIsVisible(false)
+          wasIntersecting.current = false
+        }
+        lastScrollY.current = currentScrollY
+      },
+      { threshold: 0.1 }
+    )
+
+    const handleScroll = () => {
+      lastScrollY.current = window.scrollY
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const fetchLatestBoards = async () => {
@@ -185,7 +229,7 @@ export default function Categories() {
   }, [])
 
   return (
-    <section className="py-16 md:py-24 bg-white">
+    <section ref={sectionRef} className="py-16 md:py-24 pb-0 md:pb-0 bg-gradient-to-b from-white via-gray-50/50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Category Sections */}
         {isLoading ? (
@@ -206,15 +250,22 @@ export default function Categories() {
                 : undefined
               
               return (
-                <div 
-                  key={categoryData.config.id} 
-                  className="space-y-5"
-                  style={dynamicMarginBottom ? { marginBottom: dynamicMarginBottom } : undefined}
+                <div
+                  key={categoryData.config.id}
+                  className={`space-y-5 transition-all duration-700 ease-out ${
+                    isVisible
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-8"
+                  }`}
+                  style={{
+                    ...(dynamicMarginBottom ? { marginBottom: dynamicMarginBottom } : {}),
+                    transitionDelay: isVisible ? `${index * 150}ms` : "0ms",
+                  }}
                 >
                   {/* Category Title */}
                   <div className="flex items-center justify-between">
                     <h3 
-                      className="text-xl font-bold"
+                      className="text-2xl font-bold"
                       style={{ color: categoryData.config.textColorHex }}
                     >
                       {categoryData.config.title}
@@ -252,7 +303,7 @@ export default function Categories() {
                                 <div className="flex items-center justify-between gap-3">
                                   <div className="flex items-center gap-2 flex-1 min-w-0">
                                     <span 
-                                      className="text-sm font-medium line-clamp-1 flex-1"
+                                      className="text-lg font-medium line-clamp-1 flex-1"
                                       style={{ color: categoryData.config.textColorHex }}
                                     >
                                       {post.title}

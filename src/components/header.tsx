@@ -139,7 +139,7 @@ export default function Header() {
 
                 {/* Dropdown Menu */}
                 {item.submenu && (
-                  <div className="absolute right-0 mt-0 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="absolute right-0 mt-3 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                     {item.submenu.map((subitem) => (
                       <Link
                         key={subitem.label}
