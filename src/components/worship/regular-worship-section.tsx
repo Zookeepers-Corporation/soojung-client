@@ -29,19 +29,19 @@ interface WorshipItem {
           <p className="text-sm text-gray-600 mb-2">Worship</p>
           <h2 className="text-4xl font-bold text-gray-900">장년 예배안내</h2>
         </div>
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
             {/* 좌측: 이미지 */}
-            <div className="flex gap-4 justify-center">
+            <div className="flex flex-col gap-4 justify-center items-center overflow-hidden">
               <img
                 src="/time1.jpg"
                 alt="예배 모습 1"
-                className="w-48 h-80 object-cover rounded-lg shadow-lg"
+                className="w-full h-64 md:h-80 object-cover rounded-lg shadow-lg"
               />
               <img
                 src="/sub3.jpg"
                 alt="예배 모습 2"
-                className="w-48 h-80 object-cover rounded-lg shadow-lg mt-8"
+                className="w-full h-64 md:h-80 object-cover rounded-lg shadow-lg"
               />
             </div>
   
