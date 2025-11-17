@@ -34,12 +34,12 @@ interface WorshipItem {
             {/* 좌측: 이미지 */}
             <div className="flex gap-4 justify-center">
               <img
-                src="/sub1.jpg"
+                src="/time1.jpg"
                 alt="예배 모습 1"
                 className="w-48 h-80 object-cover rounded-lg shadow-lg"
               />
               <img
-                src="/sub2.jpg"
+                src="/sub3.jpg"
                 alt="예배 모습 2"
                 className="w-48 h-80 object-cover rounded-lg shadow-lg mt-8"
               />

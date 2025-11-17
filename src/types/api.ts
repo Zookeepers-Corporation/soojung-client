@@ -272,6 +272,9 @@ export interface BoardUpdateRequest {
 // 게시글 수정 API 응답 타입
 export type BoardUpdateApiResponse = ApiResponseData<null>
 
+// 게시글 삭제 API 응답 타입
+export type BoardDeleteApiResponse = ApiResponseData<null>
+
 // 관리자 유저 리스트 응답 타입
 export interface AdminUserListResponse {
   identifier: string

@@ -1,59 +1,118 @@
 import { NextWeekEventConfig } from "@/types/api"
+import Card from "@/components/ui/card"
+import { Heading, Text } from "@/components/ui/typography"
 
 interface EventsProps {
   nextWeekEvent: NextWeekEventConfig | null
 }
 
+interface WorshipSchedule {
+  name: string
+  time: string
+  icon: string
+}
+
+const worshipSchedules: WorshipSchedule[] = [
+  { name: "주일 낮 예배", time: "11:00 AM", icon: "🌅" },
+  { name: "주일 오후 예배", time: "1:30 PM", icon: "☀️" },
+  { name: "수요 기도회", time: "7:30 PM", icon: "🕯️" },
+  { name: "금요 기도회", time: "개인기도", icon: "🙏" },
+  { name: "새벽 기도회", time: "5:00 AM", icon: "🌄" },
+]
+
+const defaultEvents = [
+  { name: "성경공부", time: "수요일 7시", icon: "📅" },
+  { name: "가족 선교", time: "토요일 오후", icon: "👨‍👩‍👧‍👦" },
+  { name: "찬양 콘서트", time: "일요일 12시 30분", icon: "🎵" },
+  { name: "성경 세미나", time: "월요일 7시", icon: "📖" },
+]
+
 export default function Events({ nextWeekEvent }: EventsProps) {
   return (
-    <section className="py-16 md:py-24 bg-gray-50">
+    <section className="py-16 md:py-24 bg-gradient-to-b from-[#F7F8FA] to-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Special Event Banner */}
-        <div className="relative rounded-lg overflow-hidden shadow-xl mb-16">
-          {/* Background Image */}
-          <img src="/--------.jpg" alt="이벤트" className="w-full h-64 md:h-80 object-cover" />
-
-          {/* Overlay Content */}
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <div className="text-center text-white">
-              <h3 className="text-3xl md:text-4xl font-bold mb-4 text-balance">추수감사절 감사예배</h3>
-              <p className="text-lg md:text-xl mb-6">주님께 감사드리는 시간에 초대합니다</p>
-              <button className="bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-3 rounded-lg font-semibold transition">
-                자세히 보기
-              </button>
-            </div>
-          </div>
+        {/* Section Header */}
+        <div className="text-center mb-12 md:mb-16">
+          <Heading variant="title4" className="mb-4 text-[#0F1011]">
+            예배 및 행사
+          </Heading>
+          <Text variant="regular" color="secondary" className="max-w-2xl mx-auto">
+            주님을 찬양하며 함께 모이는 시간입니다
+          </Text>
         </div>
 
         {/* Events Grid */}
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="bg-gray-50 p-8 rounded-lg">
-            <h4 className="text-xl font-bold text-gray-900 mb-4">정기 예배</h4>
-            <ul className="space-y-3 text-gray-600">
-              <li>✓ 주일 낮 예배: 11:00 AM</li>
-              <li>✓ 주일 오후 예배: 1:30 PM</li>
-              <li>✓ 수요 기도회: 7:30 PM</li>
-              <li>✓ 금요 기도회: 개인기도</li>
-              <li>✓ 새벽 기도회: 5:00 AM</li>
-            </ul>
-          </div>
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+          {/* 정기 예배 카드 */}
+          <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-[0px_4px_24px_rgba(0,0,0,0.08)] group border-l-4 border-l-[#5E6AD2]">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#5E6AD2]/10 to-transparent rounded-bl-full opacity-50 group-hover:opacity-75 transition-opacity" />
+            <div className="relative">
+              <div className="flex items-center gap-3 mb-6">
+                <Heading variant="title3" className="text-[#0F1011]">
+                  정기 예배
+                </Heading>
+              </div>
+              <div className="space-y-4">
+                {worshipSchedules.map((schedule, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-4 rounded-lg bg-[#F7F8FA] hover:bg-[#F0F2F5] transition-colors group/item"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">{schedule.icon}</span>
+                      <Text variant="regular" className="text-[#0F1011] font-medium">
+                        {schedule.name}
+                      </Text>
+                    </div>
+                    <Text variant="regular" color="secondary" className="font-medium">
+                      {schedule.time}
+                    </Text>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
 
-          <div className="bg-yellow-50 p-8 rounded-lg border-l-4 border-yellow-600">
-            <h4 className="text-xl font-bold text-gray-900 mb-4">교회 행사</h4>
-            {nextWeekEvent?.content ? (
-              <div
-                className="text-gray-600 prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: nextWeekEvent.content }}
-              />
-            ) : (
-              <ul className="space-y-3 text-gray-600">
-                <li>📅 성경공부: 수요일 7시</li>
-                <li>👨‍👩‍👧‍👦 가족 선교: 토요일 오후</li>
-                <li>🎵 찬양 콘서트: 일요일 12시 30분</li>
-                <li>📖 성경 세미나: 월요일 7시</li>
-              </ul>
-            )}
-          </div>
+          {/* 교회 행사 카드 */}
+          <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-[0px_4px_24px_rgba(0,0,0,0.08)] group border-l-4 border-l-[#5E6AD2]">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#EEF0FF] to-transparent rounded-bl-full opacity-50 group-hover:opacity-75 transition-opacity" />
+            <div className="relative">
+              <div className="flex items-center gap-3 mb-6">
+                <Heading variant="title3" className="text-[#0F1011]">
+                  교회 행사
+                </Heading>
+              </div>
+              {nextWeekEvent?.content ? (
+                <div
+                  className="prose prose-sm max-w-none text-[#3E4145] whitespace-pre-wrap [&_p]:mb-3 [&_p]:whitespace-pre-wrap [&_ul]:space-y-2 [&_li]:text-[#3E4145] [&_*]:whitespace-pre-wrap"
+                  dangerouslySetInnerHTML={{
+                    __html: nextWeekEvent.content
+                      .replace(/\n/g, "<br />")
+                      .replace(/  /g, "&nbsp;&nbsp;"),
+                  }}
+                />
+              ) : (
+                <div className="space-y-4">
+                  {defaultEvents.map((event, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 rounded-lg bg-[#FFF9E6] hover:bg-[#FFF5CC] transition-colors group/item border border-[#F2C94C]/20"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">{event.icon}</span>
+                        <Text variant="regular" className="text-[#0F1011] font-medium">
+                          {event.name}
+                        </Text>
+                      </div>
+                      <Text variant="regular" color="secondary" className="font-medium">
+                        {event.time}
+                      </Text>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </Card>
         </div>
       </div>
     </section>

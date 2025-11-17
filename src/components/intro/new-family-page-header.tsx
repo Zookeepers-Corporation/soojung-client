@@ -15,6 +15,7 @@ export default function NewFamilyPageHeader() {
       <div className="relative z-10 text-center">
         <p className="text-gray-600 text-lg mb-2">New Family</p>
         <h1 className="text-5xl font-bold text-gray-800">새가족 안내</h1>
+        <div className="w-64 h-1 bg-yellow-600 mx-auto mt-4" />
       </div>
     </section>
   )

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu, X, ChevronDown } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { UserRole } from "@/types/api"
@@ -87,11 +88,32 @@ export default function Header() {
         {/* Main Header */}
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold text-blue-900">
-              포항수정교회
-            </Link>
-          </div>
+          <Link href="/" className="flex items-center gap-1 flex-shrink-0">
+            {/* 로고 마크 */}
+            <div className="relative w-10 h-10">
+              <Image 
+                src="/church_mark.svg" 
+                alt="포항수정교회 마크" 
+                fill
+                className="drop-shadow-md object-contain"
+              />
+            </div>
+            
+            {/* 교회 이름 */}
+            <div className="relative">
+              <h1 
+                className="text-2xl text-blue-900 tracking-wider relative inline-block"
+                style={{ fontFamily: 'KimJeongCheolGothic' }}
+              >
+                <span className="relative z-10">
+                  <span className="font-bold">포항</span>
+                  <span style={{ fontWeight: 400 }}>수정</span>
+                  <span className="font-bold">교회</span>
+                </span>
+                <div className="absolute bottom-0 left-0 w-full h-3 bg-blue-200 opacity-30 -z-0"></div>
+              </h1>
+            </div>
+          </Link>
 
           {/* Desktop Navigation - Right Side */}
           <nav className="hidden md:flex items-center gap-8">

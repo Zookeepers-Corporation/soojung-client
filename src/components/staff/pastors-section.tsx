@@ -12,14 +12,12 @@ export default function PastorsSection() {
     {
       name: "김재곤",
       role: "담임목사",
-      image: "/pastor-main.jpg",
-      description: "하나님의 말씀으로 교회를 섬기고 있습니다.",
+      image: "/sub1.jpg",
     },
     {
       name: "박미정",
       role: "교육목사",
-      image: "/pastor-assistant.jpg",
-      description: "하나님의 말씀으로 교회를 섬기고 있습니다.",
+      image: "/edu_pastor.jpeg",
     },
   ]
 

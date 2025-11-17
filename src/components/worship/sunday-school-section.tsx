@@ -5,8 +5,8 @@ interface SundaySchoolClass {
   
   export default function SundaySchoolSection() {
     const classes: SundaySchoolClass[] = [
-      { name: "초등부", schedule: "주일 오전 / 10시" },
-      { name: "중고등부", schedule: "주일 오전 / 10시" },
+      { name: "초등부", schedule: "주일 오전 / 11시" },
+      { name: "중고등부", schedule: "주일 오전 / 11시" },
     ]
   
     return (

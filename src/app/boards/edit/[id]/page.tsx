@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, Suspense } from "react"
+import { useState, useEffect, useRef, use, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
@@ -8,226 +8,154 @@ import Card from "@/components/ui/card"
 import Input from "@/components/ui/input"
 import Button from "@/components/ui/button"
 import { Heading, Text } from "@/components/ui/typography"
-import Dialog from "@/components/ui/dialog"
-import { createBoard, ApiError } from "@/lib/api"
-import { BoardCategory, BoardCreateRequest, API_ERROR_CODES, UserRole } from "@/types/api"
+import { getBoardDetail, updateBoard, ApiError } from "@/lib/api"
+import { BoardDetailResponse, BoardUpdateRequest, BoardCategory, API_ERROR_CODES } from "@/types/api"
 import { useAuth } from "@/contexts/auth-context"
+import Image from "next/image"
 
-function WriteBoardContent() {
+interface EditBoardPageProps {
+  params: Promise<{
+    id: string
+  }>
+}
+
+interface ImageItem {
+  identifier?: string
+  url: string
+  file?: File
+  preview?: string
+  isNew: boolean
+}
+
+interface FileItem {
+  identifier?: string
+  fileUrl: string
+  originalFileName: string
+  fileSize: number
+  file?: File
+  isNew: boolean
+}
+
+function EditBoardContent({ params }: EditBoardPageProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { isLoggedIn, user } = useAuth()
-  const categoryParam = searchParams.get("category") as BoardCategory | null
-
-  const [formData, setFormData] = useState({
+  const { id } = use(params)
+  const { isLoggedIn } = useAuth()
+  const [board, setBoard] = useState<BoardDetailResponse | null>(null)
+  const [category, setCategory] = useState<BoardCategory | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  
+  // URL 경로에서 카테고리 추론 (referrer 기반)
+  useEffect(() => {
+    // 쿼리 파라미터에서 카테고리 가져오기 (우선순위 1)
+    const categoryParam = searchParams.get("category")
+    if (categoryParam && Object.values(BoardCategory).includes(categoryParam as BoardCategory)) {
+      setCategory(categoryParam as BoardCategory)
+      return
+    }
+    
+    // document.referrer에서 카테고리 추론 (우선순위 2)
+    if (typeof window !== "undefined" && document.referrer) {
+      const referrer = new URL(document.referrer)
+      const pathname = referrer.pathname
+      
+      // 경로에서 카테고리 추론
+      if (pathname.startsWith("/community/board")) {
+        setCategory(BoardCategory.BOARD)
+      } else if (pathname.startsWith("/community/album")) {
+        setCategory(BoardCategory.ALBUM)
+      } else if (pathname.startsWith("/community/resources")) {
+        setCategory(BoardCategory.ARCHIVE)
+      } else if (pathname.startsWith("/intro/news")) {
+        setCategory(BoardCategory.CHURCH_NEWS)
+      } else if (pathname.startsWith("/intro/members")) {
+        setCategory(BoardCategory.CHURCH_PEOPLE_NEWS)
+      } else if (pathname.startsWith("/sermon/sunday")) {
+        setCategory(BoardCategory.SUNDAY_WORSHIP)
+      } else if (pathname.startsWith("/sermon/wednesday")) {
+        setCategory(BoardCategory.WEDNESDAY_WORSHIP)
+      } else if (pathname.startsWith("/sermon/friday")) {
+        setCategory(BoardCategory.FRIDAY_PRAYER)
+      } else if (pathname.startsWith("/sermon/dawn")) {
+        setCategory(BoardCategory.DAWN_PRAYER)
+      } else if (pathname.startsWith("/sermon/special")) {
+        setCategory(BoardCategory.SPECIAL_WORSHIP)
+      }
+    }
+  }, [searchParams])
+  const [editFormData, setEditFormData] = useState({
     title: "",
     content: "",
-    category: categoryParam || BoardCategory.BOARD,
   })
-
-  // categoryParam이 변경되면 formData.category도 업데이트
-  useEffect(() => {
-    if (categoryParam) {
-      setFormData((prev) => ({ ...prev, category: categoryParam }))
-    }
-  }, [categoryParam])
-  const [images, setImages] = useState<File[]>([])
-  const [imageOrders, setImageOrders] = useState<number[]>([])
-  const [imagePreviews, setImagePreviews] = useState<string[]>([])
-  const [files, setFiles] = useState<File[]>([])
+  const [editImages, setEditImages] = useState<ImageItem[]>([])
+  const [editFiles, setEditFiles] = useState<FileItem[]>([])
+  const [newFiles, setNewFiles] = useState<File[]>([])
+  const [deleteFileIdentifiers, setDeleteFileIdentifiers] = useState<string[]>([])
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const imageInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isUpdating, setIsUpdating] = useState(false)
   const [errors, setErrors] = useState<{
     title?: string
     content?: string
-    category?: string
     general?: string
   }>({})
-  const [isLoading, setIsLoading] = useState(false)
-  const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false)
 
-  // 관리자 전용 카테고리인지 확인
-  const isAdminOnlyCategory =
-    formData.category === BoardCategory.SUNDAY_WORSHIP ||
-    formData.category === BoardCategory.WEDNESDAY_WORSHIP ||
-    formData.category === BoardCategory.FRIDAY_PRAYER ||
-    formData.category === BoardCategory.DAWN_PRAYER ||
-    formData.category === BoardCategory.SPECIAL_WORSHIP ||
-    formData.category === BoardCategory.CHURCH_NEWS ||
-    formData.category === BoardCategory.CHURCH_PEOPLE_NEWS
-
-  const isAdmin = isLoggedIn && user?.role === UserRole.ADMIN
-
-  // 로그인하지 않은 경우 리다이렉트
   useEffect(() => {
     if (!isLoggedIn) {
       router.push("/login")
       return
     }
-    // 관리자 전용 카테고리인데 관리자가 아닌 경우 리다이렉트
-    if (isAdminOnlyCategory && !isAdmin) {
-      router.push("/")
-    }
-  }, [isLoggedIn, isAdminOnlyCategory, isAdmin, router])
+  }, [isLoggedIn, router])
 
-  if (!isLoggedIn) {
-    return null
-  }
-
-  // 관리자 전용 카테고리인데 관리자가 아닌 경우
-  if (isAdminOnlyCategory && !isAdmin) {
-    return null
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setErrors({})
-
-    const newErrors: { title?: string; content?: string; category?: string } = {}
-
-    if (!formData.title.trim()) {
-      newErrors.title = "제목을 입력해주세요."
-    }
-
-    if (!formData.content.trim()) {
-      newErrors.content = "내용을 입력해주세요."
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-
-    setIsLoading(true)
-    try {
-      const request: BoardCreateRequest = {
-        title: formData.title.trim(),
-        content: formData.content.trim() || undefined,
-        category: formData.category,
-        images: images.length > 0 ? images : undefined,
-        imageOrders: imageOrders.length > 0 ? imageOrders : undefined,
-        files: files.length > 0 ? files : undefined,
-      }
-
-      const response = await createBoard(request)
-
-      if (response.data) {
-        setIsSuccessDialogOpen(true)
-      }
-    } catch (error) {
-      if (error instanceof ApiError) {
-        if (error.code === API_ERROR_CODES.ADMIN_ONLY) {
-          setErrors({ general: error.message })
-        } else if (error.code === API_ERROR_CODES.VALIDATION_ERROR && error.validationErrors) {
-          setErrors({ general: error.validationErrors.join("\n") })
-        } else {
-          setErrors({ general: error.message })
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const response = await getBoardDetail(id)
+        if (response.data) {
+          setBoard(response.data)
+          setEditFormData({
+            title: response.data.title,
+            content: response.data.content || "",
+          })
+          // 기존 이미지 설정
+          const sortedImages = [...response.data.images].sort((a, b) => a.displayOrder - b.displayOrder)
+          setEditImages(
+            sortedImages.map((img) => ({
+              identifier: img.identifier,
+              url: img.imageUrl,
+              isNew: false,
+            }))
+          )
+          // 기존 파일 설정
+          setEditFiles(
+            response.data.files.map((file) => ({
+              identifier: file.identifier,
+              fileUrl: file.fileUrl,
+              originalFileName: file.originalFileName,
+              fileSize: file.fileSize,
+              isNew: false,
+            }))
+          )
         }
-      } else if (error instanceof Error) {
-        setErrors({ general: error.message })
-      } else {
-        setErrors({ general: "게시글 작성 중 오류가 발생했습니다. 다시 시도해주세요." })
-      }
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const newImages = Array.from(e.target.files)
-      const newPreviews: string[] = []
-      let loadedCount = 0
-      
-      newImages.forEach((file, fileIndex) => {
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          newPreviews[fileIndex] = reader.result as string
-          loadedCount++
-          if (loadedCount === newImages.length) {
-            setImagePreviews([...imagePreviews, ...newPreviews])
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.code === API_ERROR_CODES.BOARD_NOT_FOUND) {
+            router.push("/community/board")
+            return
           }
         }
-        reader.readAsDataURL(file)
-      })
-      
-      setImages([...images, ...newImages])
-      // 이미지 순서는 추가된 순서대로 설정
-      const newOrders = newImages.map((_, index) => images.length + index)
-      setImageOrders([...imageOrders, ...newOrders])
+        console.error("게시글 상세 조회 실패:", error)
+      } finally {
+        setIsLoading(false)
+      }
     }
-  }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFiles([...files, ...Array.from(e.target.files)])
+    if (isLoggedIn) {
+      fetchData()
     }
-  }
-
-  const removeImage = (index: number) => {
-    setImages(images.filter((_, i) => i !== index))
-    setImagePreviews(imagePreviews.filter((_, i) => i !== index))
-    setImageOrders(imageOrders.filter((_, i) => i !== index).map((order, i) => i))
-  }
-
-  const handleDragStart = (index: number) => {
-    setDraggedIndex(index)
-  }
-
-  const handleDragOver = (e: React.DragEvent, index: number) => {
-    e.preventDefault()
-    if (draggedIndex === null) return
-
-    if (draggedIndex !== index) {
-      const newImages = [...images]
-      const newPreviews = [...imagePreviews]
-      const newOrders = [...imageOrders]
-
-      const draggedImage = newImages[draggedIndex]
-      const draggedPreview = newPreviews[draggedIndex]
-      const draggedOrder = newOrders[draggedIndex]
-
-      newImages.splice(draggedIndex, 1)
-      newPreviews.splice(draggedIndex, 1)
-      newOrders.splice(draggedIndex, 1)
-
-      newImages.splice(index, 0, draggedImage)
-      newPreviews.splice(index, 0, draggedPreview)
-      newOrders.splice(index, 0, draggedOrder)
-
-      // 순서 재정렬 (0부터 시작)
-      const reorderedOrders = newOrders.map((_, i) => i)
-
-      setImages(newImages)
-      setImagePreviews(newPreviews)
-      setImageOrders(reorderedOrders)
-      setDraggedIndex(index)
-    }
-  }
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null)
-  }
-
-  const removeFile = (index: number) => {
-    setFiles(files.filter((_, i) => i !== index))
-  }
-
-  const getCategoryName = (category: BoardCategory) => {
-    const categoryMap: Record<BoardCategory, string> = {
-      [BoardCategory.SUNDAY_WORSHIP]: "주일예배",
-      [BoardCategory.WEDNESDAY_WORSHIP]: "수요예배",
-      [BoardCategory.FRIDAY_PRAYER]: "금요기도회",
-      [BoardCategory.DAWN_PRAYER]: "새벽기도회",
-      [BoardCategory.SPECIAL_WORSHIP]: "특별예배",
-      [BoardCategory.BOARD]: "게시판",
-      [BoardCategory.ALBUM]: "앨범",
-      [BoardCategory.ARCHIVE]: "자료실",
-      [BoardCategory.CHURCH_NEWS]: "교회소식",
-      [BoardCategory.CHURCH_PEOPLE_NEWS]: "성도소식",
-    }
-    return categoryMap[category] || category
-  }
+  }, [id, isLoggedIn, router, searchParams])
 
   const getCategoryPath = (category: BoardCategory) => {
     const pathMap: Record<BoardCategory, string> = {
@@ -245,6 +173,179 @@ function WriteBoardContent() {
     return pathMap[category] || "/"
   }
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setErrors({})
+
+    const newErrors: { title?: string; content?: string } = {}
+
+    if (!editFormData.title.trim()) {
+      newErrors.title = "제목을 입력해주세요."
+    }
+
+    if (!editFormData.content.trim()) {
+      newErrors.content = "내용을 입력해주세요."
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+
+    setIsUpdating(true)
+    try {
+      // editImages 배열의 순서대로 keepImageIdentifiers, keepImageOrders, newImages, newImageOrders 설정
+      const keepImageIdentifiers: string[] = []
+      const keepImageOrders: number[] = []
+      const newImages: File[] = []
+      const newImageOrders: number[] = []
+
+      editImages.forEach((img, index) => {
+        if (img.isNew && img.file) {
+          // 새 이미지인 경우
+          newImages.push(img.file)
+          newImageOrders.push(index)
+        } else if (img.identifier) {
+          // 기존 이미지인 경우
+          keepImageIdentifiers.push(img.identifier)
+          keepImageOrders.push(index)
+        }
+      })
+
+      const request: BoardUpdateRequest = {
+        title: editFormData.title.trim(),
+        content: editFormData.content.trim(),
+        keepImageIdentifiers: keepImageIdentifiers.length > 0 ? keepImageIdentifiers : undefined,
+        keepImageOrders: keepImageOrders.length > 0 ? keepImageOrders : undefined,
+        newImages: newImages.length > 0 ? newImages : undefined,
+        newImageOrders: newImageOrders.length > 0 ? newImageOrders : undefined,
+        deleteFileIdentifiers: deleteFileIdentifiers.length > 0 ? deleteFileIdentifiers : undefined,
+        newFiles: newFiles.length > 0 ? newFiles : undefined,
+      }
+
+      const response = await updateBoard(id, request)
+
+      if (response.data === null && category) {
+        // 수정 성공 시 해당 게시글 상세 페이지로 리다이렉트
+        router.push(`${getCategoryPath(category)}/${id}`)
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.code === API_ERROR_CODES.BOARD_UPDATE_FORBIDDEN) {
+          setErrors({ general: error.message })
+        } else if (error.code === API_ERROR_CODES.VALIDATION_ERROR && error.validationErrors) {
+          setErrors({ general: error.validationErrors.join("\n") })
+        } else {
+          setErrors({ general: error.message })
+        }
+      } else if (error instanceof Error) {
+        setErrors({ general: error.message })
+      } else {
+        setErrors({ general: "게시글 수정 중 오류가 발생했습니다. 다시 시도해주세요." })
+      }
+    } finally {
+      setIsUpdating(false)
+    }
+  }
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newImageFiles = Array.from(e.target.files)
+      const newPreviews: string[] = []
+      let loadedCount = 0
+
+      newImageFiles.forEach((file, fileIndex) => {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          newPreviews[fileIndex] = reader.result as string
+          loadedCount++
+          if (loadedCount === newImageFiles.length) {
+            const newImageItems: ImageItem[] = newImageFiles.map((file, index) => ({
+              file,
+              url: newPreviews[index],
+              preview: newPreviews[index],
+              isNew: true,
+            }))
+            setEditImages([...editImages, ...newImageItems])
+          }
+        }
+        reader.readAsDataURL(file)
+      })
+    }
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setNewFiles([...newFiles, ...Array.from(e.target.files)])
+    }
+  }
+
+  const removeImage = (index: number) => {
+    setEditImages(editImages.filter((_, i) => i !== index))
+  }
+
+  const removeFile = (index: number) => {
+    const file = editFiles[index]
+    if (file.identifier) {
+      setDeleteFileIdentifiers([...deleteFileIdentifiers, file.identifier])
+    }
+    setEditFiles(editFiles.filter((_, i) => i !== index))
+  }
+
+  const removeNewFile = (index: number) => {
+    setNewFiles(newFiles.filter((_, i) => i !== index))
+  }
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index)
+  }
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    if (draggedIndex === null) return
+
+    if (draggedIndex !== index) {
+      const newImages = [...editImages]
+      const draggedImage = newImages[draggedIndex]
+      newImages.splice(draggedIndex, 1)
+      newImages.splice(index, 0, draggedImage)
+      setEditImages(newImages)
+      setDraggedIndex(index)
+    }
+  }
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null)
+  }
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return "0 Bytes"
+    const k = 1024
+    const sizes = ["Bytes", "KB", "MB", "GB"]
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i]
+  }
+
+  if (!isLoggedIn) {
+    return null
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow flex items-center justify-center">
+          <p>로딩 중...</p>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
+  if (!board) {
+    return null
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -253,10 +354,10 @@ function WriteBoardContent() {
           <Card>
             <div className="mb-8">
               <Heading variant="title3" className="mb-2">
-                게시글 작성
+                게시글 수정
               </Heading>
               <Text variant="regular" color="secondary">
-                {getCategoryName(formData.category)}에 게시글을 작성합니다
+                게시글을 수정합니다
               </Text>
             </div>
 
@@ -285,8 +386,8 @@ function WriteBoardContent() {
                 label="제목 (필수)"
                 type="text"
                 placeholder="제목을 입력하세요"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                value={editFormData.title}
+                onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
                 error={errors.title}
                 required
               />
@@ -296,8 +397,8 @@ function WriteBoardContent() {
                   내용 (필수)
                 </label>
                 <textarea
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  value={editFormData.content}
+                  onChange={(e) => setEditFormData({ ...editFormData, content: e.target.value })}
                   placeholder="내용을 입력하세요"
                   className={`w-full bg-white border rounded-lg px-3 py-2 text-[0.9375rem] text-[#0F1011] focus:outline-none focus:ring-2 focus:ring-[rgba(94,106,210,0.2)] min-h-[300px] resize-y ${
                     errors.content ? "border-[#EB5757]" : "border-[#E5E7EB] focus:border-[#5E6AD2]"
@@ -323,7 +424,7 @@ function WriteBoardContent() {
                   className="hidden"
                 />
                 <div className="mt-4">
-                  {images.length > 0 && (
+                  {editImages.length > 0 && (
                     <Text variant="small" color="secondary" className="mb-3 block">
                       드래그하여 순서를 변경할 수 있습니다
                     </Text>
@@ -356,7 +457,7 @@ function WriteBoardContent() {
                     </button>
 
                     {/* 이미지 카드들 */}
-                    {images.map((image, index) => (
+                    {editImages.map((image, index) => (
                       <Card
                         key={index}
                         padding="none"
@@ -371,11 +472,13 @@ function WriteBoardContent() {
                         onDragEnd={handleDragEnd}
                       >
                         <div className="aspect-square relative bg-gray-100">
-                          {imagePreviews[index] && (
-                            <img
-                              src={imagePreviews[index]}
+                          {(image.preview || image.url) && (
+                            <Image
+                              src={image.preview || image.url}
                               alt={`이미지 ${index + 1}`}
-                              className="w-full h-full object-cover"
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                             />
                           )}
                           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
@@ -422,7 +525,7 @@ function WriteBoardContent() {
                         </div>
                         <div className="p-2 bg-white">
                           <Text variant="small" color="secondary" className="truncate">
-                            {image.name}
+                            {image.isNew ? (image.file?.name || "새 이미지") : "기존 이미지"}
                           </Text>
                           <Text variant="tiny" color="tertiary">
                             순서: {index + 1}
@@ -440,24 +543,62 @@ function WriteBoardContent() {
                   첨부 파일 (선택사항)
                 </label>
                 <input
+                  ref={fileInputRef}
                   type="file"
                   multiple
                   onChange={handleFileChange}
-                  className="w-full bg-white border border-[#E5E7EB] rounded-lg px-3 py-2 text-[0.9375rem] text-[#0F1011] focus:border-[#5E6AD2] focus:outline-none focus:ring-2 focus:ring-[rgba(94,106,210,0.2)]"
+                  className="hidden"
                 />
-                {files.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full bg-white border border-[#E5E7EB] rounded-lg px-3 py-2 text-[0.9375rem] text-[#0F1011] focus:border-[#5E6AD2] focus:outline-none focus:ring-2 focus:ring-[rgba(94,106,210,0.2)] hover:bg-gray-50 transition-colors"
+                >
+                  파일 추가
+                </button>
+
+                {/* 기존 파일 목록 */}
+                {editFiles.length > 0 && (
                   <div className="mt-4 space-y-2">
-                    {files.map((file, index) => (
+                    {editFiles.map((file, index) => (
                       <div
                         key={index}
                         className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
+                      >
+                        <div className="flex-1">
+                          <Text variant="small" color="secondary" className="font-medium">
+                            {file.originalFileName}
+                          </Text>
+                          <Text variant="tiny" color="tertiary">
+                            {formatFileSize(file.fileSize)}
+                          </Text>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(index)}
+                          className="text-red-600 hover:text-red-800 text-sm ml-4"
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* 새 파일 목록 */}
+                {newFiles.length > 0 && (
+                  <div className="mt-4 space-y-2">
+                    {newFiles.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-2 bg-blue-50 rounded-lg"
                       >
                         <Text variant="small" color="secondary">
                           {file.name}
                         </Text>
                         <button
                           type="button"
-                          onClick={() => removeFile(index)}
+                          onClick={() => removeNewFile(index)}
                           className="text-red-600 hover:text-red-800 text-sm"
                         >
                           삭제
@@ -473,12 +614,12 @@ function WriteBoardContent() {
                   variant="secondary"
                   type="button"
                   onClick={() => router.back()}
-                  disabled={isLoading}
+                  disabled={isUpdating}
                 >
                   취소
                 </Button>
-                <Button variant="primary" type="submit" disabled={isLoading}>
-                  {isLoading ? "작성 중..." : "작성하기"}
+                <Button variant="primary" type="submit" disabled={isUpdating}>
+                  {isUpdating ? "수정 중..." : "수정하기"}
                 </Button>
               </div>
             </form>
@@ -486,29 +627,14 @@ function WriteBoardContent() {
         </div>
       </main>
       <Footer />
-
-      {/* 성공 Dialog */}
-      <Dialog
-        isOpen={isSuccessDialogOpen}
-        onClose={() => {
-          setIsSuccessDialogOpen(false)
-          router.push(getCategoryPath(formData.category))
-        }}
-        message="게시글이 성공적으로 생성되었습니다."
-        confirmText="확인"
-        onConfirm={() => {
-          setIsSuccessDialogOpen(false)
-          router.push(getCategoryPath(formData.category))
-        }}
-      />
     </div>
   )
 }
 
-export default function WriteBoardPage() {
+export default function EditBoardPage({ params }: EditBoardPageProps) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <WriteBoardContent />
+      <EditBoardContent params={params} />
     </Suspense>
   )
 }

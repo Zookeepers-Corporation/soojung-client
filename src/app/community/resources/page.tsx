@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import CommunityPageHeader from "@/components/community/community-page-header"
 import SermonList from "@/components/sermon/sermon-list"
 import { getBoardList } from "@/lib/api"
 import { BoardCategory, BoardListResponse, PageInfo } from "@/types/api"
@@ -53,18 +54,21 @@ function ResourcesPageContent() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        {!isLoading && (
-          <SermonList
-            title="자료실"
-            posts={posts}
-            pageInfo={pageInfo}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-            basePath="/community/resources"
-            category={BoardCategory.ARCHIVE}
-            showCategoryTabs={false}
-          />
-        )}
+        <CommunityPageHeader title="자료실" subtitle="Resources" />
+        <div className="py-12 md:py-16">
+          {!isLoading && (
+            <SermonList
+              title=""
+              posts={posts}
+              pageInfo={pageInfo}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              basePath="/community/resources"
+              category={BoardCategory.ARCHIVE}
+              showCategoryTabs={false}
+            />
+          )}
+        </div>
       </main>
       <Footer />
     </div>

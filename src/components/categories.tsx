@@ -251,11 +251,6 @@ export default function Categories() {
                               <div className="py-3 px-3 hover:bg-gray-50 transition-colors cursor-pointer">
                                 <div className="flex items-center justify-between gap-3">
                                   <div className="flex items-center gap-2 flex-1 min-w-0">
-                                    {isNewPost(post.createdAt) && (
-                                      <span className="flex-shrink-0 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                                        <span className="text-white text-[10px] font-bold leading-none">N</span>
-                                      </span>
-                                    )}
                                     <span 
                                       className="text-sm font-medium line-clamp-1 flex-1"
                                       style={{ color: categoryData.config.textColorHex }}

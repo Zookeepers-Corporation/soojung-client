@@ -15,7 +15,7 @@ export default function Hero({ banners }: HeroProps) {
   }
 
   return (
-    <section className="relative w-full h-96 md:h-screen overflow-hidden">
+    <section className="relative w-full h-96 md:h-[100dvh] overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
         <Carousel
           autoPlay={true}
@@ -23,9 +23,10 @@ export default function Hero({ banners }: HeroProps) {
           showIndicators={banners.length > 1}
           showArrows={banners.length > 1}
           className="h-full"
+          arrowStyle="minimal"
         >
           {banners.map((banner, index) => (
-            <div key={banner.identifier} className="relative w-full h-96 md:h-screen">
+            <div key={banner.identifier} className="relative w-full h-96 md:h-[100dvh]">
               <Image
                 src={banner.imageUrl}
                 alt={`배너 이미지 ${index + 1}`}
@@ -47,10 +48,10 @@ export default function Hero({ banners }: HeroProps) {
       {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4 z-20 pointer-events-none">
         <h1 className="text-4xl md:text-6xl font-bold text-center text-balance">
-          성령의 능력으로 부흥하는 교회
+          포항수정교회
         </h1>
         <p className="text-lg md:text-2xl mt-4 text-center">
-          성령충만한 이들이 용사로 세워지는 포항수정교회
+          성령충만한 이들이 용사로 세워지는 교회
         </p>
       </div>
     </section>

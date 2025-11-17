@@ -14,6 +14,7 @@ import {
   BoardDetailApiResponse,
   BoardUpdateRequest,
   BoardUpdateApiResponse,
+  BoardDeleteApiResponse,
   CommentCreateRequest,
   CommentCreateApiResponse,
   CommentUpdateRequest,
@@ -369,6 +370,15 @@ export async function updateBoard(
     }
     throw new Error("네트워크 오류가 발생했습니다.")
   }
+}
+
+/**
+ * 게시글 삭제 API 호출
+ */
+export async function deleteBoard(identifier: string): Promise<BoardDeleteApiResponse> {
+  return fetchApi<BoardDeleteApiResponse>(`/v1/boards/${identifier}`, {
+    method: "DELETE",
+  })
 }
 
 /**

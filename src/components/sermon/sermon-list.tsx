@@ -39,7 +39,9 @@ export default function SermonList({
     category === BoardCategory.WEDNESDAY_WORSHIP ||
     category === BoardCategory.FRIDAY_PRAYER ||
     category === BoardCategory.DAWN_PRAYER ||
-    category === BoardCategory.SPECIAL_WORSHIP
+    category === BoardCategory.SPECIAL_WORSHIP ||
+    category === BoardCategory.CHURCH_NEWS ||
+    category === BoardCategory.CHURCH_PEOPLE_NEWS
 
   // 작성 버튼 표시 여부
   const canWrite =

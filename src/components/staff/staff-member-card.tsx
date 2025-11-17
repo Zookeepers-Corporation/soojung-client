@@ -33,7 +33,7 @@ export default function StaffMemberCard({
         <Heading variant="title3" className="mb-1">
           {name}
         </Heading>
-        <Text variant="small" className="text-[#5E6AD2] font-semibold mb-2 block">
+        <Text variant="regular" className="text-[#5E6AD2] font-semibold mb-2 block">
           {role}
         </Text>
         {description && (

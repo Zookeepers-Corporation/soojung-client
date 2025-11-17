@@ -33,10 +33,18 @@ export default function NewFamilyPage() {
             <div className="space-y-4">
               <div>
                 <Text variant="regular" className="font-semibold mb-2">
-                  주일예배
+                  주일 낮 예배
                 </Text>
                 <Text variant="regular" color="secondary">
-                  매주 일요일 오전 11시
+                  일요일 오전 11시
+                </Text>
+              </div>
+              <div>
+                <Text variant="regular" className="font-semibold mb-2">
+                  주일 오후 예배
+                </Text>
+                <Text variant="regular" color="secondary">
+                  일요일 오후 1시 30분
                 </Text>
               </div>
               <div>
@@ -44,7 +52,7 @@ export default function NewFamilyPage() {
                   수요예배
                 </Text>
                 <Text variant="regular" color="secondary">
-                  매주 수요일 오후 7시 30분
+                  수요일 오후 7시 30분
                 </Text>
               </div>
               <div>
@@ -52,7 +60,7 @@ export default function NewFamilyPage() {
                   금요기도회
                 </Text>
                 <Text variant="regular" color="secondary">
-                  매주 금요일 오후 8시
+                  개인기도
                 </Text>
               </div>
               <div>
@@ -60,7 +68,7 @@ export default function NewFamilyPage() {
                   새벽기도회
                 </Text>
                 <Text variant="regular" color="secondary">
-                  매일 새벽 5시 30분
+                  새벽 5시 00분
                 </Text>
               </div>
             </div>
@@ -78,6 +86,14 @@ export default function NewFamilyPage() {
                 </Text>
                 <Text variant="regular" color="secondary">
                   054-248-7831
+                </Text>
+              </div>
+              <div>
+                <Text variant="regular" className="font-semibold mb-2">
+                  이메일
+                </Text>
+                <Text variant="regular" color="secondary">
+                  pohangsoojungofficial@gmail.com
                 </Text>
               </div>
               <div>
@@ -110,7 +126,7 @@ export default function NewFamilyPage() {
                   주차 안내
                 </Text>
                 <Text variant="regular" color="secondary">
-                  교회 내 주차장을 이용하실 수 있습니다. 주차 공간이 부족할 경우 주변 공영주차장을 이용해 주세요.
+                  교회 왼쪽 편의 주차장을 이용하실 수 있습니다. 주차 공간이 부족할 경우 주변 길가에 주차해 주세요.
                 </Text>
               </div>
               <div>
@@ -118,7 +134,7 @@ export default function NewFamilyPage() {
                   새가족 등록
                 </Text>
                 <Text variant="regular" color="secondary">
-                  교회에 정기적으로 참석하시려면 새가족 등록을 해주시기 바랍니다. 등록 후 교회 소식과 행사 안내를 받으실 수 있습니다.
+                  교회에 정기적으로 참석하시려면 새가족 등록을 도와드립니다.
                 </Text>
               </div>
               <div>

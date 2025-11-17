@@ -1,6 +1,6 @@
 import Image from "next/image"
 
-const PASTOR_IMAGE = "/pastor-main.jpg"
+const PASTOR_IMAGE = "/sub1.jpg"
 
 export default function PastorIntroduction() {
   return (
