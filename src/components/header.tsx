@@ -125,13 +125,13 @@ export default function Header() {
                 onMouseLeave={() => setOpenDropdown(null)}
               >
                 {item.submenu ? (
-                  <button className="text-gray-700 hover:text-blue-900 transition text-base font-bold">
+                  <button className="text-gray-700 hover:text-blue-900 transition text-lg font-bold">
                     {item.label}
                   </button>
                 ) : (
                   <Link
                     href={item.href}
-                    className="text-gray-700 hover:text-blue-900 transition text-base font-bold"
+                    className="text-gray-700 hover:text-blue-900 transition text-lg font-bold"
                   >
                     {item.label}
                   </Link>
@@ -169,7 +169,7 @@ export default function Header() {
                 {item.submenu ? (
                   <button
                     onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
-                    className="w-full flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-gray-100 rounded transition font-bold"
+                    className="w-full flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-gray-100 rounded transition text-lg font-bold"
                   >
                     {item.label}
                     <ChevronDown
@@ -180,7 +180,7 @@ export default function Header() {
                 ) : (
                   <Link
                     href={item.href}
-                    className="w-full flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded transition font-bold"
+                    className="w-full flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded transition text-lg font-bold"
                   >
                     {item.label}
                   </Link>

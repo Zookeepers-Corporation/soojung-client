@@ -88,12 +88,16 @@ export default function Gallery() {
   }
 
   return (
-    <section ref={sectionRef} className="relative py-20 md:py-32 bg-gradient-to-b from-[#F7F8FA] via-white to-[#F7F8FA] overflow-hidden">
-      {/* 배경 장식 요소 */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-5">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-[#8B7355] rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#5E6AD2] rounded-full blur-3xl"></div>
-      </div>
+    <section ref={sectionRef} className="relative py-20 md:py-32 overflow-hidden">
+      {/* 배경 이미지 */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/main3 .jpg')",
+        }}
+      />
+      {/* 그라데이션 오버레이 */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/75 to-white/80"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
