@@ -100,7 +100,16 @@ export default function Header() {
             </div>
             
             {/* 교회 이름 */}
-            <div className="relative">
+            <div className="relative flex flex-col items-start">
+              {/* 대한예수교장로회 */}
+              <div 
+                className="text-xs text-gray-600 mb-0"
+                style={{ fontFamily: 'KimJeongCheolGothic' }}
+              >
+                대한예수교장로회
+              </div>
+              
+              {/* 포항수정교회 */}
               <h1 
                 className="text-2xl text-blue-900 tracking-wider relative inline-block"
                 style={{ fontFamily: 'KimJeongCheolGothic' }}
