@@ -310,7 +310,6 @@ export default function SermonDetailPage({ params }: SermonDetailPageProps) {
   const handleDeleteConfirm = async () => {
     // TODO: 삭제 API 호출
     setIsDeleteDialogOpen(false)
-    console.log("삭제 기능은 추후 구현 예정")
   }
 
   const handleCommentUpdate = useCallback(async () => {
