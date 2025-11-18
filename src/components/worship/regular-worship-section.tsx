@@ -1,0 +1,68 @@
+interface WorshipItem {
+    category: string
+    times: string[]
+  }
+  
+  export default function RegularWorshipSection() {
+    const worshipSchedule: WorshipItem[] = [
+      {
+        category: "주일 예배",
+        times: ["오전 11시 00분", "오후 1시 30분"],
+      },
+      {
+        category: "수요 기도회",
+        times: ["저녁 7시 30분"],
+      },
+      {
+        category: "금요기도회",
+        times: ["개인 기도"],
+      },
+      {
+        category: "새벽기도",
+        times: ["오전 5시 00분"],
+      },
+    ]
+  
+    return (
+      <section className="pt-6 py-16 bg-white">
+        <div className="text-center mb-12">
+          <p className="text-sm text-gray-600 mb-2">Worship</p>
+          <h2 className="text-4xl font-bold text-gray-900">장년 예배안내</h2>
+        </div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+            {/* 좌측: 이미지 */}
+            <div className="flex flex-col gap-4 justify-center items-center overflow-hidden">
+              <img
+                src="/time1.jpg"
+                alt="예배 모습 1"
+                className="w-full h-64 md:h-80 object-cover rounded-lg shadow-lg"
+              />
+              <img
+                src="/sub3.jpg"
+                alt="예배 모습 2"
+                className="w-full h-64 md:h-80 object-cover rounded-lg shadow-lg"
+              />
+            </div>
+  
+            {/* 우측: 예배시간 정보 */}
+            <div className="space-y-8">
+              {worshipSchedule.map((item, index) => (
+                <div key={index} className="border-b border-gray-300 pb-6 last:border-b-0">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{item.category}</h3>
+                  <ul className="space-y-2">
+                    {item.times.map((time, timeIndex) => (
+                      <li key={timeIndex} className="text-gray-600">
+                        {time}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+  
