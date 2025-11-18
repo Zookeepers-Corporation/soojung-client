@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     description: "포항수정교회는 가정이 행복하게, 일터가 복되게, 자녀를 지도자로 키우는 하나님의 나라로 세워지는 교회입니다.",
     images: [
       {
-        url: new URL("/logo-image.png", "https://pohangsoojung.com").toString(),
+        url: new URL("/logo.png", "https://pohangsoojung.com").toString(),
         width: 1200,
         height: 630,
         alt: "포항수정교회",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "포항수정교회",
     description: "포항수정교회는 가정이 행복하게, 일터가 복되게, 자녀를 지도자로 키우는 하나님의 나라로 세워지는 교회입니다.",
-    images: [new URL("/logo-image.png", "https://pohangsoojung.com").toString()],
+    images: [new URL("/logo.png", "https://pohangsoojung.com").toString()],
   },
   robots: {
     index: true,
@@ -76,9 +76,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    // 모든 플랫폼에서 church_mark.svg 사용
-    icon: "/church_mark.svg",
-    apple: "/church_mark.svg",
+    // 모든 플랫폼에서 logo.png 사용
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
   verification: {
     // Google Search Console 등에서 제공받은 verification code를 추가할 수 있습니다
