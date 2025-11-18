@@ -1,7 +1,7 @@
 "use client"
 
 export default function StructuredData() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pohangsoojung.com"
+  const baseUrl = "https://pohangsoojung.com"
 
   const organizationSchema = {
     "@context": "https://schema.org",

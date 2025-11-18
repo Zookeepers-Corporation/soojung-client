@@ -7,12 +7,12 @@ import StructuredData from "@/components/structured-data"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pohangsoojung.com"),
+  metadataBase: new URL("https://pohangsoojung.com"),
   title: {
     default: "포항수정교회",
     template: "%s | 포항수정교회",
   },
-  description: "진정한 신앙 공동체, 하나님의 말씀으로 함께 성장합니다. 포항수정교회는 성령충만한 이들이 용사로 세워지는 교회입니다.",
+  description: "포항수정교회는 가정이 행복하게, 일터가 복되게, 자녀를 지도자로 키우는 하나님의 나라로 세워지는 교회입니다.",
   keywords: [
     "포항수정교회",
     "포항 교회",
@@ -48,10 +48,10 @@ export const metadata: Metadata = {
     url: "/",
     siteName: "포항수정교회",
     title: "포항수정교회",
-    description: "진정한 신앙 공동체, 하나님의 말씀으로 함께 성장합니다.",
+    description: "포항수정교회는 가정이 행복하게, 일터가 복되게, 자녀를 지도자로 키우는 하나님의 나라로 세워지는 교회입니다.",
     images: [
       {
-        url: "/logo-image.png",
+        url: new URL("/logo-image.png", "https://pohangsoojung.com").toString(),
         width: 1200,
         height: 630,
         alt: "포항수정교회",
@@ -61,8 +61,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "포항수정교회",
-    description: "진정한 신앙 공동체, 하나님의 말씀으로 함께 성장합니다.",
-    images: ["/logo-image.png"],
+    description: "포항수정교회는 가정이 행복하게, 일터가 복되게, 자녀를 지도자로 키우는 하나님의 나라로 세워지는 교회입니다.",
+    images: [new URL("/logo-image.png", "https://pohangsoojung.com").toString()],
   },
   robots: {
     index: true,
@@ -76,21 +76,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [
-      {
-        url: "/church_mark.svg",
-        type: "image/svg+xml",
-      },
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-    ],
-    apple: "/apple-icon.png",
+    // 모든 플랫폼에서 church_mark.svg 사용
+    icon: "/church_mark.svg",
+    apple: "/church_mark.svg",
   },
   verification: {
     // Google Search Console 등에서 제공받은 verification code를 추가할 수 있습니다
