@@ -43,10 +43,16 @@ export default function Home() {
   return (
     <div className="w-full">
       <Header />
-      {!isLoading && banners.length > 0 && <Hero banners={banners} />}
-      <Events nextWeekEvent={nextWeekEvent} />
-      <Categories />
-      <Gallery />
+      {/* Hero 섹션은 항상 먼저 렌더링 (로딩 중이면 스켈레톤 표시) */}
+      <Hero banners={banners} isLoading={isLoading} />
+      {/* 다른 섹션들은 Hero가 로드된 후에만 표시 */}
+      {!isLoading && (
+        <>
+          <Events nextWeekEvent={nextWeekEvent} />
+          <Categories />
+          <Gallery />
+        </>
+      )}
       <Footer />
     </div>
   )

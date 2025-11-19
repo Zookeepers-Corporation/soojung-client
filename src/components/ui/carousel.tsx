@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, ReactNode } from "react"
+import { useState, useEffect, useRef, ReactNode } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 interface CarouselProps {
@@ -24,25 +24,147 @@ export default function Carousel({
 }: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [currentX, setCurrentX] = useState(0)
+  const [translateX, setTranslateX] = useState(0)
+  const carouselRef = useRef<HTMLDivElement>(null)
 
   const items = Array.isArray(children) ? children : [children]
   const totalItems = items.length
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index)
+    setTranslateX(0)
   }
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? totalItems - 1 : prevIndex - 1
     )
+    setTranslateX(0)
   }
 
   const goToNext = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === totalItems - 1 ? 0 : prevIndex + 1
     )
+    setTranslateX(0)
   }
+
+  // 마우스 드래그 시작
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (totalItems <= 1) return
+    setIsDragging(true)
+    setIsPaused(true)
+    setStartX(e.clientX)
+    setCurrentX(e.clientX)
+  }
+
+  // 마우스 드래그 중
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || totalItems <= 1) return
+    e.preventDefault()
+    setCurrentX(e.clientX)
+    const diff = e.clientX - startX
+    setTranslateX(diff)
+  }
+
+  // 마우스 드래그 종료
+  const handleMouseUp = () => {
+    if (!isDragging || totalItems <= 1) return
+    setIsDragging(false)
+    setIsPaused(false)
+
+    const diff = currentX - startX
+    const threshold = 50 // 드래그 임계값 (픽셀)
+
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) {
+        goToPrevious()
+      } else {
+        goToNext()
+      }
+    } else {
+      setTranslateX(0)
+    }
+  }
+
+  // 터치 시작
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (totalItems <= 1) return
+    setIsDragging(true)
+    setIsPaused(true)
+    setStartX(e.touches[0].clientX)
+    setCurrentX(e.touches[0].clientX)
+  }
+
+  // 터치 이동
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || totalItems <= 1) return
+    setCurrentX(e.touches[0].clientX)
+    const diff = e.touches[0].clientX - startX
+    setTranslateX(diff)
+  }
+
+  // 터치 종료
+  const handleTouchEnd = () => {
+    if (!isDragging || totalItems <= 1) return
+    setIsDragging(false)
+    setIsPaused(false)
+
+    const diff = currentX - startX
+    const threshold = 50 // 드래그 임계값 (픽셀)
+
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) {
+        goToPrevious()
+      } else {
+        goToNext()
+      }
+    } else {
+      setTranslateX(0)
+    }
+  }
+
+  // 전역 마우스 이벤트 처리
+  useEffect(() => {
+    if (!isDragging) return
+
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (!isDragging || totalItems <= 1) return
+      setCurrentX(e.clientX)
+      const diff = e.clientX - startX
+      setTranslateX(diff)
+    }
+
+    const handleGlobalMouseUp = () => {
+      if (!isDragging || totalItems <= 1) return
+      setIsDragging(false)
+      setIsPaused(false)
+
+      const diff = currentX - startX
+      const threshold = 50
+
+      if (Math.abs(diff) > threshold) {
+        if (diff > 0) {
+          goToPrevious()
+        } else {
+          goToNext()
+        }
+      } else {
+        setTranslateX(0)
+      }
+    }
+
+    window.addEventListener("mousemove", handleGlobalMouseMove)
+    window.addEventListener("mouseup", handleGlobalMouseUp)
+
+    return () => {
+      window.removeEventListener("mousemove", handleGlobalMouseMove)
+      window.removeEventListener("mouseup", handleGlobalMouseUp)
+    }
+  }, [isDragging, startX, currentX, totalItems])
 
   useEffect(() => {
     if (autoPlay && !isPaused && totalItems > 1) {
@@ -58,16 +180,24 @@ export default function Carousel({
 
   return (
     <div
-      className={`relative w-full overflow-hidden ${className}`}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      ref={carouselRef}
+      className={`relative w-full overflow-hidden ${className} ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+      onMouseEnter={() => !isDragging && setIsPaused(true)}
+      onMouseLeave={() => !isDragging && setIsPaused(false)}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Carousel Container */}
       <div className="relative h-full">
         <div
           className="flex h-full transition-transform duration-500 ease-in-out"
           style={{
-            transform: `translateX(-${currentIndex * 100}%)`,
+            transform: `translateX(calc(-${currentIndex * 100}% + ${translateX}px))`,
+            transition: isDragging ? "none" : "transform 0.5s ease-in-out",
           }}
         >
           {items.map((item, index) => (

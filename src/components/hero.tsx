@@ -7,9 +7,10 @@ import { BannerItem } from "@/types/api"
 
 interface HeroProps {
   banners: BannerItem[]
+  isLoading?: boolean
 }
 
-export default function Hero({ banners }: HeroProps) {
+export default function Hero({ banners, isLoading = false }: HeroProps) {
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const lastScrollY = useRef<number>(typeof window !== "undefined" ? window.scrollY : 0)
@@ -54,6 +55,18 @@ export default function Hero({ banners }: HeroProps) {
       }
     }
   }, [])
+
+  // 로딩 중일 때 스켈레톤 UI 표시
+  if (isLoading) {
+    return (
+      <section ref={sectionRef} className="relative w-full h-96 md:h-[100dvh] overflow-hidden bg-gray-200 animate-pulse">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4 z-20">
+          <div className="h-16 md:h-24 w-64 md:w-96 bg-white/20 rounded-lg mb-4"></div>
+          <div className="h-8 md:h-12 w-80 md:w-[500px] bg-white/20 rounded-lg"></div>
+        </div>
+      </section>
+    )
+  }
 
   // 배너가 없으면 렌더링하지 않음
   if (banners.length === 0) {
