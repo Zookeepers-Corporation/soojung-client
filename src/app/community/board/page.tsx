@@ -50,24 +50,34 @@ function BoardPageContent() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow flex items-center justify-center">
+          <div>Loading...</div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
         <CommunityPageHeader title="게시판" subtitle="Board" />
         <div className="py-4 md:py-8">
-          {!isLoading && (
-            <SermonList
-              title=""
-              posts={posts}
-              pageInfo={pageInfo}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-              basePath="/community/board"
-              category={BoardCategory.BOARD}
-              showCategoryTabs={false}
-            />
-          )}
+          <SermonList
+            title=""
+            posts={posts}
+            pageInfo={pageInfo}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            basePath="/community/board"
+            category={BoardCategory.BOARD}
+            showCategoryTabs={false}
+          />
         </div>
       </main>
       <Footer />

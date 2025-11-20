@@ -85,12 +85,8 @@ export default function SermonDetail({
         {/* Content */}
         <Card className="mb-8">
           <div
-            className="prose prose-sm max-w-none whitespace-pre-wrap [&_p]:mb-3 [&_p]:whitespace-pre-wrap [&_ul]:space-y-2 [&_li]:whitespace-pre-wrap [&_*]:whitespace-pre-wrap"
-            dangerouslySetInnerHTML={{
-              __html: content
-                .replace(/\n/g, "<br />")
-                .replace(/  /g, "&nbsp;&nbsp;"),
-            }}
+            className="prose prose-sm max-w-none whitespace-pre-wrap [&_p]:mb-3 [&_p]:whitespace-pre-wrap [&_ul]:space-y-2 [&_li]:whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: content }}
           />
         </Card>
       </div>

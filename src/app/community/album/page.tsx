@@ -50,24 +50,34 @@ function AlbumPageContent() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow flex items-center justify-center">
+          <div>Loading...</div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
         <CommunityPageHeader title="앨범" subtitle="Album" />
         <div className="py-12 md:py-16">
-          {!isLoading && (
-            <SermonList
-              title=""
-              posts={posts}
-              pageInfo={pageInfo}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-              basePath="/community/album"
-              category={BoardCategory.ALBUM}
-              showCategoryTabs={false}
-            />
-          )}
+          <SermonList
+            title=""
+            posts={posts}
+            pageInfo={pageInfo}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            basePath="/community/album"
+            category={BoardCategory.ALBUM}
+            showCategoryTabs={false}
+          />
         </div>
       </main>
       <Footer />
