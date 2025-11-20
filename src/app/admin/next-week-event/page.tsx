@@ -22,7 +22,7 @@ import { useToast } from "@/components/ui/toast"
 
 export default function AdminNextWeekEventPage() {
   const router = useRouter()
-  const { isLoggedIn, user } = useAuth()
+  const { isLoggedIn, user, isInitialized } = useAuth()
   const isAdmin = isLoggedIn && user?.role === UserRole.ADMIN
 
   const [content, setContent] = useState("")
@@ -33,6 +33,10 @@ export default function AdminNextWeekEventPage() {
   const { showToast, ToastComponent } = useToast()
 
   useEffect(() => {
+    // 초기화가 완료된 후에만 인증 체크
+    if (!isInitialized) {
+      return
+    }
     if (!isLoggedIn) {
       router.push("/login")
       return
@@ -41,7 +45,7 @@ export default function AdminNextWeekEventPage() {
       router.push("/")
       return
     }
-  }, [isLoggedIn, isAdmin, router])
+  }, [isInitialized, isLoggedIn, isAdmin, router])
 
   useEffect(() => {
     if (isAdmin) {
@@ -106,6 +110,11 @@ export default function AdminNextWeekEventPage() {
     } finally {
       setIsSaving(false)
     }
+  }
+
+  // 초기화가 완료되기 전까지는 아무것도 렌더링하지 않음
+  if (!isInitialized) {
+    return null
   }
 
   if (!isLoggedIn || !isAdmin) {

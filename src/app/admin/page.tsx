@@ -13,10 +13,14 @@ import { Users, Image, Calendar } from "lucide-react"
 
 export default function AdminPage() {
   const router = useRouter()
-  const { isLoggedIn, user } = useAuth()
+  const { isLoggedIn, user, isInitialized } = useAuth()
   const isAdmin = isLoggedIn && user?.role === UserRole.ADMIN
 
   useEffect(() => {
+    // 초기화가 완료된 후에만 인증 체크
+    if (!isInitialized) {
+      return
+    }
     if (!isLoggedIn) {
       router.push("/login")
       return
@@ -25,7 +29,12 @@ export default function AdminPage() {
       router.push("/")
       return
     }
-  }, [isLoggedIn, isAdmin, router])
+  }, [isInitialized, isLoggedIn, isAdmin, router])
+
+  // 초기화가 완료되기 전까지는 아무것도 렌더링하지 않음
+  if (!isInitialized) {
+    return null
+  }
 
   if (!isLoggedIn || !isAdmin) {
     return null
