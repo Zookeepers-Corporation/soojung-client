@@ -415,10 +415,13 @@ function EditBoardContent({ params }: EditBoardPageProps) {
                 <label className="block text-sm font-medium text-[#0F1011] mb-2">
                   이미지 (선택사항)
                 </label>
+                <Text variant="small" color="tertiary" className="mb-2">
+                  PNG, JPG, JPEG 파일만 업로드 가능합니다. 동영상은 업로드할 수 없습니다.
+                </Text>
                 <input
                   ref={imageInputRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/png,image/jpeg,image/jpg"
                   multiple
                   onChange={handleImageChange}
                   className="hidden"

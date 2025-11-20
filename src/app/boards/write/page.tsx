@@ -209,6 +209,40 @@ function WriteBoardContent() {
     setDraggedIndex(null)
   }
 
+  const moveImageUp = (index: number) => {
+    if (index === 0) return
+    const newImages = [...images]
+    const newPreviews = [...imagePreviews]
+    const newOrders = [...imageOrders]
+
+    ;[newImages[index], newImages[index - 1]] = [newImages[index - 1], newImages[index]]
+    ;[newPreviews[index], newPreviews[index - 1]] = [newPreviews[index - 1], newPreviews[index]]
+    ;[newOrders[index], newOrders[index - 1]] = [newOrders[index - 1], newOrders[index]]
+
+    const reorderedOrders = newOrders.map((_, i) => i)
+
+    setImages(newImages)
+    setImagePreviews(newPreviews)
+    setImageOrders(reorderedOrders)
+  }
+
+  const moveImageDown = (index: number) => {
+    if (index === images.length - 1) return
+    const newImages = [...images]
+    const newPreviews = [...imagePreviews]
+    const newOrders = [...imageOrders]
+
+    ;[newImages[index], newImages[index + 1]] = [newImages[index + 1], newImages[index]]
+    ;[newPreviews[index], newPreviews[index + 1]] = [newPreviews[index + 1], newPreviews[index]]
+    ;[newOrders[index], newOrders[index + 1]] = [newOrders[index + 1], newOrders[index]]
+
+    const reorderedOrders = newOrders.map((_, i) => i)
+
+    setImages(newImages)
+    setImagePreviews(newPreviews)
+    setImageOrders(reorderedOrders)
+  }
+
   const removeFile = (index: number) => {
     setFiles(files.filter((_, i) => i !== index))
   }
@@ -314,10 +348,13 @@ function WriteBoardContent() {
                 <label className="block text-sm font-medium text-[#0F1011] mb-2">
                   이미지 (선택사항)
                 </label>
+                <Text variant="small" color="tertiary" className="mb-2">
+                  PNG, JPG, JPEG 파일만 업로드 가능합니다. 동영상은 업로드할 수 없습니다.
+                </Text>
                 <input
                   ref={imageInputRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/png,image/jpeg,image/jpg"
                   multiple
                   onChange={handleImageChange}
                   className="hidden"
@@ -361,7 +398,7 @@ function WriteBoardContent() {
                         key={index}
                         padding="none"
                         className={`
-                          relative group cursor-move overflow-hidden
+                          relative group overflow-hidden
                           ${draggedIndex === index ? "opacity-50 scale-95" : ""}
                           hover:shadow-lg transition-all
                         `}
@@ -378,7 +415,33 @@ function WriteBoardContent() {
                               className="w-full h-full object-cover"
                             />
                           )}
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                          {/* 모바일에서 항상 보이는 컨트롤 버튼들 */}
+                          <div className="absolute top-2 right-2 flex gap-2 md:hidden">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                removeImage(index)
+                              }}
+                              className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-colors shadow-lg"
+                            >
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                          {/* 데스크톱에서 호버 시 보이는 컨트롤 */}
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors hidden md:flex items-center justify-center">
                             <div className="opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center gap-2">
                               <div className="bg-white/90 rounded-full p-2">
                                 <svg
@@ -421,9 +484,68 @@ function WriteBoardContent() {
                           </div>
                         </div>
                         <div className="p-2 bg-white">
-                          <Text variant="small" color="secondary" className="truncate">
-                            {image.name}
-                          </Text>
+                          <div className="flex items-center justify-between mb-1">
+                            <Text variant="small" color="secondary" className="truncate flex-1">
+                              {image.name}
+                            </Text>
+                            {/* 모바일에서 순서 변경 버튼 */}
+                            <div className="flex gap-1 md:hidden ml-2">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  moveImageUp(index)
+                                }}
+                                disabled={index === 0}
+                                className={`p-1 rounded ${
+                                  index === 0
+                                    ? "text-gray-300 cursor-not-allowed"
+                                    : "text-[#5E6AD2] hover:bg-[#F7F8FF]"
+                                }`}
+                              >
+                                <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 15l7-7 7 7"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  moveImageDown(index)
+                                }}
+                                disabled={index === images.length - 1}
+                                className={`p-1 rounded ${
+                                  index === images.length - 1
+                                    ? "text-gray-300 cursor-not-allowed"
+                                    : "text-[#5E6AD2] hover:bg-[#F7F8FF]"
+                                }`}
+                              >
+                                <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
                           <Text variant="tiny" color="tertiary">
                             순서: {index + 1}
                           </Text>
