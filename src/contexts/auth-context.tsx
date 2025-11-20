@@ -7,6 +7,7 @@ import { UserLoginResponse } from "@/types/api"
 interface AuthContextType {
   isLoggedIn: boolean
   user: UserLoginResponse | null
+  isInitialized: boolean // 초기 로드 완료 여부
   login: (userData: UserLoginResponse) => void
   logout: () => void
   checkSession: () => Promise<void>
@@ -19,6 +20,7 @@ const USER_STORAGE_KEY = "user"
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState<UserLoginResponse | null>(null)
+  const [isInitialized, setIsInitialized] = useState(false)
   const router = useRouter()
 
   // 초기 로드 시 세션 스토리지에서 사용자 정보 복원
@@ -34,6 +36,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         sessionStorage.removeItem(USER_STORAGE_KEY)
       }
     }
+    // 초기화 완료 표시
+    setIsInitialized(true)
   }, [])
 
   // 세션 만료 이벤트 리스너
@@ -99,7 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, checkSession }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, isInitialized, login, logout, checkSession }}>
       {children}
     </AuthContext.Provider>
   )
