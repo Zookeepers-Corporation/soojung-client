@@ -63,14 +63,25 @@ function MembersPageContent() {
     </div>
   )
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow flex items-center justify-center">
+          <div>Loading...</div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
         <MembersPageHeader />
         <div className="pb-4 md:pb-8">
-          {!isLoading && (
-            <SermonList
+          <SermonList
             title=""
             posts={posts}
             pageInfo={pageInfo}
@@ -81,7 +92,6 @@ function MembersPageContent() {
             showCategoryTabs={false}
             customTabs={customTabs}
           />
-          )}
         </div>
       </main>
       <Footer />
