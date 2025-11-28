@@ -20,7 +20,6 @@ export default function Header() {
         submenu: [
           { label: "인사말", href: "/intro/welcome" },
           { label: "섬기는 사람들", href: "/intro/staff" },
-          { label: "오시는길", href: "/intro/location" },
         ],
     },
     {
