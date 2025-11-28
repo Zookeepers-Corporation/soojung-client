@@ -17,12 +17,11 @@ export default function Header() {
     {
       label: "우리교회는",
       href: "#intro",
-      submenu: [
-        { label: "인사말", href: "/intro/welcome" },
-        { label: "섬기는 사람들", href: "/intro/staff" },
-        { label: "예배시간", href: "/intro/worship" },
-        { label: "오시는길", href: "/intro/location" },
-      ],
+        submenu: [
+          { label: "인사말", href: "/intro/welcome" },
+          { label: "섬기는 사람들", href: "/intro/staff" },
+          { label: "오시는길", href: "/intro/location" },
+        ],
     },
     {
       label: "말씀과 찬양",
