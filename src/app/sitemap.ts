@@ -47,12 +47,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/intro/new-family`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/sermon/sunday`,
       lastModified: new Date(),
       changeFrequency: "weekly",
