@@ -16,11 +16,11 @@ export default function CommunityPageHeader({ title, subtitle }: CommunityPageHe
 
   return (
     <section className="relative h-80 flex items-center justify-center overflow-hidden">
-      {/* 배경 이미지 - students.png 사용 */}
+      {/* 배경 이미지 - main2.jpg 사용 */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 transition-opacity duration-1000"
         style={{
-          backgroundImage: "url('/students.png')",
+          backgroundImage: "url('/main2.jpg')",
         }}
       />
       

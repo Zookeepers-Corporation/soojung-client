@@ -66,7 +66,7 @@ function DawnSermonPageContent() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <SermonPageHeader title="새벽기도회" subtitle="Dawn Prayer" />
+        <SermonPageHeader title="예화" subtitle="Illustrations" />
         <div className="py-12 md:py-16">
           <SermonList
             title=""

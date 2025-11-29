@@ -66,7 +66,7 @@ function ResourcesPageContent() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <CommunityPageHeader title="자료실" subtitle="Resources" />
+        <CommunityPageHeader title="주보" subtitle="Newsletter" />
         <div className="py-12 md:py-16">
           <SermonList
             title=""
