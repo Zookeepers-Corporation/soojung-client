@@ -58,6 +58,11 @@ export const metadata: Metadata = {
       },
     ],
   },
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
   twitter: {
     card: "summary_large_image",
     title: "포항수정교회",
@@ -74,11 +79,6 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  },
-  icons: {
-    // 모든 플랫폼에서 logo.png 사용
-    icon: "/logo.png",
-    apple: "/logo.png",
   },
   verification: {
     // Google Search Console 등에서 제공받은 verification code를 추가할 수 있습니다

@@ -76,7 +76,6 @@ function ResourcesPageContent() {
             onPageChange={handlePageChange}
             basePath="/community/resources"
             category={BoardCategory.ARCHIVE}
-            showCategoryTabs={false}
           />
         </div>
       </main>
