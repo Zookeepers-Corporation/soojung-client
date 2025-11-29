@@ -76,7 +76,6 @@ function AlbumPageContent() {
             onPageChange={handlePageChange}
             basePath="/community/album"
             category={BoardCategory.ALBUM}
-            showCategoryTabs={false}
           />
         </div>
       </main>

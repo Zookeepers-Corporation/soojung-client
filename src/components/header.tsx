@@ -15,38 +15,30 @@ export default function Header() {
 
   const menuItems = [
     {
-      label: "교회소개",
+      label: "우리교회는",
       href: "#intro",
-      submenu: [
-        { label: "환영인사", href: "/intro/welcome" },
-        { label: "교회소식", href: "/intro/news" },
-        { label: "성도소식", href: "/intro/members" },
-        { label: "섬기는 사람들", href: "/intro/staff" },
-        { label: "예배시간", href: "/intro/worship" },
-        { label: "오시는길", href: "/intro/location" },
-      ],
+        submenu: [
+          { label: "인사말", href: "/intro/welcome" },
+          { label: "섬기는 사람들", href: "/intro/staff" },
+        ],
     },
     {
-      label: "새가족안내",
-      href: "/intro/new-family",
-    },
-    {
-      label: "말씀과 찬양",
+      label: "교회에서는",
       href: "#sermon",
       submenu: [
-        { label: "주일예배", href: "/sermon/sunday" },
-        { label: "수요예배", href: "/sermon/wednesday" },
-        { label: "금요기도회", href: "/sermon/friday" },
-        { label: "새벽기도회", href: "/sermon/dawn" },
+        { label: "설교", href: "/sermon/sunday" },
+        { label: "주보", href: "/sermon/wednesday" },
+        { label: "교회학교행사", href: "/community/resources" },
+        { label: "예화", href: "/sermon/dawn" },
       ],
     },
     {
-      label: "커뮤니티",
+      label: "믿음생활은",
       href: "#community",
       submenu: [
-        { label: "게시판", href: "/community/board" },
+        { label: "공지(교회소식)", href: "/intro/news" },
+        { label: "자유게시판", href: "/community/board" },
         { label: "앨범", href: "/community/album" },
-        { label: "자료실", href: "/community/resources" },
       ],
     },
   ]

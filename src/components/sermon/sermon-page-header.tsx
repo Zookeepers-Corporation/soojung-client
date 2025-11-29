@@ -16,11 +16,11 @@ export default function SermonPageHeader({ title, subtitle }: SermonPageHeaderPr
 
   return (
     <section className="relative h-80 flex items-center justify-center overflow-hidden">
-      {/* 배경 이미지 - main2.jpg 사용 */}
+      {/* 배경 이미지 - bible.jpg 사용 */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 transition-opacity duration-1000"
         style={{
-          backgroundImage: "url('/main2.jpg')",
+          backgroundImage: "url('/bible.jpg')",
         }}
       />
       

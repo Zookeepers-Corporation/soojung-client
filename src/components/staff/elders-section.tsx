@@ -29,15 +29,20 @@ export default function EldersSection() {
       role: "장로",
       image: "/elder-5.jpg",
     },
+    {
+      name: "송갑천",
+      role: "장로(은퇴)",
+      image: "/elder-6.jpg",
+    },
   ]
 
   return (
     <section className="pb-4 md:pb-8 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Elders Grid */}
-        <div className="flex flex-wrap justify-center gap-6">
+        <div className="flex flex-col md:flex-row justify-center gap-4 md:overflow-x-auto px-4">
           {elders.map((elder, index) => (
-            <div key={index} className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)] xl:w-[240px]">
+            <div key={index} className="flex-shrink-0 w-56 mx-auto md:mx-0">
               <StaffMemberCard
                 name={elder.name}
                 role={elder.role}

@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import SermonPostCard from "./sermon-post-card"
-import SermonCategoryTabs from "./sermon-category-tabs"
 import Pagination from "@/components/ui/pagination"
 import { Heading, Text } from "@/components/ui/typography"
 import { BoardListResponse, PageInfo, BoardCategory, UserRole } from "@/types/api"
@@ -14,7 +13,6 @@ interface SermonListProps {
   pageInfo?: PageInfo
   currentPage?: number
   onPageChange?: (page: number) => void
-  showCategoryTabs?: boolean
   customTabs?: React.ReactNode
   basePath?: string // 예: "/sermon/sunday"
   category?: BoardCategory
@@ -26,7 +24,6 @@ export default function SermonList({
   pageInfo,
   currentPage,
   onPageChange,
-  showCategoryTabs = true,
   customTabs,
   basePath,
   category,
@@ -36,12 +33,12 @@ export default function SermonList({
   // 관리자 전용 카테고리인지 확인
   const isAdminOnlyCategory =
     category === BoardCategory.SUNDAY_WORSHIP ||
-    category === BoardCategory.WEDNESDAY_WORSHIP ||
     category === BoardCategory.FRIDAY_PRAYER ||
     category === BoardCategory.DAWN_PRAYER ||
     category === BoardCategory.SPECIAL_WORSHIP ||
     category === BoardCategory.CHURCH_NEWS ||
-    category === BoardCategory.CHURCH_PEOPLE_NEWS
+    category === BoardCategory.CHURCH_PEOPLE_NEWS ||
+    category === BoardCategory.WEDNESDAY_WORSHIP
 
   // 작성 버튼 표시 여부
   const canWrite =
@@ -82,7 +79,6 @@ export default function SermonList({
             )}
           </div>
           {customTabs && <div className="mb-6">{customTabs}</div>}
-          {showCategoryTabs && <SermonCategoryTabs />}
         </div>
 
         {/* Posts Grid */}
