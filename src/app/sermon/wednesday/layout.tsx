@@ -1,11 +1,11 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "수요예배",
-  description: "포항수정교회 수요예배 설교를 듣고 하나님의 말씀을 나눕니다.",
+  title: "주보",
+  description: "포항수정교회 주보를 확인하세요.",
   openGraph: {
-    title: "수요예배 | 포항수정교회",
-    description: "포항수정교회 수요예배 설교를 듣고 하나님의 말씀을 나눕니다.",
+    title: "주보 | 포항수정교회",
+    description: "포항수정교회 주보를 확인하세요.",
     type: "website",
   },
 }

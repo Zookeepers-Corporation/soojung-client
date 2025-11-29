@@ -66,7 +66,7 @@ function BoardPageContent() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <CommunityPageHeader title="게시판" subtitle="Board" />
+        <CommunityPageHeader title="자유게시판" subtitle="Board" />
         <div className="py-4 md:py-8">
           <SermonList
             title=""

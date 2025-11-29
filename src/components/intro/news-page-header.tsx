@@ -39,10 +39,10 @@ export default function NewsPageHeader() {
               : "opacity-0 -translate-y-4"
           }`}
         >
-          교회소식
+          공지(교회소식)
         </h1>
         <div
-          className={`w-44 h-1 bg-yellow-600 mx-auto mt-4 transition-all duration-700 ease-out delay-300 ${
+          className={`w-77 h-1 bg-yellow-600 mx-auto mt-4 transition-all duration-700 ease-out delay-300 ${
             isVisible
               ? "opacity-100 scale-x-100"
               : "opacity-0 scale-x-0"

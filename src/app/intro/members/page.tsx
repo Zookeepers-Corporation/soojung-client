@@ -52,16 +52,6 @@ function MembersPageContent() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  const customTabs = (
-    <div className="flex justify-center gap-4">
-      <Link href="/intro/news">
-        <Button variant="secondary">교회소식</Button>
-      </Link>
-      <Link href="/intro/members">
-        <Button variant="primary">성도소식</Button>
-      </Link>
-    </div>
-  )
 
   if (isLoading) {
     return (
@@ -89,8 +79,6 @@ function MembersPageContent() {
             onPageChange={handlePageChange}
             basePath="/intro/members"
             category={BoardCategory.CHURCH_PEOPLE_NEWS}
-            showCategoryTabs={false}
-            customTabs={customTabs}
           />
         </div>
       </main>

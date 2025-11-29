@@ -27,8 +27,8 @@ export default function Header() {
       href: "#sermon",
       submenu: [
         { label: "설교", href: "/sermon/sunday" },
-        { label: "주보", href: "/community/resources" },
-        { label: "교회학교행사", href: "/sermon/wednesday" },
+        { label: "주보", href: "/sermon/wednesday" },
+        { label: "교회학교행사", href: "/community/resources" },
         { label: "예화", href: "/sermon/dawn" },
       ],
     },

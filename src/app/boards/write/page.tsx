@@ -248,12 +248,12 @@ function WriteBoardContent() {
 
   const getCategoryName = (category: BoardCategory) => {
     const categoryMap: Record<BoardCategory, string> = {
-      [BoardCategory.SUNDAY_WORSHIP]: "주일예배",
+      [BoardCategory.SUNDAY_WORSHIP]: "설교",
       [BoardCategory.WEDNESDAY_WORSHIP]: "교회학교행사",
       [BoardCategory.FRIDAY_PRAYER]: "금요기도회",
       [BoardCategory.DAWN_PRAYER]: "예화",
       [BoardCategory.SPECIAL_WORSHIP]: "특별예배",
-      [BoardCategory.BOARD]: "게시판",
+      [BoardCategory.BOARD]: "자유게시판",
       [BoardCategory.ALBUM]: "앨범",
       [BoardCategory.ARCHIVE]: "주보",
       [BoardCategory.CHURCH_NEWS]: "교회소식",
