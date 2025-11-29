@@ -76,7 +76,6 @@ function BoardPageContent() {
             onPageChange={handlePageChange}
             basePath="/community/board"
             category={BoardCategory.BOARD}
-            showCategoryTabs={false}
           />
         </div>
       </main>
