@@ -49,7 +49,6 @@ function WriteBoardContent() {
   // 관리자 전용 카테고리인지 확인
   const isAdminOnlyCategory =
     formData.category === BoardCategory.SUNDAY_WORSHIP ||
-    formData.category === BoardCategory.WEDNESDAY_WORSHIP ||
     formData.category === BoardCategory.FRIDAY_PRAYER ||
     formData.category === BoardCategory.DAWN_PRAYER ||
     formData.category === BoardCategory.SPECIAL_WORSHIP ||
@@ -249,14 +248,14 @@ function WriteBoardContent() {
 
   const getCategoryName = (category: BoardCategory) => {
     const categoryMap: Record<BoardCategory, string> = {
-      [BoardCategory.SUNDAY_WORSHIP]: "주일예배",
-      [BoardCategory.WEDNESDAY_WORSHIP]: "수요예배",
+      [BoardCategory.SUNDAY_WORSHIP]: "설교",
+      [BoardCategory.WEDNESDAY_WORSHIP]: "교회학교행사",
       [BoardCategory.FRIDAY_PRAYER]: "금요기도회",
-      [BoardCategory.DAWN_PRAYER]: "새벽기도회",
+      [BoardCategory.DAWN_PRAYER]: "예화",
       [BoardCategory.SPECIAL_WORSHIP]: "특별예배",
-      [BoardCategory.BOARD]: "게시판",
+      [BoardCategory.BOARD]: "자유게시판",
       [BoardCategory.ALBUM]: "앨범",
-      [BoardCategory.ARCHIVE]: "자료실",
+      [BoardCategory.ARCHIVE]: "주보",
       [BoardCategory.CHURCH_NEWS]: "교회소식",
       [BoardCategory.CHURCH_PEOPLE_NEWS]: "성도소식",
     }

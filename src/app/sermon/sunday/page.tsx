@@ -66,7 +66,7 @@ function SundaySermonPageContent() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <SermonPageHeader title="주일예배" subtitle="Sunday Worship" />
+        <SermonPageHeader title="설교" subtitle="Sermons" />
         <div className="py-12 md:py-16">
           <SermonList
             title=""
