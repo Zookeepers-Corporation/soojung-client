@@ -12,12 +12,12 @@ export default function EldersSection() {
     {
       name: "박재원",
       role: "장로",
-      image: "/elder-1.jpg",
+      image: "/elder2.png",
     },
     {
       name: "김승환",
       role: "장로",
-      image: "/elder-3.jpg",
+      image: "/elder3.png",
     },
     {
       name: "방청록",
@@ -27,12 +27,12 @@ export default function EldersSection() {
     {
       name: "황영택",
       role: "장로",
-      image: "/elder-5.jpg",
+      image: "/elder4.png",
     },
     {
       name: "송갑천",
       role: "장로(은퇴)",
-      image: "/elder-6.jpg",
+      image: "/elder5.png",
     },
   ]
 
@@ -40,7 +40,7 @@ export default function EldersSection() {
     <section className="pb-4 md:pb-8 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Elders Grid */}
-        <div className="flex flex-col md:flex-row justify-center gap-4 md:overflow-x-auto px-4">
+        <div className="flex flex-col md:flex-row justify-center gap-4 px-4">
           {elders.map((elder, index) => (
             <div key={index} className="flex-shrink-0 w-56 mx-auto md:mx-0">
               <StaffMemberCard
