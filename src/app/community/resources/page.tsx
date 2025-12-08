@@ -50,33 +50,27 @@ function ResourcesPageContent() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow flex items-center justify-center">
-          <div>Loading...</div>
-        </main>
-        <Footer />
-      </div>
-    )
-  }
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
         <CommunityPageHeader title="교회학교행사" subtitle="Church School Events" />
         <div className="py-12 md:py-16">
-          <SermonList
-            title=""
-            posts={posts}
-            pageInfo={pageInfo}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-            basePath="/community/resources"
-            category={BoardCategory.ARCHIVE}
-          />
+          {isLoading ? (
+            <div className="flex items-center justify-center py-16">
+              <div>Loading...</div>
+            </div>
+          ) : (
+            <SermonList
+              title=""
+              posts={posts}
+              pageInfo={pageInfo}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              basePath="/community/resources"
+              category={BoardCategory.ARCHIVE}
+            />
+          )}
         </div>
       </main>
       <Footer />

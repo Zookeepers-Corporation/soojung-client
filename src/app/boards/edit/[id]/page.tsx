@@ -99,7 +99,29 @@ function EditBoardContent({ params }: EditBoardPageProps) {
     title?: string
     content?: string
     general?: string
+    files?: string
   }>({})
+
+  // 파일과 이미지 합산 총 용량 제한 (20MB)
+  // 이미지와 파일을 구분하지 않고 모두 합쳐서 20MB 제한 적용
+  const MAX_TOTAL_FILE_SIZE = 20 * 1024 * 1024 // 20MB in bytes
+
+  // 현재 파일들과 이미지들의 총 용량 계산 (이미지 + 파일 합산)
+  const getTotalFileSize = () => {
+    // 기존 파일들의 용량 (fileSize가 API에서 제공됨)
+    const existingFileSize = editFiles.reduce((total, file) => total + file.fileSize, 0)
+    // 새로 추가한 파일들의 용량
+    const newFileSize = newFiles.reduce((total, file) => total + file.size, 0)
+    // 기존 이미지들의 용량 (API에서 용량 정보가 제공되지 않으므로 0으로 처리)
+    // const existingImageSize = 0
+    // 새로 추가한 이미지들의 용량 (isNew가 true인 것들)
+    const newImageSize = editImages
+      .filter(img => img.isNew)
+      .reduce((total, img) => total + (img.file?.size || 0), 0)
+
+    return existingFileSize + newFileSize + newImageSize
+  }
+
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -177,7 +199,7 @@ function EditBoardContent({ params }: EditBoardPageProps) {
     e.preventDefault()
     setErrors({})
 
-    const newErrors: { title?: string; content?: string } = {}
+    const newErrors: { title?: string; content?: string; general?: string } = {}
 
     if (!editFormData.title.trim()) {
       newErrors.title = "제목을 입력해주세요."
@@ -185,6 +207,10 @@ function EditBoardContent({ params }: EditBoardPageProps) {
 
     if (!editFormData.content.trim()) {
       newErrors.content = "내용을 입력해주세요."
+    }
+
+    if (getTotalFileSize() > MAX_TOTAL_FILE_SIZE) {
+      newErrors.general = `파일 총 용량이 20MB를 초과합니다. 현재: ${formatFileSize(getTotalFileSize())}`
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -251,6 +277,18 @@ function EditBoardContent({ params }: EditBoardPageProps) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newImageFiles = Array.from(e.target.files)
+      const currentTotalSize = getTotalFileSize()
+      const newImagesTotalSize = newImageFiles.reduce((total, file) => total + file.size, 0)
+      const totalSizeAfterAdd = currentTotalSize + newImagesTotalSize
+
+      if (totalSizeAfterAdd > MAX_TOTAL_FILE_SIZE) {
+        setErrors({
+          ...errors,
+          files: `파일 총 용량이 20MB를 초과합니다. 현재: ${formatFileSize(currentTotalSize)}, 추가하려는 이미지: ${formatFileSize(newImagesTotalSize)}, 합계: ${formatFileSize(totalSizeAfterAdd)}`
+        })
+        return
+      }
+
       const newPreviews: string[] = []
       let loadedCount = 0
 
@@ -267,6 +305,7 @@ function EditBoardContent({ params }: EditBoardPageProps) {
               isNew: true,
             }))
             setEditImages([...editImages, ...newImageItems])
+            setErrors({ ...errors, files: undefined })
           }
         }
         reader.readAsDataURL(file)
@@ -276,12 +315,27 @@ function EditBoardContent({ params }: EditBoardPageProps) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setNewFiles([...newFiles, ...Array.from(e.target.files)])
+      const newFileList = Array.from(e.target.files)
+      const currentTotalSize = getTotalFileSize()
+      const newFilesTotalSize = newFileList.reduce((total, file) => total + file.size, 0)
+      const totalSizeAfterAdd = currentTotalSize + newFilesTotalSize
+
+      if (totalSizeAfterAdd > MAX_TOTAL_FILE_SIZE) {
+        setErrors({
+          ...errors,
+          files: `파일 총 용량이 20MB를 초과합니다. 현재: ${formatFileSize(currentTotalSize)}, 추가하려는 파일: ${formatFileSize(newFilesTotalSize)}, 합계: ${formatFileSize(totalSizeAfterAdd)}`
+        })
+        return
+      }
+
+      setNewFiles([...newFiles, ...newFileList])
+      setErrors({ ...errors, files: undefined })
     }
   }
 
   const removeImage = (index: number) => {
     setEditImages(editImages.filter((_, i) => i !== index))
+    setErrors({ ...errors, files: undefined }) // 이미지 제거 시 에러 초기화
   }
 
   const removeFile = (index: number) => {
@@ -290,10 +344,12 @@ function EditBoardContent({ params }: EditBoardPageProps) {
       setDeleteFileIdentifiers([...deleteFileIdentifiers, file.identifier])
     }
     setEditFiles(editFiles.filter((_, i) => i !== index))
+    setErrors({ ...errors, files: undefined }) // 파일 제거 시 에러 초기화
   }
 
   const removeNewFile = (index: number) => {
     setNewFiles(newFiles.filter((_, i) => i !== index))
+    setErrors({ ...errors, files: undefined }) // 새 파일 제거 시 에러 초기화
   }
 
   const handleDragStart = (index: number) => {
@@ -545,17 +601,44 @@ function EditBoardContent({ params }: EditBoardPageProps) {
                 <label className="block text-sm font-medium text-[#0F1011] mb-2">
                   첨부 파일 (선택사항)
                 </label>
+                <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-blue-800 font-medium">
+                      파일 총 용량 제한: 20MB
+                    </span>
+                    <span className={`font-semibold ${getTotalFileSize() > MAX_TOTAL_FILE_SIZE * 0.8 ? 'text-red-600' : 'text-blue-600'}`}>
+                      현재: {formatFileSize(getTotalFileSize())} / 20MB
+                    </span>
+                  </div>
+                  <div className="mt-2 w-full bg-blue-200 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        getTotalFileSize() > MAX_TOTAL_FILE_SIZE * 0.8 ? 'bg-red-500' : 'bg-blue-500'
+                      }`}
+                      style={{
+                        width: `${Math.min((getTotalFileSize() / MAX_TOTAL_FILE_SIZE) * 100, 100)}%`
+                      }}
+                    ></div>
+                  </div>
+                </div>
+                {errors.files && (
+                  <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-800">{errors.files}</p>
+                  </div>
+                )}
                 <input
                   ref={fileInputRef}
                   type="file"
                   multiple
                   onChange={handleFileChange}
+                  disabled={getTotalFileSize() >= MAX_TOTAL_FILE_SIZE}
                   className="hidden"
                 />
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full bg-white border border-[#E5E7EB] rounded-lg px-3 py-2 text-[0.9375rem] text-[#0F1011] focus:border-[#5E6AD2] focus:outline-none focus:ring-2 focus:ring-[rgba(94,106,210,0.2)] hover:bg-gray-50 transition-colors"
+                  disabled={getTotalFileSize() >= MAX_TOTAL_FILE_SIZE}
+                  className="w-full bg-white border border-[#E5E7EB] rounded-lg px-3 py-2 text-[0.9375rem] text-[#0F1011] focus:border-[#5E6AD2] focus:outline-none focus:ring-2 focus:ring-[rgba(94,106,210,0.2)] hover:bg-gray-50 transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400"
                 >
                   파일 추가
                 </button>
@@ -596,13 +679,18 @@ function EditBoardContent({ params }: EditBoardPageProps) {
                         key={index}
                         className="flex items-center justify-between p-2 bg-blue-50 rounded-lg"
                       >
-                        <Text variant="small" color="secondary">
-                          {file.name}
-                        </Text>
+                        <div className="flex-1">
+                          <Text variant="small" color="secondary" className="font-medium">
+                            {file.name}
+                          </Text>
+                          <Text variant="tiny" color="tertiary">
+                            {formatFileSize(file.size)}
+                          </Text>
+                        </div>
                         <button
                           type="button"
                           onClick={() => removeNewFile(index)}
-                          className="text-red-600 hover:text-red-800 text-sm"
+                          className="text-red-600 hover:text-red-800 text-sm ml-4"
                         >
                           삭제
                         </button>
