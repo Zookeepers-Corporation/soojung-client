@@ -40,7 +40,7 @@ function EditBoardContent({ params }: EditBoardPageProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { id } = use(params)
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, user, isInitialized } = useAuth()
   const [board, setBoard] = useState<BoardDetailResponse | null>(null)
   const [category, setCategory] = useState<BoardCategory | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -124,11 +124,12 @@ function EditBoardContent({ params }: EditBoardPageProps) {
 
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    // 인증 초기화가 완료된 후에 로그인 상태 체크
+    if (isInitialized && !isLoggedIn) {
       router.push("/login")
       return
     }
-  }, [isLoggedIn, router])
+  }, [isLoggedIn, isInitialized, router])
 
   useEffect(() => {
     const fetchData = async () => {
