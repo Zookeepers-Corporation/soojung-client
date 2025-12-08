@@ -16,7 +16,7 @@ import { useAuth } from "@/contexts/auth-context"
 function WriteBoardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { isLoggedIn, user } = useAuth()
+  const { isLoggedIn, user, isInitialized } = useAuth()
   const categoryParam = searchParams.get("category") as BoardCategory | null
 
   const [formData, setFormData] = useState({
@@ -81,15 +81,16 @@ function WriteBoardContent() {
 
   // 로그인하지 않은 경우 리다이렉트
   useEffect(() => {
-    if (!isLoggedIn) {
+    // 인증 초기화가 완료된 후에 로그인 상태 체크
+    if (isInitialized && !isLoggedIn) {
       router.push("/login")
       return
     }
     // 관리자 전용 카테고리인데 관리자가 아닌 경우 리다이렉트
-    if (isAdminOnlyCategory && !isAdmin) {
+    if (isInitialized && isAdminOnlyCategory && !isAdmin) {
       router.push("/")
     }
-  }, [isLoggedIn, isAdminOnlyCategory, isAdmin, router])
+  }, [isLoggedIn, isInitialized, isAdminOnlyCategory, isAdmin, router])
 
   if (!isLoggedIn) {
     return null
