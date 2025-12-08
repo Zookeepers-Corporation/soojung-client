@@ -37,14 +37,36 @@ function WriteBoardContent() {
   const [files, setFiles] = useState<File[]>([])
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const imageInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [errors, setErrors] = useState<{
     title?: string
     content?: string
     category?: string
     general?: string
+    files?: string
   }>({})
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false)
+
+  // 파일과 이미지 합산 총 용량 제한 (20MB)
+  // 이미지와 파일을 구분하지 않고 모두 합쳐서 20MB 제한 적용
+  const MAX_TOTAL_FILE_SIZE = 20 * 1024 * 1024 // 20MB in bytes
+
+  // 현재 파일들과 이미지들의 총 용량 계산 (이미지 + 파일 합산)
+  const getTotalFileSize = () => {
+    const fileSize = files.reduce((total, file) => total + file.size, 0)
+    const imageSize = images.reduce((total, image) => total + image.size, 0)
+    return fileSize + imageSize
+  }
+
+  // 파일 용량 포맷팅
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return "0 Bytes"
+    const k = 1024
+    const sizes = ["Bytes", "KB", "MB", "GB"]
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i]
+  }
 
   // 관리자 전용 카테고리인지 확인
   const isAdminOnlyCategory =
@@ -82,7 +104,7 @@ function WriteBoardContent() {
     e.preventDefault()
     setErrors({})
 
-    const newErrors: { title?: string; content?: string; category?: string } = {}
+    const newErrors: { title?: string; content?: string; category?: string; general?: string } = {}
 
     if (!formData.title.trim()) {
       newErrors.title = "제목을 입력해주세요."
@@ -90,6 +112,10 @@ function WriteBoardContent() {
 
     if (!formData.content.trim()) {
       newErrors.content = "내용을 입력해주세요."
+    }
+
+    if (getTotalFileSize() > MAX_TOTAL_FILE_SIZE) {
+      newErrors.general = `파일 총 용량이 20MB를 초과합니다. 현재: ${formatFileSize(getTotalFileSize())}`
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -159,7 +185,21 @@ function WriteBoardContent() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFiles([...files, ...Array.from(e.target.files)])
+      const newFiles = Array.from(e.target.files)
+      const currentTotalSize = getTotalFileSize()
+      const newFilesTotalSize = newFiles.reduce((total, file) => total + file.size, 0)
+      const totalSizeAfterAdd = currentTotalSize + newFilesTotalSize
+
+      if (totalSizeAfterAdd > MAX_TOTAL_FILE_SIZE) {
+        setErrors({
+          ...errors,
+          files: `파일 총 용량이 20MB를 초과합니다. 현재: ${formatFileSize(currentTotalSize)}, 추가하려는 파일: ${formatFileSize(newFilesTotalSize)}, 합계: ${formatFileSize(totalSizeAfterAdd)}`
+        })
+        return
+      }
+
+      setFiles([...files, ...newFiles])
+      setErrors({ ...errors, files: undefined })
     }
   }
 
@@ -244,6 +284,7 @@ function WriteBoardContent() {
 
   const removeFile = (index: number) => {
     setFiles(files.filter((_, i) => i !== index))
+    setErrors({ ...errors, files: undefined }) // 파일 제거 시 에러 초기화
   }
 
   const getCategoryName = (category: BoardCategory) => {
@@ -560,11 +601,38 @@ function WriteBoardContent() {
                 <label className="block text-sm font-medium text-[#0F1011] mb-2">
                   첨부 파일 (선택사항)
                 </label>
+                <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-blue-800 font-medium">
+                      파일 총 용량 제한: 20MB
+                    </span>
+                    <span className={`font-semibold ${getTotalFileSize() > MAX_TOTAL_FILE_SIZE * 0.8 ? 'text-red-600' : 'text-blue-600'}`}>
+                      현재: {formatFileSize(getTotalFileSize())} / 20MB
+                    </span>
+                  </div>
+                  <div className="mt-2 w-full bg-blue-200 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        getTotalFileSize() > MAX_TOTAL_FILE_SIZE * 0.8 ? 'bg-red-500' : 'bg-blue-500'
+                      }`}
+                      style={{
+                        width: `${Math.min((getTotalFileSize() / MAX_TOTAL_FILE_SIZE) * 100, 100)}%`
+                      }}
+                    ></div>
+                  </div>
+                </div>
+                {errors.files && (
+                  <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-800">{errors.files}</p>
+                  </div>
+                )}
                 <input
+                  ref={fileInputRef}
                   type="file"
                   multiple
                   onChange={handleFileChange}
-                  className="w-full bg-white border border-[#E5E7EB] rounded-lg px-3 py-2 text-[0.9375rem] text-[#0F1011] focus:border-[#5E6AD2] focus:outline-none focus:ring-2 focus:ring-[rgba(94,106,210,0.2)]"
+                  disabled={getTotalFileSize() >= MAX_TOTAL_FILE_SIZE}
+                  className="w-full bg-white border border-[#E5E7EB] rounded-lg px-3 py-2 text-[0.9375rem] text-[#0F1011] focus:border-[#5E6AD2] focus:outline-none focus:ring-2 focus:ring-[rgba(94,106,210,0.2)] disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
                 {files.length > 0 && (
                   <div className="mt-4 space-y-2">
@@ -573,13 +641,18 @@ function WriteBoardContent() {
                         key={index}
                         className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
                       >
-                        <Text variant="small" color="secondary">
-                          {file.name}
-                        </Text>
+                        <div className="flex-1">
+                          <Text variant="small" color="secondary" className="font-medium">
+                            {file.name}
+                          </Text>
+                          <Text variant="tiny" color="tertiary">
+                            {formatFileSize(file.size)}
+                          </Text>
+                        </div>
                         <button
                           type="button"
                           onClick={() => removeFile(index)}
-                          className="text-red-600 hover:text-red-800 text-sm"
+                          className="text-red-600 hover:text-red-800 text-sm ml-4"
                         >
                           삭제
                         </button>

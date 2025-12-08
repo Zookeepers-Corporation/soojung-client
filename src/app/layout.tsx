@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     default: "포항수정교회",
     template: "%s | 포항수정교회",
   },
-  description: "포항수정교회는 가정이 행복하게, 일터가 복되게, 자녀를 지도자로 키우는 하나님의 나라로 세워지는 교회입니다.",
+  description: "포항수정교회는 예수 그리스도의 복음으로 가정을 행복하게, 일터가 복되게, 자녀를 지도자로 키워 하나님의 나라를 든든히 세워가는 교회입니다.",
   keywords: [
     "포항수정교회",
     "포항 교회",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     url: "/",
     siteName: "포항수정교회",
     title: "포항수정교회",
-    description: "포항수정교회는 가정이 행복하게, 일터가 복되게, 자녀를 지도자로 키우는 하나님의 나라로 세워지는 교회입니다.",
+    description: "포항수정교회는 예수 그리스도의 복음으로 가정을 행복하게, 일터가 복되게, 자녀를 지도자로 키워 하나님의 나라를 든든히 세워가는 교회입니다.",
     images: [
       {
         url: new URL("/logo.png", "https://pohangsoojung.com").toString(),
@@ -59,14 +59,14 @@ export const metadata: Metadata = {
     ],
   },
   icons: {
-    icon: '/logo.png',
-    shortcut: '/logo.png',
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
     apple: '/logo.png',
   },
   twitter: {
     card: "summary_large_image",
     title: "포항수정교회",
-    description: "포항수정교회는 가정이 행복하게, 일터가 복되게, 자녀를 지도자로 키우는 하나님의 나라로 세워지는 교회입니다.",
+    description: "포항수정교회는 예수 그리스도의 복음으로 가정을 행복하게, 일터가 복되게, 자녀를 지도자로 키워 하나님의 나라를 든든히 세워가는 교회입니다.",
     images: [new URL("/logo.png", "https://pohangsoojung.com").toString()],
   },
   robots: {
