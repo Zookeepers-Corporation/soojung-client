@@ -53,33 +53,27 @@ function NewsPageContent() {
   }
 
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow flex items-center justify-center">
-          <div>Loading...</div>
-        </main>
-        <Footer />
-      </div>
-    )
-  }
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
         <NewsPageHeader />
         <div className="pb-4 md:pb-8">
-          <SermonList
-            title=""
-            posts={posts}
-            pageInfo={pageInfo}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-            basePath="/intro/news"
-            category={BoardCategory.CHURCH_NEWS}
-          />
+          {isLoading ? (
+            <div className="flex items-center justify-center py-16">
+              <div>Loading...</div>
+            </div>
+          ) : (
+            <SermonList
+              title=""
+              posts={posts}
+              pageInfo={pageInfo}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              basePath="/intro/news"
+              category={BoardCategory.CHURCH_NEWS}
+            />
+          )}
         </div>
       </main>
       <Footer />
