@@ -19,6 +19,7 @@ export default function Header() {
       href: "#intro",
         submenu: [
           { label: "인사말", href: "/intro/welcome" },
+          { label: "사명선언문", href: "/intro/mission" },
           { label: "섬기는 사람들", href: "/intro/staff" },
         ],
     },
