@@ -17,7 +17,7 @@ export default function PastorsSection() {
     {
       name: "박미정",
       role: "교육목사",
-      image: "/edu_pastor.jpeg",
+      image: "/edu_pastor.png",
     },
   ]
 

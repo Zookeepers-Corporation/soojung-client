@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     description: "포항수정교회는 예수 그리스도의 복음으로 가정을 행복하게, 일터가 복되게, 자녀를 지도자로 키워 하나님의 나라를 든든히 세워가는 교회입니다.",
     images: [
       {
-        url: new URL("/logo.png", "https://pohangsoojung.com").toString(),
+        url: new URL("/logo-image.png", "https://pohangsoojung.com").toString(),
         width: 1200,
         height: 630,
         alt: "포항수정교회",
@@ -59,15 +59,21 @@ export const metadata: Metadata = {
     ],
   },
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/logo.png',
+    icon: [
+      { url: new URL("/favicon.ico", "https://pohangsoojung.com").toString() },
+      { url: new URL("/favicon.ico", "https://pohangsoojung.com").toString(), sizes: "32x32", type: "image/x-icon" },
+      { url: new URL("/favicon.ico", "https://pohangsoojung.com").toString(), sizes: "16x16", type: "image/x-icon" },
+    ],
+    shortcut: new URL("/favicon.ico", "https://pohangsoojung.com").toString(),
+    apple: [
+      { url: new URL("/logo.png", "https://pohangsoojung.com").toString(), sizes: "180x180", type: "image/png" },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "포항수정교회",
     description: "포항수정교회는 예수 그리스도의 복음으로 가정을 행복하게, 일터가 복되게, 자녀를 지도자로 키워 하나님의 나라를 든든히 세워가는 교회입니다.",
-    images: [new URL("/logo.png", "https://pohangsoojung.com").toString()],
+    images: [new URL("/logo-image.png", "https://pohangsoojung.com").toString()],
   },
   robots: {
     index: true,
