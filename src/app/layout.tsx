@@ -99,9 +99,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
       <body className={`font-sans antialiased`}>
         <StructuredData />
         <AuthProvider>
