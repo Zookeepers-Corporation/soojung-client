@@ -60,14 +60,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: new URL("/favicon.ico", "https://pohangsoojung.com").toString() },
-      { url: new URL("/favicon.ico", "https://pohangsoojung.com").toString(), sizes: "32x32", type: "image/x-icon" },
-      { url: new URL("/favicon.ico", "https://pohangsoojung.com").toString(), sizes: "16x16", type: "image/x-icon" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.png", type: "image/png", sizes: "96x96" },
     ],
-    shortcut: new URL("/favicon.ico", "https://pohangsoojung.com").toString(),
-    apple: [
-      { url: new URL("/logo.png", "https://pohangsoojung.com").toString(), sizes: "180x180", type: "image/png" },
-    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/logo.png", sizes: "96x96", type: "image/png" }],
   },
   twitter: {
     card: "summary_large_image",
