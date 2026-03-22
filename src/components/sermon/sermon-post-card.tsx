@@ -27,21 +27,13 @@ export default function SermonPostCard({
       >
         {/* Image */}
         <div className="relative w-full h-48 bg-[#F0F2F5] overflow-hidden">
-          {image ? (
-            <Image
-              src={image}
-              alt={title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center text-[#6B7075]">
-              <Text variant="small" color="tertiary">
-                이미지 없음
-              </Text>
-            </div>
-          )}
+          <Image
+            src={image || "/main4.jpg"}
+            alt={title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         </div>
 
         {/* Content */}
