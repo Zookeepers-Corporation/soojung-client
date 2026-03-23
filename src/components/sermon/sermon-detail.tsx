@@ -5,12 +5,14 @@ import Card from "@/components/ui/card"
 import Button from "@/components/ui/button"
 import { Heading, Text } from "@/components/ui/typography"
 import Image from "next/image"
+import { BoardFileInfo } from "@/types/api"
 
 interface SermonDetailProps {
   title: string
   author: string
   date: string
   images?: string[]
+  files?: BoardFileInfo[]
   content: string
   canEdit?: boolean
   canDelete?: boolean
@@ -23,6 +25,7 @@ export default function SermonDetail({
   author,
   date,
   images = [],
+  files = [],
   content,
   canEdit = false,
   canDelete = false,
@@ -89,6 +92,39 @@ export default function SermonDetail({
             dangerouslySetInnerHTML={{ __html: content }}
           />
         </Card>
+
+        {/* Files */}
+        {files.length > 0 && (
+          <Card className="mb-8">
+            <Heading variant="title4" className="mb-4">
+              첨부파일
+            </Heading>
+            <div className="space-y-2">
+              {files.map((file) => (
+                <a
+                  key={file.identifier}
+                  href={file.fileUrl}
+                  download={file.originalFileName}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <svg className="w-5 h-5 mr-3 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                  </svg>
+                  <div className="flex-1 min-w-0">
+                    <Text variant="small" className="truncate font-medium text-blue-600 hover:underline inline-block max-w-full">
+                      {file.originalFileName}
+                    </Text>
+                  </div>
+                  <Text variant="tiny" color="tertiary" className="ml-4 whitespace-nowrap flex-shrink-0">
+                    {(file.fileSize / 1024).toFixed(1)} KB
+                  </Text>
+                </a>
+              ))}
+            </div>
+          </Card>
+        )}
       </div>
     </div>
   )

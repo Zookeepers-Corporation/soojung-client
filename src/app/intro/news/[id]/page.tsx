@@ -126,6 +126,7 @@ export default function NewsDetailPage({ params }: NewsDetailPageProps) {
           date={formatDate(board.createdAt)}
           images={sortedImages.map((img) => img.imageUrl)}
           content={board.content || ""}
+          files={board.files}
           canEdit={board.canEdit}
           canDelete={board.canDelete}
           onEdit={handleEdit}
