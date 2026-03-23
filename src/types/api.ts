@@ -129,11 +129,11 @@ export interface LatestBoardResponse {
   createdAt: string
 }
 
-// 최신 게시글 API 응답 데이터 타입
 export interface LatestBoardsResponse {
   sundayWorship: LatestBoardResponse[]
   churchNews: LatestBoardResponse[]
-  churchPeopleNews: LatestBoardResponse[]
+  churchPeopleNews?: LatestBoardResponse[]
+  archive?: LatestBoardResponse[]
   board: LatestBoardResponse[]
   album?: LatestBoardResponse[]
 }

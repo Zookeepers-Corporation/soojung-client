@@ -35,15 +35,15 @@ const categoryConfigs: CategoryConfig[] = [
   },
   {
     id: 2,
-    title: "성도소식",
-    description: "성도들의 소식을 만나보세요",
-    icon: "👥",
-    href: "/intro/members",
+    title: "교회학교행사",
+    description: "교회학교의 다양한 소식을 만나보세요",
+    icon: "🏫",
+    href: "/community/resources",
     color: "bg-[#4CB782]",
     textColorHex: "#4CB782",
     accentColorHex: "#3DA572",
-    category: BoardCategory.CHURCH_PEOPLE_NEWS,
-    detailPath: (id: string) => `/intro/members/${id}`,
+    category: BoardCategory.ARCHIVE,
+    detailPath: (id: string) => `/community/resources/${id}`,
   },
   {
     id: 3,
@@ -195,8 +195,8 @@ export default function Categories() {
             // API 응답에서 해당 카테고리의 게시글 가져오기
             if (config.category === BoardCategory.CHURCH_NEWS && data.churchNews) {
               posts = data.churchNews
-            } else if (config.category === BoardCategory.CHURCH_PEOPLE_NEWS && data.churchPeopleNews) {
-              posts = data.churchPeopleNews
+            } else if (config.category === BoardCategory.ARCHIVE && data.archive) {
+              posts = data.archive
             } else if (config.category === BoardCategory.SUNDAY_WORSHIP && data.sundayWorship) {
               posts = data.sundayWorship
             } else if (config.category === BoardCategory.BOARD && data.board) {
