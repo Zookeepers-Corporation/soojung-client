@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Carousel from "@/components/ui/carousel"
 import Card from "@/components/ui/card"
 import Button from "@/components/ui/button"
@@ -32,6 +33,10 @@ export default function SermonDetail({
   onEdit,
   onDelete,
 }: SermonDetailProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const rawTextLength = content ? content.replace(/<[^>]*>?/gm, "").length : 0
+  const shouldCollapse = rawTextLength >= 800
+
   return (
     <div className="py-12 md:py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -86,11 +91,35 @@ export default function SermonDetail({
         )}
 
         {/* Content */}
-        <Card className="mb-8">
+        <Card className="mb-8 relative overflow-hidden">
           <div
-            className="prose prose-sm max-w-none whitespace-pre-wrap [&_p]:mb-3 [&_p]:whitespace-pre-wrap [&_ul]:space-y-2 [&_li]:whitespace-pre-wrap"
+            className={`prose prose-sm max-w-none whitespace-pre-wrap [&_p]:mb-3 [&_p]:whitespace-pre-wrap [&_ul]:space-y-2 [&_li]:whitespace-pre-wrap transition-all duration-300 ${
+              shouldCollapse && !isExpanded ? "max-h-[600px] overflow-hidden" : ""
+            }`}
             dangerouslySetInnerHTML={{ __html: content }}
           />
+          {shouldCollapse && !isExpanded && (
+            <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent flex items-end justify-center pb-4">
+              <Button 
+                onClick={() => setIsExpanded(true)} 
+                variant="outline"
+                className="rounded-full px-6 shadow-sm bg-white hover:bg-gray-50 text-gray-700"
+              >
+                본문 모두보기 ▾
+              </Button>
+            </div>
+          )}
+          {shouldCollapse && isExpanded && (
+            <div className="flex justify-center mt-8 pt-6 border-t border-gray-100">
+              <Button 
+                onClick={() => setIsExpanded(false)} 
+                variant="outline"
+                className="rounded-full px-6 bg-white hover:bg-gray-50 text-gray-700"
+              >
+                본문 접기 ▴
+              </Button>
+            </div>
+          )}
         </Card>
 
         {/* Files */}
