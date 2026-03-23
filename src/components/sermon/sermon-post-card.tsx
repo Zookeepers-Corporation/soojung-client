@@ -28,7 +28,7 @@ export default function SermonPostCard({
         {/* Image */}
         <div className="relative w-full h-48 bg-[#F0F2F5] overflow-hidden">
           <Image
-            src={image || "/main4.jpg"}
+            src={image || "/thumbnail.png"}
             alt={title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"

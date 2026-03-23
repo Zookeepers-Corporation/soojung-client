@@ -155,7 +155,7 @@ export default function Gallery() {
                   <div className="relative w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                     <>
                       <Image
-                        src={album.thumbnailUrl || "/main4.jpg"}
+                        src={album.thumbnailUrl || "/thumbnail.png"}
                         alt={album.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
