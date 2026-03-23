@@ -102,7 +102,7 @@ export default function SermonDetail({
             <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent flex items-end justify-center pb-4">
               <Button 
                 onClick={() => setIsExpanded(true)} 
-                variant="outline"
+                variant="secondary"
                 className="rounded-full px-6 shadow-sm bg-white hover:bg-gray-50 text-gray-700"
               >
                 본문 모두보기 ▾
@@ -113,7 +113,7 @@ export default function SermonDetail({
             <div className="flex justify-center mt-8 pt-6 border-t border-gray-100">
               <Button 
                 onClick={() => setIsExpanded(false)} 
-                variant="outline"
+                variant="secondary"
                 className="rounded-full px-6 bg-white hover:bg-gray-50 text-gray-700"
               >
                 본문 접기 ▴
