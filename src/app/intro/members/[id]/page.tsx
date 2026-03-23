@@ -86,6 +86,7 @@ export default function MembersDetailPage({ params }: MembersDetailPageProps) {
           date={formatDate(board.createdAt)}
           images={sortedImages.map((img) => img.imageUrl)}
           content={board.content || ""}
+          files={board.files}
         />
         <div className="pb-12">
           <CommentSection boardIdentifier={id} />

@@ -128,6 +128,7 @@ export default function BoardDetailPage({ params }: BoardDetailPageProps) {
           date={formatDate(board.createdAt)}
           images={imageUrls}
           content={board.content}
+          files={board.files}
           canEdit={board.canEdit}
           canDelete={board.canDelete}
           onEdit={handleEdit}
