@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import Card from "@/components/ui/card"
 import { Heading, Text } from "@/components/ui/typography"
 import { getLatestBoards } from "@/lib/api"
@@ -12,6 +13,7 @@ interface CategoryConfig {
   title: string
   description: string
   icon: string
+  image: string
   href: string
   color: string
   textColorHex: string
@@ -26,6 +28,7 @@ const categoryConfigs: CategoryConfig[] = [
     title: "교회소식",
     description: "교회의 소식을 만나보세요",
     icon: "📢",
+    image: "/pray.png",
     href: "/intro/news",
     color: "bg-[#5E6AD2]",
     textColorHex: "#5E6AD2",
@@ -38,6 +41,7 @@ const categoryConfigs: CategoryConfig[] = [
     title: "주일예배",
     description: "주일예배 말씀과 찬양",
     icon: "🙏",
+    image: "/bible.jpg",
     href: "/sermon/sunday",
     color: "bg-[#4EA7FC]",
     textColorHex: "#4EA7FC",
@@ -50,6 +54,7 @@ const categoryConfigs: CategoryConfig[] = [
     title: "게시판",
     description: "성도들과의 소통과 나눔",
     icon: "💬",
+    image: "/nature_background.png",
     href: "/community/board",
     color: "bg-[#FC7840]",
     textColorHex: "#FC7840",
@@ -215,16 +220,25 @@ export default function Categories() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative py-16 md:py-24 overflow-hidden">
-      {/* 배경 이미지 */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/nature_background.png')" }}
-      />
-      {/* 가독성을 위한 화이트 오버레이 */}
-      <div className="absolute inset-0 bg-white/15" />
-
+    <section ref={sectionRef} className="relative py-16 md:py-24 overflow-hidden bg-[#F7F8FA]">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div
+          className={`text-center mb-10 md:mb-12 transition-all duration-700 ease-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
+        >
+          <div className="inline-block mb-4">
+            <Heading variant="title4" className="text-[#0F1011] mb-3 font-bold tracking-tight">
+              교회 소식
+            </Heading>
+            <div className="w-12 h-1 bg-[#5E6AD2] rounded-full mx-auto"></div>
+          </div>
+          <Text variant="large" className="text-[#3E4145] max-w-2xl mx-auto">
+            교회의 다양한 소식을 전합니다
+          </Text>
+        </div>
+
         {/* Category Sections */}
         {isLoading ? (
           <div className="text-center py-12 text-gray-400">
@@ -236,7 +250,7 @@ export default function Categories() {
               return (
                 <div
                   key={categoryData.config.id}
-                  className={`bg-white border border-[#E5E7EB] shadow-sm p-6 space-y-4 transition-all duration-700 ease-out hover:shadow-md ${
+                  className={`bg-white border border-[#E5E7EB] shadow-sm overflow-hidden transition-all duration-700 ease-out hover:shadow-md ${
                     isVisible
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 translate-y-8"
@@ -245,6 +259,18 @@ export default function Categories() {
                     transitionDelay: isVisible ? `${index * 150}ms` : "0ms",
                   }}
                 >
+                  {/* Card Image */}
+                  <Link href={categoryData.config.href} className="relative block w-full h-40 overflow-hidden">
+                    <Image
+                      src={categoryData.config.image}
+                      alt={categoryData.config.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                  </Link>
+
+                  <div className="p-6 space-y-4">
                   {/* Category Title */}
                   <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
                     <div className="flex items-center gap-2.5">
@@ -303,6 +329,7 @@ export default function Categories() {
                         ))}
                       </>
                     )}
+                  </div>
                   </div>
                 </div>
               )

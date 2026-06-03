@@ -110,8 +110,8 @@ export default function Events({ nextWeekEvent }: EventsProps) {
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-14 md:py-20 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={sectionRef} className="relative py-14 md:py-20 overflow-hidden bg-[#F7F8FA]">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div
           className={`text-center mb-10 md:mb-12 transition-all duration-700 ease-out ${
