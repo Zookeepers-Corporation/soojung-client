@@ -33,7 +33,7 @@ export default function Footer() {
                 (37710) 경북 포항시 북구 두호로37번길 10 포항수정교회
               </p>
               <p className="text-gray-500 text-sm">
-                Copyright (c) 2025 포항수정교회 All rights reserved. provided by GraceBuilder
+                Copyright (c) 2025 포항수정교회 All rights reserved. provided by Zookeepers
               </p>
             </div>
           </div>

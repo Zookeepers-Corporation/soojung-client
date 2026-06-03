@@ -36,9 +36,39 @@ export default function SignupPage() {
     email?: string
     general?: string
   }>({})
+  const [birthParts, setBirthParts] = useState({ year: "", month: "", day: "" })
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
+
+  const currentYear = new Date().getFullYear()
+  const yearOptions = Array.from({ length: currentYear - 1920 + 1 }, (_, i) => currentYear - i)
+  const monthOptions = Array.from({ length: 12 }, (_, i) => i + 1)
+  const getDaysInMonth = (year: string, month: string): number => {
+    if (!year || !month) return 31
+    return new Date(Number(year), Number(month), 0).getDate()
+  }
+  const dayOptions = Array.from(
+    { length: getDaysInMonth(birthParts.year, birthParts.month) },
+    (_, i) => i + 1
+  )
+
+  const updateBirth = (part: "year" | "month" | "day", value: string) => {
+    const next = { ...birthParts, [part]: value }
+    // 월/년이 바뀌어 선택된 일이 해당 월의 일수를 초과하면 일 선택 초기화
+    if ((part === "year" || part === "month") && next.day) {
+      if (Number(next.day) > getDaysInMonth(next.year, next.month)) {
+        next.day = ""
+      }
+    }
+    setBirthParts(next)
+    const { year, month, day } = next
+    const birthDate =
+      year && month && day
+        ? `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+        : ""
+    setFormData((prev) => ({ ...prev, birthDate }))
+  }
 
   const joinPathOptions = [
     { value: "member", label: "교인" },
@@ -238,16 +268,52 @@ export default function SignupPage() {
                 required
               />
 
-              <Input
-                label="생년월일 (필수)"
-                type="date"
-                value={formData.birthDate}
-                onChange={(e) =>
-                  setFormData({ ...formData, birthDate: e.target.value })
-                }
-                error={errors.birthDate}
-                required
-              />
+              <div className="w-full">
+                <label className="block text-sm font-medium text-[#0F1011] mb-2">
+                  생년월일 (필수)
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  <select
+                    value={birthParts.year}
+                    onChange={(e) => updateBirth("year", e.target.value)}
+                    className="w-full bg-white border border-[#E5E7EB] rounded-lg px-3 py-2 text-[0.9375rem] text-[#0F1011] focus:border-[#5E6AD2] focus:outline-none focus:ring-2 focus:ring-[rgba(94,106,210,0.2)]"
+                  >
+                    <option value="">년도</option>
+                    {yearOptions.map((year) => (
+                      <option key={year} value={year}>
+                        {year}년
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={birthParts.month}
+                    onChange={(e) => updateBirth("month", e.target.value)}
+                    className="w-full bg-white border border-[#E5E7EB] rounded-lg px-3 py-2 text-[0.9375rem] text-[#0F1011] focus:border-[#5E6AD2] focus:outline-none focus:ring-2 focus:ring-[rgba(94,106,210,0.2)]"
+                  >
+                    <option value="">월</option>
+                    {monthOptions.map((month) => (
+                      <option key={month} value={month}>
+                        {month}월
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={birthParts.day}
+                    onChange={(e) => updateBirth("day", e.target.value)}
+                    className="w-full bg-white border border-[#E5E7EB] rounded-lg px-3 py-2 text-[0.9375rem] text-[#0F1011] focus:border-[#5E6AD2] focus:outline-none focus:ring-2 focus:ring-[rgba(94,106,210,0.2)]"
+                  >
+                    <option value="">일</option>
+                    {dayOptions.map((day) => (
+                      <option key={day} value={day}>
+                        {day}일
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {errors.birthDate && (
+                  <p className="mt-1.5 text-sm text-red-600">{errors.birthDate}</p>
+                )}
+              </div>
 
               <Input
                 label="휴대폰 번호 (필수)"
