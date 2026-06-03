@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: "assets.pohangsoojung.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "pub-5c340c05c27246498125f2571736821e.r2.dev",
+        pathname: "/**",
+      },
     ],
   },
 };

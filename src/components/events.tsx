@@ -2,33 +2,66 @@
 
 import { useEffect, useRef, useState } from "react"
 import { NextWeekEventConfig } from "@/types/api"
-import Card from "@/components/ui/card"
 import { Heading, Text } from "@/components/ui/typography"
 
 interface EventsProps {
   nextWeekEvent: NextWeekEventConfig | null
 }
 
-interface WorshipSchedule {
+interface ScheduleItem {
   name: string
   time: string
-  icon: string
 }
 
-const worshipSchedules: WorshipSchedule[] = [
-  { name: "주일 낮 예배", time: "11:00 AM", icon: "🌅" },
-  { name: "주일 오후 예배", time: "1:30 PM", icon: "☀️" },
-  { name: "수요 기도회", time: "7:30 PM", icon: "🕯️" },
-  { name: "금요 기도회", time: "개인기도", icon: "🙏" },
-  { name: "새벽 기도회", time: "5:00 AM", icon: "🌄" },
+const worshipSchedules: ScheduleItem[] = [
+  { name: "주일 낮 예배", time: "11:00 AM" },
+  { name: "주일 오후 예배", time: "1:30 PM" },
+  { name: "수요 기도회", time: "7:30 PM" },
+  { name: "금요 기도회", time: "개인기도" },
+  { name: "새벽 기도회", time: "5:00 AM" },
 ]
 
-const defaultEvents = [
-  { name: "성경공부", time: "수요일 7시", icon: "📅" },
-  { name: "가족 선교", time: "토요일 오후", icon: "👨‍👩‍👧‍👦" },
-  { name: "찬양 콘서트", time: "일요일 12시 30분", icon: "🎵" },
-  { name: "성경 세미나", time: "월요일 7시", icon: "📖" },
+const defaultEvents: ScheduleItem[] = [
+  { name: "성경공부", time: "수요일 7시" },
+  { name: "가족 선교", time: "토요일 오후" },
+  { name: "찬양 콘서트", time: "일요일 12시 30분" },
+  { name: "성경 세미나", time: "월요일 7시" },
 ]
+
+// 예배별 사진이 준비되기 전까지 사용하는 인디고 계열 그라데이션 (순환)
+const tileGradients = [
+  "from-[#5E6AD2] to-[#3E4AAD]",
+  "from-[#6D78D9] to-[#4E5BBD]",
+  "from-[#4E5BBD] to-[#363F8F]",
+  "from-[#7B86E0] to-[#5E6AD2]",
+  "from-[#5862C9] to-[#3E4AAD]",
+]
+
+interface ScheduleTileProps {
+  item: ScheduleItem
+  gradient: string
+  isVisible: boolean
+  delay: number
+}
+
+function ScheduleTile({ item, gradient, isVisible, delay }: ScheduleTileProps) {
+  return (
+    <div
+      className={`relative overflow-hidden bg-gradient-to-br ${gradient} p-5 min-h-[104px] flex flex-col justify-between shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 ease-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+      }`}
+      style={{ transitionDelay: isVisible ? `${delay}ms` : "0ms" }}
+    >
+      {/* 장식 원 */}
+      <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/10" />
+      <div className="absolute -bottom-8 -left-4 w-20 h-20 rounded-full bg-black/10" />
+      <h4 className="relative text-white text-lg md:text-xl font-bold tracking-tight">
+        {item.name}
+      </h4>
+      <span className="relative text-white/85 text-sm font-medium">{item.time}</span>
+    </div>
+  )
+}
 
 export default function Events({ nextWeekEvent }: EventsProps) {
   const [isVisible, setIsVisible] = useState(false)
@@ -77,144 +110,84 @@ export default function Events({ nextWeekEvent }: EventsProps) {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative py-20 md:py-32 overflow-hidden">
-      {/* 배경 이미지 */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/bible.jpg')",
-        }}
-      />
-      {/* 그라데이션 오버레이 */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/75 to-white/80"></div>
-      
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={sectionRef} className="py-14 md:py-20 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div
-          className={`text-center mb-16 md:mb-20 transition-all duration-700 ease-out ${
-            isVisible
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-6"
+          className={`text-center mb-10 md:mb-12 transition-all duration-700 ease-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
           <div className="inline-block mb-4">
-            <Heading variant="title4" className="text-[#1a1a1a] mb-3 font-bold">
+            <Heading variant="title4" className="text-[#0F1011] mb-3 font-bold tracking-tight">
               예배 및 행사
             </Heading>
-            <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-[#8B7355] to-transparent mx-auto"></div>
+            <div className="w-12 h-1 bg-[#5E6AD2] rounded-full mx-auto"></div>
           </div>
-          <Text variant="large" className="text-[#4a4a4a] max-w-2xl mx-auto font-medium">
+          <Text variant="large" className="text-[#3E4145] max-w-2xl mx-auto">
             주님을 찬양하며 함께 모이는 시간입니다
           </Text>
         </div>
 
-        {/* Events Grid */}
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
-          {/* 정기 예배 카드 */}
-          <Card
-            padding="lg"
-            className={`relative overflow-hidden transition-all duration-500 hover:shadow-2xl group backdrop-blur-sm ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
-            }`}
-            style={{
-              transitionDelay: isVisible ? "200ms" : "0ms",
-              backgroundColor: "rgba(255, 255, 255, 0.85)",
-              border: "1px solid rgba(139, 115, 85, 0.2)",
-            }}
-          >
-            {/* 장식 요소 */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#8B7355]/30 via-[#8B7355]/50 to-[#8B7355]/30"></div>
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#8B7355]/5 to-transparent rounded-bl-full opacity-60 group-hover:opacity-80 transition-opacity"></div>
-            
-            <div className="relative">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-1 h-8 bg-gradient-to-b from-[#8B7355] to-[#A68B6B] rounded-full"></div>
-                <Heading variant="title3" className="text-[#2c2c2c] font-bold">
-                  정기 예배
-                </Heading>
-              </div>
-              <div className="space-y-3">
-                {worshipSchedules.map((schedule, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 rounded-lg bg-white/60 hover:bg-white/80 backdrop-blur-sm transition-all duration-300 group/item border border-[#8B7355]/10 hover:border-[#8B7355]/20 hover:shadow-md"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="text-2xl filter drop-shadow-sm">{schedule.icon}</div>
-                      <Text variant="regular" className="text-[#2c2c2c] font-semibold">
-                        {schedule.name}
-                      </Text>
-                    </div>
-                    <Text variant="regular" className="text-[#8B7355] font-bold">
-                      {schedule.time}
-                    </Text>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Card>
-
-          {/* 교회 행사 카드 */}
-          <Card
-            padding="lg"
-            className={`relative overflow-hidden transition-all duration-500 hover:shadow-2xl group backdrop-blur-sm ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
-            }`}
-            style={{
-              transitionDelay: isVisible ? "400ms" : "0ms",
-              backgroundColor: "rgba(255, 255, 255, 0.85)",
-              border: "1px solid rgba(139, 115, 85, 0.2)",
-            }}
-          >
-            {/* 장식 요소 */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#8B7355]/30 via-[#8B7355]/50 to-[#8B7355]/30"></div>
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#8B7355]/5 to-transparent rounded-bl-full opacity-60 group-hover:opacity-80 transition-opacity"></div>
-            
-            <div className="relative">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-1 h-8 bg-gradient-to-b from-[#8B7355] to-[#A68B6B] rounded-full"></div>
-                <Heading variant="title3" className="text-[#2c2c2c] font-bold">
-                  교회 행사
-                </Heading>
-              </div>
-            {nextWeekEvent?.content ? (
-              <div
-                  className="prose prose-sm max-w-none text-[#3E4145] whitespace-pre-wrap [&_p]:mb-3 [&_p]:whitespace-pre-wrap [&_ul]:space-y-2 [&_li]:text-[#3E4145] [&_*]:whitespace-pre-wrap bg-white/40 p-4 rounded-lg backdrop-blur-sm border border-[#8B7355]/10"
-                  dangerouslySetInnerHTML={{
-                    __html: nextWeekEvent.content
-                      .replace(/\n/g, "<br />")
-                      .replace(/  /g, "&nbsp;&nbsp;"),
-                  }}
+        {/* 정기 예배 타일 그리드 */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-1 h-6 bg-[#5E6AD2] rounded-full"></div>
+            <Heading variant="title3" className="text-[#0F1011] font-bold">
+              정기 예배
+            </Heading>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+            {worshipSchedules.map((schedule, index) => (
+              <ScheduleTile
+                key={schedule.name}
+                item={schedule}
+                gradient={tileGradients[index % tileGradients.length]}
+                isVisible={isVisible}
+                delay={index * 80}
               />
-            ) : (
-                <div className="space-y-3">
-                  {defaultEvents.map((event, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-4 rounded-lg bg-white/60 hover:bg-white/80 backdrop-blur-sm transition-all duration-300 group/item border border-[#8B7355]/10 hover:border-[#8B7355]/20 hover:shadow-md"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="text-2xl filter drop-shadow-sm">{event.icon}</div>
-                        <Text variant="regular" className="text-[#2c2c2c] font-semibold">
-                          {event.name}
-                        </Text>
-                      </div>
-                      <Text variant="regular" className="text-[#8B7355] font-bold">
-                        {event.time}
-                      </Text>
-                    </div>
-                  ))}
-                </div>
-            )}
+            ))}
+          </div>
+        </div>
+
+        {/* 교회 행사 */}
+        <div>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-1 h-6 bg-[#5E6AD2] rounded-full"></div>
+            <Heading variant="title3" className="text-[#0F1011] font-bold">
+              교회 행사
+            </Heading>
+          </div>
+          {nextWeekEvent?.content ? (
+            <div
+              className={`bg-white border border-[#E5E7EB] shadow-sm p-6 transition-all duration-500 ease-out ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+              }`}
+            >
+              <div
+                className="prose prose-sm max-w-none text-[#3E4145] whitespace-pre-wrap [&_p]:mb-3 [&_p]:whitespace-pre-wrap [&_ul]:space-y-2 [&_li]:text-[#3E4145] [&_*]:whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{
+                  __html: nextWeekEvent.content
+                    .replace(/\n/g, "<br />")
+                    .replace(/  /g, "&nbsp;&nbsp;"),
+                }}
+              />
             </div>
-          </Card>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+              {defaultEvents.map((event, index) => (
+                <ScheduleTile
+                  key={event.name}
+                  item={event}
+                  gradient={tileGradients[index % tileGradients.length]}
+                  isVisible={isVisible}
+                  delay={index * 80}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>
   )
 }
-  

@@ -98,7 +98,7 @@ export default function Hero({ banners, isLoading = false }: HeroProps) {
                 blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
               />
               {/* Overlay */}
-              <div className="absolute inset-0 bg-black/40 z-10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/25 to-black/35 z-10" />
             </div>
           ))}
         </Carousel>
@@ -107,7 +107,7 @@ export default function Hero({ banners, isLoading = false }: HeroProps) {
       {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4 z-20 pointer-events-none">
         <h1
-          className={`text-4xl md:text-6xl font-bold text-center text-balance transition-all duration-1000 ease-out ${
+          className={`text-4xl md:text-6xl font-bold text-center text-balance tracking-tight transition-all duration-1000 ease-out ${
             isVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-8"
@@ -116,7 +116,7 @@ export default function Hero({ banners, isLoading = false }: HeroProps) {
           포항수정교회
         </h1>
         <p
-          className={`text-lg md:text-2xl mt-4 text-center transition-all duration-1000 ease-out delay-300 ${
+          className={`text-base md:text-xl mt-5 text-center text-white/85 font-light tracking-wide transition-all duration-1000 ease-out delay-300 ${
             isVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-8"
