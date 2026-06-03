@@ -88,18 +88,8 @@ export default function Gallery() {
   }
 
   return (
-    <section ref={sectionRef} className="relative py-20 md:py-32 overflow-hidden">
-      {/* 배경 이미지 */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/main3 .jpg')",
-        }}
-      />
-      {/* 그라데이션 오버레이 */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/75 to-white/80"></div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={sectionRef} className="relative py-20 md:py-28 bg-[#F7F8FA]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <div
           className={`text-center mb-16 md:mb-20 transition-all duration-700 ease-out ${
@@ -109,12 +99,12 @@ export default function Gallery() {
           }`}
         >
           <div className="inline-block mb-4">
-            <Heading variant="title4" className="text-[#1a1a1a] mb-3 font-bold">
+            <Heading variant="title4" className="text-[#0F1011] mb-3 font-bold tracking-tight">
               수정 갤러리
             </Heading>
-            <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-[#8B7355] to-transparent mx-auto"></div>
+            <div className="w-12 h-1 bg-[#5E6AD2] rounded-full mx-auto"></div>
           </div>
-          <Text variant="regular" className="text-[#4a4a4a] max-w-2xl mx-auto font-medium">
+          <Text variant="regular" className="text-[#6B7075] max-w-2xl mx-auto">
             우리 교회의 다양한 활동들을 소개합니다
           </Text>
         </div>
@@ -122,7 +112,7 @@ export default function Gallery() {
         {/* Gallery Grid */}
         {isLoading ? (
           <div className="text-center py-16">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#8B7355]"></div>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#5E6AD2]"></div>
             <Text variant="regular" color="secondary" className="mt-4 block">
               로딩 중...
             </Text>
@@ -149,7 +139,7 @@ export default function Gallery() {
               >
                 <Card
                   padding="none"
-                  className="overflow-hidden cursor-pointer bg-white border border-gray-200/50 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 h-full flex flex-col"
+                  className="rounded-none! overflow-hidden cursor-pointer bg-white border border-[#E5E7EB] shadow-sm hover:shadow-lg hover:border-[#5E6AD2]/30 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col"
                 >
                   {/* Image Container */}
                   <div className="relative w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
@@ -167,7 +157,7 @@ export default function Gallery() {
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 transform scale-90 group-hover:scale-100 transition-transform duration-300">
                           <svg
-                            className="w-8 h-8 text-[#8B7355]"
+                            className="w-8 h-8 text-[#5E6AD2]"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -190,7 +180,7 @@ export default function Gallery() {
                     </>
                     {/* 날짜 배지 */}
                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm">
-                      <Text variant="tiny" className="text-[#8B7355] font-semibold">
+                      <Text variant="tiny" className="text-[#5E6AD2] font-semibold">
                         {formatDate(album.createdAt)}
                       </Text>
                     </div>
@@ -200,7 +190,7 @@ export default function Gallery() {
                   <div className="p-5 bg-white flex-1 flex flex-col">
                     <Heading
                       variant="title2"
-                      className="line-clamp-2 text-[#1a1a1a] group-hover:text-[#8B7355] transition-colors duration-300"
+                      className="line-clamp-2 text-[#1a1a1a] group-hover:text-[#5E6AD2] transition-colors duration-300"
                     >
                       {album.title}
                     </Heading>
@@ -211,7 +201,7 @@ export default function Gallery() {
                           자세히 보기
                         </Text>
                         <svg
-                          className="w-4 h-4 text-[#8B7355] transform group-hover:translate-x-1 transition-transform duration-300"
+                          className="w-4 h-4 text-[#5E6AD2] transform group-hover:translate-x-1 transition-transform duration-300"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"

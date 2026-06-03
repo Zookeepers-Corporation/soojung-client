@@ -23,7 +23,7 @@ export default function Card({
   return (
     <div
       className={`
-        bg-white border border-[#E5E7EB] rounded-xl
+        bg-white border border-[#E5E7EB]
         shadow-[0px_2px_4px_rgba(0,0,0,0.04)]
         ${paddingStyles[padding]}
         ${className}
